@@ -1,0 +1,36 @@
+# CODEOWNERS 파일은 특정 파일이나 디렉토리에 대한 코드 검토자를 자동으로 지정합니다
+# https://help.github.com/articles/about-code-owners/
+
+# 기본적으로 모든 파일에 대해 프로젝트 관리자가 검토
+* @project-maintainers
+
+# 프론트엔드 코드
+/frontend/ @frontend-team
+*.js @frontend-team
+*.ts @frontend-team
+*.tsx @frontend-team
+*.css @frontend-team
+*.scss @frontend-team
+
+# 백엔드 코드 
+/backend/ @backend-team
+*.py @backend-team
+/api/ @backend-team
+
+# 데이터베이스 관련
+/db/ @database-team
+*.sql @database-team
+
+# 테스트 코드
+/tests/ @qa-team
+*.test.js @qa-team
+*.spec.ts @qa-team
+
+# 문서
+*.md @docs-team
+/docs/ @docs-team
+
+# CI/CD 설정
+/.github/ @devops-team
+/workflows/ @devops-team
+*.yml @devops-team

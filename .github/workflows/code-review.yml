@@ -1,0 +1,41 @@
+name: 코드 리뷰 워크플로우
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  code-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 코드 품질 검사
+        uses: reviewdog/action-setup@v1
+        with:
+          reviewdog_version: latest
+
+      - name: 린트 검사
+        run: |
+          # 프로젝트의 린터 설정에 따라 실행
+          # 예: eslint, pylint 등
+          echo "린트 검사 실행"
+
+      - name: 테스트 실행
+        run: |
+          # 프로젝트의 테스트 실행
+          echo "테스트 실행"
+
+      - name: 코드 커버리지 검사
+        run: |
+          # 코드 커버리지 검사 실행
+          echo "코드 커버리지 검사"
+
+      - name: PR 크기 검사
+        run: |
+          # PR이 너무 큰 경우 경고
+          FILES_CHANGED=$(git diff --name-only origin/main | wc -l)
+          if [ $FILES_CHANGED -gt 500 ]; then
+            echo "경고: PR이 너무 큽니다. 파일 변경: $FILES_CHANGED"
+            exit 1
+          fi
