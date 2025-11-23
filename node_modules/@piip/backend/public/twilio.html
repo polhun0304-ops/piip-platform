@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Twilio Video Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        font-family: system-ui, Arial, sans-serif;
+        padding: 16px;
+      }
+      #videos {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 12px;
+      }
+      video {
+        width: 320px;
+        height: 240px;
+        background: #000;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Twilio Video Test</h1>
+    <div>
+      <label>Room: <input id="roomName" placeholder="room-name" /></label>
+      <label>Identity: <input id="identity" placeholder="user" /></label>
+      <button id="joinBtn">Join</button>
+      <button id="leaveBtn">Leave</button>
+    </div>
+    <div id="status"></div>
+    <div id="videos"></div>
+    <script src="https://sdk.twilio.com/js/video/releases/2.27.2/twilio-video.min.js"></script>
+    <script>
+      const qs = new URLSearchParams(location.search);
+      document.getElementById("roomName").value = qs.get("room") || "";
+      document.getElementById("identity").value = qs.get("id") || "";
+
+      let room;
+
+      async function getToken(identity, roomName) {
+        const res = await fetch("/api/twilio/video/token", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ identity, roomName }),
+        });
+        if (!res.ok) throw new Error("Failed to get token");
+        const data = await res.json();
+        return data.token;
+      }
+
+      function attachTrack(track) {
+        const el = track.attach();
+        el.autoplay = true;
+        el.playsInline = true;
+        document.getElementById("videos").appendChild(el);
+      }
+
+      function detachTrack(track) {
+        track.detach().forEach((el) => el.remove());
+      }
+
+      document.getElementById("joinBtn").onclick = async () => {
+        try {
+          const identity =
+            document.getElementById("identity").value ||
+            "user-" + Math.floor(Math.random() * 1000);
+          const roomName =
+            document.getElementById("roomName").value || "piip-demo";
+          const token = await getToken(identity, roomName);
+          room = await Twilio.Video.connect(token, {
+            name: roomName,
+            audio: true,
+            video: { width: 640 },
+          });
+          document.getElementById("status").textContent = "Joined " + room.name;
+          room.localParticipant.tracks.forEach((pub) => attachTrack(pub.track));
+          room.participants.forEach((p) =>
+            p.tracks.forEach(
+              (pub) => pub.isSubscribed && attachTrack(pub.track)
+            )
+          );
+          room.on("trackSubscribed", attachTrack);
+          room.on("trackUnsubscribed", detachTrack);
+        } catch (e) {
+          document.getElementById("status").textContent = e.message;
+        }
+      };
+
+      document.getElementById("leaveBtn").onclick = () => {
+        if (room) {
+          room.disconnect();
+          document.getElementById("status").textContent = "Left";
+        }
+      };
+    </script>
+  </body>
+</html>

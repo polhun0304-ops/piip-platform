@@ -1,0 +1,31 @@
+{
+  "models": [
+    {
+      "title": "GPT-4o",
+      "provider": "openai",
+      "model": "gpt-4o",
+      "apiKey": "OPENAI_API_KEY"
+    },
+    {
+      "title": "Claude 3.5 Sonnet",
+      "provider": "anthropic",
+      "model": "claude-3-5-sonnet-20241022",
+      "apiKey": "ANTHROPIC_API_KEY"
+    }
+  ],
+  "tabAutocompleteModel": {
+    "title": "GPT-4o Mini",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "apiKey": "OPENAI_API_KEY"
+  },
+  "autocomplete": {
+    "disable": false
+  },
+  "allowAnonymousTelemetry": false,
+  "embeddingsProvider": {
+    "provider": "openai",
+    "model": "text-embedding-3-small",
+    "apiKey": "OPENAI_API_KEY"
+  }
+}

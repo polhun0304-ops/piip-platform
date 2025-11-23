@@ -1,0 +1,142 @@
+/* AppButton Component Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  font-size: 0.9375rem; /* 15px */
+  font-weight: 500;
+  line-height: 1.4;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  color: var(--text);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)) inset,
+    var(--card);
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Variants */
+.btn--primary {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)) inset,
+    var(--primary);
+  border-color: transparent;
+  color: #fff;
+  font-weight: 600;
+}
+
+.btn--primary:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+.btn--secondary {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.btn--secondary:hover:not(:disabled) {
+  border-color: var(--primary);
+}
+
+.btn--danger {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)) inset,
+    var(--danger);
+  border-color: transparent;
+  color: #fff;
+}
+
+.btn--danger:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.btn--soft {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)) inset,
+    rgba(124, 58, 237, 0.15);
+  border-color: rgba(124, 58, 237, 0.35);
+  color: var(--text);
+}
+
+.btn--soft:hover:not(:disabled) {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04)) inset,
+    rgba(124, 58, 237, 0.2);
+}
+
+.btn--icon {
+  padding: 10px;
+}
+
+.btn--icon-only {
+  padding: 10px;
+  aspect-ratio: 1;
+}
+
+.btn--text {
+  background: transparent;
+  border: none;
+  color: var(--primary);
+}
+
+.btn--text:hover:not(:disabled) {
+  background: rgba(124, 58, 237, 0.1);
+}
+
+/* Sizes */
+.btn--sm {
+  padding: 8px 12px;
+  font-size: 0.875rem; /* 14px */
+}
+
+.btn--sm.btn--icon-only {
+  padding: 8px;
+}
+
+.btn--lg {
+  padding: 14px 18px;
+  font-size: 1rem; /* 16px */
+}
+
+.btn--lg.btn--icon-only {
+  padding: 14px;
+}
+
+/* Material Icons */
+.btn .material-icons-outlined {
+  font-size: 20px;
+  vertical-align: middle;
+}
+
+.btn--sm .material-icons-outlined {
+  font-size: 18px;
+}
+
+.btn--lg .material-icons-outlined {
+  font-size: 22px;
+}
+
+/* Focus styles for accessibility */
+.btn:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 4px;
+}

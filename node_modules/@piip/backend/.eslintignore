@@ -1,0 +1,6 @@
+# Ignore backup and generated files
+**/*.backup
+node_modules
+dist
+build
+.pnp.js

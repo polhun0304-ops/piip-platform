@@ -1,0 +1,64 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:8.2
+    container_name: piip-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build:
+      context: ./packages/backend
+    container_name: piip-backend
+    ports:
+      - "5001:5001"
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/piip-platform
+      - AZURE_OPENAI_API_VERSION=2024-02-15-preview
+      - OPENAI_API_VERSION=2024-02-15-preview
+    volumes:
+      - ./packages/backend:/app
+      - ./packages/shared:/shared
+      - backend-node-modules:/app/node_modules
+    command:
+      - sh
+      - -c
+      - >-
+        npm install --legacy-peer-deps --include=dev && npm run build && npm run start
+
+  frontend:
+    build:
+      context: ./packages/frontend
+    container_name: piip-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    volumes:
+      - ./packages/frontend:/app
+      - ./packages/shared:/app/shared
+      - frontend-node-modules:/app/node_modules
+    command: npm run dev
+
+  mobile:
+    build:
+      context: ./packages/mobile
+    container_name: piip-mobile
+    ports:
+      - "5174:5173"
+    volumes:
+      - ./packages/mobile:/app
+      - ./packages/shared:/app/shared
+      - mobile-node-modules:/app/node_modules
+    command: npm run dev
+
+volumes:
+  mongo-data:
+  backend-node-modules:
+  frontend-node-modules:
+  mobile-node-modules:

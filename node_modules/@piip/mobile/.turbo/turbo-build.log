@@ -1,0 +1,23 @@
+
+> @piip/mobile@1.0.0 build
+> tsc && vite build
+
+src/App.tsx(10,8): error TS2307: Cannot find module 'react-native' or its corresponding type declarations.
+src/index.tsx(2,29): error TS7016: Could not find a declaration file for module 'react-native-web'. 'C:/Projects/piip-platform/packages/mobile/node_modules/react-native-web/dist/cjs/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/react-native-web` if it exists or add a new declaration (.d.ts) file containing `declare module 'react-native-web';`
+src/screens/CaseDetailScreen.tsx(1,40): error TS2307: Cannot find module 'react-native' or its corresponding type declarations.
+src/screens/CaseListScreen.tsx(7,8): error TS2307: Cannot find module 'react-native' or its corresponding type declarations.
+src/screens/CaseListScreen.tsx(31,24): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/screens/CaseListScreen.tsx(32,24): error TS7031: Binding element 'item' implicitly has an 'any' type.
+src/screens/EvidenceScreen.tsx(1,50): error TS2307: Cannot find module 'react-native' or its corresponding type declarations.
+src/screens/EvidenceScreen.tsx(15,24): error TS7006: Parameter 'i' implicitly has an 'any' type.
+src/screens/EvidenceScreen.tsx(16,24): error TS7031: Binding element 'item' implicitly has an 'any' type.
+src/screens/HomeScreen.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/screens/HomeScreen.tsx(2,58): error TS2307: Cannot find module 'react-native' or its corresponding type declarations.
+npm error Lifecycle script `build` failed with error:
+npm error code 2
+npm error path C:\Projects\piip-platform\packages\mobile
+npm error workspace @piip/mobile@1.0.0
+npm error location C:\Projects\piip-platform\packages\mobile
+npm error command failed
+npm error command C:\Windows\system32\cmd.exe /d /s /c tsc && vite build

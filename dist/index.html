@@ -1,0 +1,4737 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PIIP Detective - 세계 최고의 탐정 플랫폼</title>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <meta
+      name="description"
+      content="AI 기반 전문가 탐정 매칭 및 사건 관리 - 신속, 안전, 전문성"
+    />
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="PIIP Detective - 세계 최고의 탐정 플랫폼"
+    />
+    <meta
+      property="og:description"
+      content="AI 기반 전문가 탐정 매칭 및 사건 관리 - 신속, 안전, 전문성"
+    />
+    <meta
+      property="og:image"
+      content="https://source.unsplash.com/1200x630/?detective,investigation,night"
+    />
+    <meta property="og:locale" content="ko_KR" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="PIIP Detective - 세계 최고의 탐정 플랫폼"
+    />
+    <meta
+      name="twitter:description"
+      content="AI 기반 전문가 탐정 매칭 및 사건 관리 - 신속, 안전, 전문성"
+    />
+    <meta
+      name="twitter:image"
+      content="https://source.unsplash.com/1200x630/?detective,investigation,night"
+    />
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/assets/manifest-rbSmv9US.json" />
+    <meta name="theme-color" content="#00f5ff" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="PIIP" />
+    <link rel="apple-touch-icon" href="/assets/icon-192.png" />
+
+    <!-- Schema.org structured data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "PIIP Detective",
+        "url": "https://piip.example",
+        "logo": "https://piip.example/logo.png",
+        "sameAs": [
+          "https://www.facebook.com/piip",
+          "https://twitter.com/piip",
+          "https://www.instagram.com/piip"
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "PIIP Detective",
+        "url": "https://piip.example",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://piip.example/search?q={query}",
+          "query-input": "required name=query"
+        }
+      }
+    </script>
+    <style>
+      :root {
+        /* Neon Hi-tech palette (cyberpunk cyan/magenta/purple) - Brightened */
+        --primary: linear-gradient(135deg, #00f5ff 0%, #ff00ff 100%);
+        --secondary: linear-gradient(135deg, #00ffff 0%, #7b2ff7 100%);
+        --accent: linear-gradient(135deg, #ff00ff 0%, #8b5cf6 100%);
+        --bg: #1a1540; /* lighter purple */
+        --bg-alt: #2a2050; /* brighter neon panel */
+        --card: rgba(42, 32, 80, 0.82);
+        --card-hover: rgba(52, 42, 100, 0.95);
+        --text: #ffffff;
+        --text-dim: #e6d7ff;
+        --text-mute: #b99edb;
+        --border: rgba(255, 0, 255, 0.25);
+        --glow: rgba(0, 245, 255, 0.6); /* brighter cyan neon glow */
+        --glow-magenta: rgba(255, 0, 255, 0.7);
+        --glow-purple: rgba(139, 92, 246, 0.6);
+      }
+      [data-theme="light"] {
+        --bg: #faf5ff;
+        --bg-alt: #f5f0ff;
+        --card: rgba(255, 255, 255, 0.94);
+        --card-hover: rgba(250, 248, 255, 1);
+        --text: #1a0a2e;
+        --text-dim: #4c1d95;
+        --text-mute: #9d84c8;
+        --border: rgba(139, 92, 246, 0.15);
+        --glow: rgba(0, 245, 255, 0.3);
+        --glow-magenta: rgba(255, 0, 255, 0.3);
+        --glow-purple: rgba(139, 92, 246, 0.3);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .skip-link {
+        position: absolute;
+        left: -9999px;
+        top: auto;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+      }
+      .skip-link:focus {
+        left: 16px;
+        top: 16px;
+        width: auto;
+        height: auto;
+        background: #111827;
+        color: #fff;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        z-index: 10000;
+        border: 1px solid var(--border);
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      /* Anchor scroll offset for fixed header */
+      section[id] {
+        scroll-margin-top: 96px;
+      }
+
+      /* Respect reduced motion for users */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      .premium-header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        background: rgba(42, 32, 80, 0.88);
+        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 4px 24px rgba(0, 245, 255, 0.1);
+      }
+      .premium-nav {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 1.25rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.25s;
+      }
+      .nav-brand:hover {
+        transform: scale(1.05);
+      }
+      .brand-icon {
+        font-size: 2rem;
+        filter: drop-shadow(0 0 12px rgba(0, 245, 255, 0.6));
+      }
+      .brand-text {
+        background: var(--primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .brand-accent {
+        font-weight: 300;
+        opacity: 0.9;
+      }
+      .nav-menu {
+        display: flex;
+        gap: 2.5rem;
+        list-style: none;
+      }
+      .nav-link {
+        color: var(--text-dim);
+        text-decoration: none;
+        font-weight: 500;
+        position: relative;
+        padding: 0.5rem 0;
+        transition: color 0.25s;
+      }
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--primary);
+        transition: width 0.25s;
+      }
+      .nav-link:hover {
+        color: var(--text);
+      }
+      .nav-link:hover::after {
+        width: 100%;
+      }
+      .nav-actions {
+        display: flex;
+        gap: 1rem;
+      }
+      .theme-toggle {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 50%;
+        padding: 0.5rem;
+        cursor: pointer;
+        color: var(--text-dim);
+        transition: all 0.25s;
+      }
+      .theme-toggle:hover {
+        background: var(--card-hover);
+        border-color: var(--glow);
+        box-shadow: 0 0 24px var(--glow);
+      }
+      .hero-premium {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8rem 2rem 4rem;
+        overflow: hidden;
+        background: linear-gradient(135deg, rgba(42, 32, 80, 0.85) 0%, rgba(52, 53, 92, 0.82) 100%),
+                    url('탐정사진/탐정사진 기본.png');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+      }
+      .hero-container {
+        position: relative;
+        z-index: 1;
+        max-width: 1400px;
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 5rem;
+        align-items: stretch;
+      }
+      @media (max-width: 968px) {
+        .hero-container {
+          gap: 4rem;
+        }
+      }
+      .hero-bg-effects {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .gradient-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(100px);
+        opacity: 0.4;
+        animation: float 20s ease-in-out infinite;
+      }
+      .orb-1 {
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, #00f5ff, transparent);
+        top: -200px;
+        left: -200px;
+        box-shadow: 0 0 120px rgba(0, 245, 255, 0.5);
+      }
+      .orb-2 {
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, #ff00ff, transparent);
+        bottom: -150px;
+        right: -150px;
+        animation-delay: 5s;
+        box-shadow: 0 0 120px rgba(255, 0, 255, 0.6);
+      }
+      .orb-3 {
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, #8b5cf6, transparent);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation-delay: 10s;
+        box-shadow: 0 0 100px rgba(139, 92, 246, 0.5);
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        33% {
+          transform: translate(50px, -50px) scale(1.1);
+        }
+        66% {
+          transform: translate(-50px, 50px) scale(0.9);
+        }
+      }
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        text-align: left;
+      }
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--card);
+        border: 1px solid var(--glow);
+        border-radius: 50px;
+        padding: 0.5rem 1.25rem;
+        margin-bottom: 2rem;
+        color: var(--text-dim);
+        animation: fadeInUp 0.6s ease-out;
+        box-shadow:
+          0 0 20px var(--glow),
+          inset 0 0 20px rgba(0, 245, 255, 0.1);
+      }
+      .badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 0 16px rgba(0, 245, 255, 0.8);
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+          box-shadow: 0 0 16px rgba(0, 245, 255, 0.8);
+        }
+        50% {
+          opacity: 0.7;
+          transform: scale(1.2);
+          box-shadow: 0 0 24px rgba(0, 245, 255, 1);
+        }
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .hero-title {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 900;
+        line-height: 1.2;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, #ffffff, #a8b3cf);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: fadeInUp 0.8s 0.2s both;
+      }
+      .hero-subtitle {
+        font-size: clamp(1.1rem, 2vw, 1.35rem);
+        color: var(--text-dim);
+        margin-bottom: 3rem;
+        animation: fadeInUp 1s 0.4s both;
+      }
+      .hero-cta {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        animation: fadeInUp 1.2s 0.6s both;
+      }
+      .hero-stats {
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        margin-top: 4rem;
+        flex-wrap: wrap;
+        animation: fadeInUp 1.4s 0.8s both;
+      }
+      .stat-item {
+        text-align: left;
+      }
+      .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: var(--primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+      .stat-label {
+        color: var(--text-dim);
+        font-weight: 500;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.875rem 2rem;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: all 0.25s;
+        position: relative;
+        overflow: hidden;
+      }
+      .btn::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.1),
+          transparent
+        );
+        opacity: 0;
+        transition: opacity 0.25s;
+      }
+      .btn:hover::before {
+        opacity: 1;
+      }
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+        box-shadow:
+          0 4px 16px rgba(0, 0, 0, 0.3),
+          0 0 20px var(--glow);
+      }
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow:
+          0 12px 32px rgba(0, 0, 0, 0.4),
+          0 0 32px var(--glow);
+      }
+      .btn-secondary {
+        background: transparent;
+        border: 2px solid var(--glow);
+        color: var(--text);
+        box-shadow: 0 0 16px rgba(0, 245, 255, 0.2);
+      }
+      .btn-secondary:hover {
+        background: var(--card);
+        border-color: #00f5ff;
+        box-shadow: 0 0 28px var(--glow);
+      }
+      .btn-white {
+        background: white;
+        color: #667eea;
+      }
+      .btn-white:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+      }
+      .btn-lg {
+        padding: 1.125rem 2.5rem;
+        font-size: 1.1rem;
+      }
+      .features-premium {
+        padding: 6rem 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      .section-header {
+        text-align: center;
+        margin-bottom: 4rem;
+      }
+      .section-badge {
+        display: inline-block;
+        background: var(--card);
+        border: 1px solid var(--glow);
+        border-radius: 50px;
+        padding: 0.5rem 1.25rem;
+        margin-bottom: 1rem;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        box-shadow:
+          0 0 16px var(--glow),
+          inset 0 0 16px rgba(0, 245, 255, 0.08);
+      }
+      .section-title {
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 800;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #ffffff, #a8b3cf);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .section-description {
+        font-size: 1.2rem;
+        color: var(--text-dim);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+      }
+      .feature-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 2.5rem;
+        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(20px);
+        transition: all 0.35s;
+        position: relative;
+      }
+      .feature-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--primary);
+        opacity: 0;
+        transition: opacity 0.25s;
+      }
+      .feature-card:hover {
+        transform: translateY(-8px);
+        background: var(--card-hover);
+        border-color: var(--glow);
+        box-shadow:
+          0 24px 48px rgba(0, 0, 0, 0.5),
+          0 0 40px var(--glow),
+          inset 0 0 40px rgba(0, 245, 255, 0.05);
+      }
+      .feature-card:hover::before {
+        opacity: 1;
+      }
+      .feature-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 12px;
+        background: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow:
+          0 0 32px var(--glow),
+          0 0 16px var(--glow-magenta);
+      }
+      .feature-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+      }
+      .feature-description {
+        color: var(--text-dim);
+        font-size: 1.05rem;
+        line-height: 1.8;
+      }
+      .detectives-showcase {
+        padding: 6rem 2rem;
+        background: var(--bg-alt);
+      }
+      .detectives-container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      .detectives-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+      }
+      .detective-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 2.5rem;
+        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(20px);
+        transition: all 0.35s;
+        position: relative;
+        text-align: center;
+      }
+      .detective-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: var(--primary);
+        opacity: 0;
+        transition: opacity 0.25s;
+      }
+      .detective-card:hover::before {
+        opacity: 0.05;
+      }
+      .detective-card:hover {
+        transform: translateY(-8px);
+        border-color: var(--glow);
+        box-shadow:
+          0 24px 48px rgba(0, 0, 0, 0.5),
+          0 0 40px var(--glow);
+      }
+      .detective-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: var(--primary);
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        box-shadow:
+          0 12px 32px rgba(0, 0, 0, 0.4),
+          0 0 32px var(--glow);
+        position: relative;
+        z-index: 1;
+      }
+      .detective-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 1;
+      }
+      .detective-specialty {
+        color: var(--text-dim);
+        margin-bottom: 1.5rem;
+        position: relative;
+        z-index: 1;
+      }
+      .detective-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border);
+        position: relative;
+        z-index: 1;
+      }
+      .detective-stat {
+        text-align: center;
+      }
+      .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        background: var(--accent);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: block;
+      }
+      .detective-badge {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        background: var(--secondary);
+        color: white;
+        padding: 0.375rem 0.875rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        z-index: 1;
+      }
+      .cases-section {
+        padding: 6rem 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      .cases-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+      }
+      .case-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 2.5rem;
+        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(20px);
+        transition: all 0.35s;
+      }
+      .case-card:hover {
+        transform: translateY(-8px);
+        background: var(--card-hover);
+        border-color: var(--glow);
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+      }
+      .case-quote {
+        position: relative;
+        margin-bottom: 1.5rem;
+      }
+      .case-quote::before {
+        content: '"';
+        position: absolute;
+        top: -20px;
+        left: -10px;
+        font-size: 5rem;
+        color: var(--border);
+        font-family: Georgia, serif;
+        line-height: 1;
+        z-index: -1;
+      }
+      .case-text {
+        font-size: 1.1rem;
+        color: var(--text-dim);
+        font-style: italic;
+        line-height: 1.8;
+      }
+      .case-author {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+      }
+      .author-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+      }
+      .author-info {
+        flex: 1;
+      }
+      .author-name {
+        font-weight: 600;
+      }
+      .author-role {
+        font-size: 0.9rem;
+        color: var(--text-mute);
+      }
+      .case-rating {
+        display: flex;
+        gap: 0.25rem;
+        color: #fbbf24;
+      }
+      .faq-premium {
+        padding: 6rem 2rem;
+        background: var(--bg-alt);
+      }
+      .faq-container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .faq-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      .faq-item {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(20px);
+        transition: all 0.25s;
+      }
+      .faq-item:hover {
+        border-color: var(--glow);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      }
+      .faq-question {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.5rem 2rem;
+        cursor: pointer;
+      }
+      .faq-question-text {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+      .faq-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow:
+          0 0 20px var(--glow),
+          0 0 10px var(--glow-magenta);
+      }
+      .faq-toggle {
+        color: var(--text-dim);
+        transition: transform 0.25s;
+      }
+      .faq-answer {
+        padding: 0 2rem 1.5rem 5rem;
+        color: var(--text-dim);
+        line-height: 1.8;
+      }
+      .cta-section {
+        padding: 8rem 2rem;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      }
+      .cta-section::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            circle at 20% 50%,
+            rgba(0, 245, 255, 0.3),
+            transparent
+          ),
+          radial-gradient(
+            circle at 80% 50%,
+            rgba(255, 0, 255, 0.3),
+            transparent
+          );
+        pointer-events: none;
+      }
+      .cta-container {
+        max-width: 900px;
+        margin: 0 auto;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+      }
+      .cta-title {
+        font-size: clamp(2rem, 4vw, 3.5rem);
+        font-weight: 800;
+        color: white;
+        margin-bottom: 1.5rem;
+      }
+      .cta-description {
+        font-size: 1.25rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 3rem;
+        line-height: 1.8;
+      }
+      .cta-actions {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .premium-footer {
+        background: var(--bg-alt);
+        border-top: 1px solid var(--border);
+        padding: 4rem 2rem 2rem;
+      }
+      .footer-container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      .footer-main {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 3rem;
+        margin-bottom: 3rem;
+      }
+      .footer-brand .nav-brand {
+        margin-bottom: 1rem;
+      }
+      .footer-description {
+        color: var(--text-dim);
+        line-height: 1.8;
+        margin-bottom: 1.5rem;
+      }
+      .footer-social {
+        display: flex;
+        gap: 1rem;
+      }
+      .social-link {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-dim);
+        text-decoration: none;
+        transition: all 0.25s;
+      }
+      .social-link:hover {
+        background: var(--primary);
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 0 28px var(--glow);
+      }
+      .footer-section h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 1.25rem;
+      }
+      .footer-links {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      .footer-link {
+        color: var(--text-dim);
+        text-decoration: none;
+        transition: all 0.25s;
+      }
+      .footer-link:hover {
+        color: var(--text);
+        transform: translateX(4px);
+      }
+      .footer-bottom {
+        padding-top: 2rem;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .footer-credits {
+        color: var(--text-dim);
+        font-size: 0.85rem;
+        margin: 0;
+      }
+      /* Video modal styles */
+      .video-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: grid;
+        place-items: center;
+      }
+      .video-modal[hidden] {
+        display: none;
+      }
+      .video-backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        -webkit-backdrop-filter: blur(6px);
+        backdrop-filter: blur(6px);
+      }
+      .video-dialog {
+        position: relative;
+        width: min(92vw, 960px);
+        aspect-ratio: 16 / 9;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+      }
+      .video-close {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        z-index: 2;
+        width: 40px;
+        height: 40px;
+        display: grid;
+        place-items: center;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: var(--text);
+        cursor: pointer;
+      }
+      .video-close:hover {
+        background: var(--card-hover);
+      }
+      .video-frame,
+      .video-frame iframe {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .footer-copyright {
+        color: var(--text-mute);
+        font-size: 0.9rem;
+      }
+      .footer-badges {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .footer-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.375rem 0.875rem;
+        font-size: 0.85rem;
+        color: var(--text-dim);
+      }
+      .footer-badge .material-icons {
+        font-size: 1rem;
+        color: #10b981;
+      }
+      /* Social links unified styling */
+      .social-links {
+        display: flex;
+        gap: 0.75rem;
+      }
+      .social-link {
+        width: 35px;
+        height: 35px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+      .social-link .material-icons {
+        font-size: 34px;
+      }
+      .social-link::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle at 30% 30%,
+          rgba(255, 255, 255, 0.15),
+          transparent 70%
+        );
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .social-link:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-3px);
+        box-shadow:
+          0 8px 24px rgba(0, 0, 0, 0.4),
+          0 0 24px rgba(255, 255, 255, 0.3);
+      }
+      .social-link:hover::before {
+        opacity: 1;
+      }
+      @media (max-width: 1024px) {
+        .premium-nav {
+          padding: 1rem 1.5rem;
+        }
+        .nav-menu {
+          gap: 1.5rem;
+        }
+        .hero-premium {
+          padding: 6rem 1.5rem 3rem;
+        }
+        .features-premium,
+        .detectives-showcase,
+        .cases-section,
+        .faq-premium {
+          padding: 4rem 1.5rem;
+        }
+      }
+      @media (max-width: 768px) {
+        .premium-nav {
+          flex-wrap: wrap;
+        }
+        .nav-menu {
+          order: 3;
+          width: 100%;
+          justify-content: center;
+          padding-top: 1rem;
+          border-top: 1px solid var(--border);
+        }
+        .hero-stats {
+          gap: 2rem;
+        }
+        .features-grid,
+        .detectives-grid,
+        .cases-grid {
+          grid-template-columns: 1fr;
+        }
+        .footer-main {
+          grid-template-columns: 1fr;
+        }
+        .footer-bottom {
+          flex-direction: column;
+          text-align: center;
+        }
+      }
+      @media (max-width: 480px) {
+        .hero-cta {
+          flex-direction: column;
+          width: 100%;
+        }
+        .hero-cta .btn {
+          width: 100%;
+        }
+        .feature-card,
+        .detective-card,
+        .case-card {
+          padding: 1.5rem;
+        }
+        .faq-question {
+          padding: 1rem 1.5rem;
+        }
+        .faq-answer {
+          padding: 0 1.5rem 1rem 4rem;
+        }
+      }
+
+      /* ===== Aliases & Fix-ups for current markup ===== */
+      /* Navigation list alias */
+      .nav-links {
+        display: flex;
+        gap: 2.5rem;
+        list-style: none;
+      }
+      /* Button size and variants used in markup */
+      .btn-large {
+        padding: 1.125rem 2.5rem;
+        font-size: 1.1rem;
+      }
+      .btn-small {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        border-radius: 10px;
+      }
+      .btn-gradient {
+        background: var(--primary);
+        color: #fff;
+        box-shadow:
+          0 4px 16px rgba(0, 0, 0, 0.3),
+          0 0 20px var(--glow);
+      }
+      .btn-gradient:hover {
+        transform: translateY(-2px);
+        box-shadow:
+          0 12px 32px rgba(0, 0, 0, 0.4),
+          0 0 32px var(--glow);
+      }
+      .btn-ghost {
+        background: transparent;
+        border: 2px solid var(--glow);
+        color: var(--text);
+        box-shadow: 0 0 12px rgba(0, 245, 255, 0.2);
+      }
+      .btn-ghost:hover {
+        background: var(--card);
+        border-color: #00f5ff;
+        box-shadow: 0 0 28px var(--glow);
+      }
+      .btn-outline {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-dim);
+        box-shadow: 0 0 8px rgba(0, 245, 255, 0.1);
+      }
+      .btn-outline:hover {
+        border-color: var(--glow);
+        color: var(--text);
+        box-shadow: 0 0 20px var(--glow);
+      }
+
+      /* Text utilities */
+      .gradient-text {
+        background: var(--primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      /* Screen reader only */
+      .sr-only {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+      }
+      /* Auto-expanding textarea utility */
+      .auto-expand {
+        resize: none;
+        overflow: hidden; /* hide scrollbar; height grows with content */
+        transition: height 120ms ease;
+      }
+      .hero-description {
+        font-size: clamp(1.1rem, 2vw, 1.35rem);
+        color: var(--text-dim);
+        margin-bottom: 3rem;
+        animation: fadeInUp 1s 0.4s both;
+      }
+
+      /* Hero visual floating card used on the right */
+      .hero-visual {
+        position: relative;
+        width: 100%;
+        pointer-events: auto;
+        margin-top: 0.5rem;
+      }
+      /* Hero photo with luxury treatment */
+      .hero-photo-wrap {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 4/3;
+        margin-bottom: 1.25rem;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow:
+          0 28px 64px rgba(0, 0, 0, 0.5),
+          0 0 48px var(--glow),
+          0 0 24px var(--glow-magenta);
+      }
+      .hero-photo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        filter: saturation(1.05) contrast(1.05);
+      }
+      .hero-photo-wrap::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(18, 22, 52, 0) 40%,
+          rgba(18, 22, 52, 0.55) 100%
+        );
+        pointer-events: none;
+      }
+      .hero-divider {
+        width: 100%;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--glow),
+          transparent
+        );
+        opacity: 0.5;
+      }
+      .photo-marquee {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        padding: 0.5rem 0;
+        overflow: hidden;
+      }
+      .marquee-track {
+        display: flex;
+        gap: 2rem;
+        animation: marquee 40s linear infinite;
+        white-space: nowrap;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+      }
+      .marquee-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        color: var(--text);
+        opacity: 0.85;
+      }
+      .marquee-item .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 0 8px var(--glow);
+      }
+      /* Pause marquee on hover for readability */
+      .photo-marquee:hover .marquee-track {
+        animation-play-state: paused;
+      }
+      @keyframes marquee {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-25%);
+        }
+      }
+      .visual-card {
+        position: relative;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 1.25rem 1.5rem;
+        -webkit-backdrop-filter: blur(16px);
+        backdrop-filter: blur(16px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+        z-index: 1; /* ensure above hero-photo overlay */
+      }
+      .card-floating {
+        /* animation removed for static display */
+      }
+      /* Card positioning helper classes - now static vertical layout */
+      .card-pos-top-left,
+      .card-pos-mid-right,
+      .card-pos-bottom-center {
+        position: relative;
+        max-width: 100%;
+        margin-bottom: 1.5rem;
+      }
+      /* Mobile stacking fallback */
+      @media (max-width: 968px) {
+        .card-pos-top-left,
+        .card-pos-mid-right,
+        .card-pos-bottom-center {
+          margin-bottom: 1rem;
+        }
+        .hero-photo-wrap {
+          aspect-ratio: 1/1;
+        }
+        .floating-cards-stack {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          position: relative;
+          padding: 0;
+          pointer-events: none;
+        }
+        .floating-cards-stack .visual-card {
+          pointer-events: auto;
+        }
+      }
+      @keyframes floatSoft {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        33% {
+          transform: translate(12px, -12px) scale(1.02);
+        }
+        66% {
+          transform: translate(-12px, 12px) scale(0.98);
+        }
+      }
+      .card-glow {
+        position: absolute;
+        inset: -1px;
+        border-radius: 20px;
+        background: radial-gradient(
+          80% 80% at 50% 0%,
+          rgba(0, 245, 255, 0.3),
+          transparent 60%
+        );
+        filter: blur(16px);
+        pointer-events: none;
+      }
+      .card-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: var(--text);
+      }
+      .card-content .card-icon {
+        font-size: 1.25rem;
+      }
+
+      /* Stat divider */
+      .stat-divider {
+        width: 1px;
+        height: 32px;
+        background: var(--border);
+        align-self: center;
+      }
+
+      /* Section container helper */
+      .section-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      /* Centered narrow form container for case inputs */
+      .case-form-narrow {
+        max-width: 960px;
+        margin: 0 auto;
+      }
+      .case-detail-row textarea {
+        max-width: 100%;
+      }
+
+      /* Detective grid alias + image placeholder styles */
+      .detective-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+      }
+      /* Generic center helper for form rows */
+      .form-row.center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .detective-image {
+        position: relative;
+        margin-bottom: 1rem;
+      }
+      /* Real photo styling for detective cards */
+      .detective-photo {
+        width: 100%;
+        aspect-ratio: 16/9;
+        object-fit: cover;
+        border-radius: 16px;
+        display: block;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+      }
+      .detective-image::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 16px;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 40%,
+          rgba(0, 0, 0, 0.25) 100%
+        );
+        pointer-events: none;
+      }
+      .image-placeholder {
+        width: 100%;
+        aspect-ratio: 16/9;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 2.25rem;
+      }
+      .gradient-bg-1 {
+        background:
+          radial-gradient(
+            100% 100% at 20% 0%,
+            rgba(0, 245, 255, 0.5),
+            transparent
+          ),
+          linear-gradient(135deg, #0a0118, #1a0f2e);
+      }
+      .gradient-bg-2 {
+        background:
+          radial-gradient(
+            100% 100% at 20% 0%,
+            rgba(255, 0, 255, 0.5),
+            transparent
+          ),
+          linear-gradient(135deg, #0f0320, #241838);
+      }
+      .gradient-bg-3 {
+        background:
+          radial-gradient(
+            100% 100% at 20% 0%,
+            rgba(139, 92, 246, 0.5),
+            transparent
+          ),
+          linear-gradient(135deg, #0a0118, #1e1245);
+      }
+
+      /* Feature list */
+      .feature-list {
+        list-style: none;
+        margin-top: 1rem;
+        display: grid;
+        gap: 0.5rem;
+        color: var(--text-dim);
+      }
+      .feature-list .check-icon {
+        display: inline-block;
+        width: 1.25rem;
+        height: 1.25rem;
+        line-height: 1.25rem;
+        text-align: center;
+        margin-right: 0.5rem;
+        border-radius: 999px;
+        background: rgba(0, 245, 255, 0.2);
+        color: #00f5ff;
+        font-weight: 700;
+        box-shadow: 0 0 8px rgba(0, 245, 255, 0.3);
+      }
+
+      /* Testimonials */
+      .testimonials-slider {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+      }
+      .testimonial-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 1.75rem;
+        -webkit-backdrop-filter: blur(16px);
+        backdrop-filter: blur(16px);
+        transition:
+          transform 0.25s,
+          box-shadow 0.25s;
+      }
+      .testimonial-card:hover {
+        transform: translateY(-6px);
+        box-shadow:
+          0 24px 48px rgba(0, 0, 0, 0.5),
+          0 0 32px var(--glow);
+      }
+      .testimonial-card.premium {
+        border-color: var(--glow);
+      }
+      .testimonial-rating {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #fbbf24;
+        margin-bottom: 0.75rem;
+      }
+      .testimonial-text {
+        color: var(--text-dim);
+        line-height: 1.8;
+        margin-bottom: 1rem;
+      }
+      .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .testimonial-author .author-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--accent);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        color: #0a0e27;
+      }
+      .testimonial-author .author-info .author-case {
+        color: var(--text-mute);
+        font-size: 0.9rem;
+      }
+
+      /* FAQ grid variant used in markup */
+      .faq-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1.5rem;
+      }
+      .faq-item-premium {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.25rem;
+        -webkit-backdrop-filter: blur(16px);
+        backdrop-filter: blur(16px);
+        transition:
+          border-color 0.25s,
+          transform 0.25s;
+      }
+      .faq-item-premium:hover {
+        border-color: var(--glow);
+        transform: translateY(-4px);
+      }
+      .faq-item-premium h3 {
+        margin: 0.75rem 0 0.5rem;
+        font-size: 1.1rem;
+      }
+      .faq-item-premium p {
+        color: var(--text-dim);
+        line-height: 1.7;
+      }
+
+      /* CTA buttons group used in markup */
+      .cta-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .btn-ghost-white {
+        background: transparent;
+        color: #fff;
+        border: 2px solid rgba(255, 255, 255, 0.6);
+      }
+      .btn-ghost-white:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: #fff;
+      }
+      .btn-white {
+        background: #fff;
+        color: #667eea;
+        border: 2px solid #fff;
+      }
+      .btn-white:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Responsive alias for nav links */
+      @media (max-width: 768px) {
+        .nav-links {
+          order: 3;
+          width: 100%;
+          justify-content: center;
+          padding-top: 1rem;
+          border-top: 1px solid var(--border);
+        }
+      }
+
+      /* Pricing */
+      .pricing-section {
+        padding: 6rem 2rem;
+        background: var(--bg-alt);
+      }
+      .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        align-items: stretch;
+      }
+      .feature-card.highlighted {
+        border-color: var(--glow);
+        box-shadow:
+          0 24px 48px rgba(0, 0, 0, 0.5),
+          0 0 40px var(--glow);
+        position: relative;
+      }
+      .feature-card .badge.best {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: var(--secondary);
+        color: #fff;
+        padding: 0.25rem 0.6rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 700;
+      }
+      .plan-name {
+        font-size: 1.4rem;
+        font-weight: 800;
+        margin-bottom: 0.25rem;
+      }
+      .plan-desc {
+        color: var(--text-dim);
+        margin-bottom: 1rem;
+      }
+      .price {
+        display: flex;
+        align-items: baseline;
+        gap: 0.35rem;
+        margin: 1rem 0 1.25rem;
+      }
+      .price .amount {
+        font-weight: 900;
+        font-size: 1.75rem;
+        background: var(--primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .price .term {
+        color: var(--text-mute);
+        font-size: 0.95rem;
+      }
+
+      /* Login form */
+      .login-section {
+        padding: 4rem 2rem;
+      }
+      .login-card {
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      .login-form {
+        display: grid;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      .login-form .form-row {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: 1fr 1fr;
+      }
+      .login-form input {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+        color: var(--text);
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .login-form input:focus {
+        border-color: var(--glow);
+        box-shadow:
+          0 0 0 3px rgba(0, 245, 255, 0.2),
+          0 0 16px var(--glow);
+      }
+      @media (max-width: 640px) {
+        .login-form .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Flow section */
+      .flow-section {
+        padding: 6rem 2rem;
+      }
+      .flow-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
+      }
+      .flow-step {
+        position: relative;
+        overflow: hidden;
+      }
+      .flow-step .step-index {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: var(--primary);
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        color: #fff;
+        margin-bottom: 0.75rem;
+        box-shadow:
+          0 0 20px var(--glow),
+          0 0 10px var(--glow-magenta);
+      }
+      .flow-step .step-title {
+        font-weight: 700;
+        margin-bottom: 0.35rem;
+      }
+      .flow-step .step-desc {
+        color: var(--text-dim);
+      }
+
+      /* UI Kit */
+      .ui-kit {
+        padding: 6rem 2rem;
+        background: var(--bg-alt);
+      }
+      .ui-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+      }
+      .ui-group h3 {
+        font-size: 1.1rem;
+        font-weight: 800;
+        margin-bottom: 0.75rem;
+      }
+      .ui-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      .ui-col {
+        display: grid;
+        gap: 0.5rem;
+      }
+      .ui-input {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 0.7rem 0.9rem;
+        color: var(--text);
+      }
+      .ui-select {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 0.65rem 0.9rem;
+        color: var(--text);
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.25rem 0.6rem;
+        border-radius: 999px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--text-dim);
+        font-size: 0.85rem;
+      }
+      .alert {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-left: 3px solid #f59e0b;
+        padding: 0.75rem 1rem;
+        border-radius: 12px;
+        color: var(--text-dim);
+      }
+
+      /* File Upload Styles */
+      .file-upload-section {
+        margin: 2rem 0;
+        padding: 2rem;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+      }
+      .upload-header {
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
+      .upload-header .material-icons {
+        font-size: 3rem;
+        background: var(--primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+      }
+      .upload-header h3 {
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
+      }
+      .upload-desc {
+        color: var(--text-dim);
+        font-size: 0.95rem;
+      }
+      .file-drop-zone {
+        border: 2px dashed var(--border);
+        border-radius: 12px;
+        padding: 3rem 2rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        background: var(--bg-alt);
+      }
+      .file-drop-zone:hover,
+      .file-drop-zone.drag-over {
+        border-color: var(--glow);
+        background: var(--card-hover);
+        box-shadow: 0 0 20px var(--glow);
+      }
+      .file-drop-zone .material-icons {
+        font-size: 4rem;
+        color: var(--text-dim);
+        margin-bottom: 1rem;
+      }
+      .file-drop-zone p {
+        margin: 0.5rem 0;
+        color: var(--text-dim);
+      }
+      .upload-hint {
+        font-size: 0.85rem;
+        color: var(--text-mute);
+      }
+      .file-preview-list {
+        margin-top: 1.5rem;
+        display: grid;
+        gap: 1rem;
+      }
+      .file-preview-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: var(--bg-alt);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        transition: all 0.3s;
+      }
+      .file-preview-item:hover {
+        border-color: var(--glow);
+        box-shadow: 0 0 16px rgba(0, 245, 255, 0.2);
+      }
+      .file-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        background: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 0 16px var(--glow);
+      }
+      .file-icon .material-icons {
+        color: white;
+        font-size: 24px;
+      }
+      .file-info {
+        flex: 1;
+      }
+      .file-name {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+      .file-size {
+        font-size: 0.85rem;
+        color: var(--text-mute);
+      }
+      .file-remove {
+        background: transparent;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.5rem;
+        cursor: pointer;
+        color: var(--text-dim);
+        transition: all 0.3s;
+      }
+      .file-remove:hover {
+        border-color: #ef4444;
+        color: #ef4444;
+        box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);
+      }
+      .ai-analysis-status {
+        margin-top: 1.5rem;
+        padding: 1.5rem;
+        background: var(--bg-alt);
+        border: 1px solid var(--glow);
+        border-radius: 12px;
+        box-shadow: 0 0 20px var(--glow);
+      }
+      .analysis-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .analysis-header .material-icons {
+        color: #00f5ff;
+      }
+      .spinning {
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: var(--border);
+        border-radius: 999px;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+      }
+      .progress-fill {
+        height: 100%;
+        background: var(--primary);
+        transition: width 0.3s;
+        box-shadow: 0 0 12px var(--glow);
+      }
+      .analysis-text {
+        color: var(--text-dim);
+        font-size: 0.9rem;
+      }
+      .ai-analysis-result {
+        margin-top: 1.5rem;
+        padding: 1.5rem;
+        background: var(--card);
+        border: 1px solid var(--glow);
+        border-radius: 12px;
+        box-shadow: 0 0 20px var(--glow);
+      }
+      .result-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+      }
+      .result-header .material-icons {
+        color: #10b981;
+        font-size: 2rem;
+      }
+      .result-header h4 {
+        font-size: 1.2rem;
+        margin: 0;
+      }
+      .analysis-content {
+        color: var(--text-dim);
+        line-height: 1.8;
+      }
+      .analysis-section {
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+      .analysis-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+      .analysis-section h5 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+      }
+      .analysis-section ul {
+        margin: 0;
+        padding-left: 1.5rem;
+      }
+      .analysis-section li {
+        margin-bottom: 0.35rem;
+      }
+      .confidence-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+      }
+      .confidence-high {
+        background: rgba(16, 185, 129, 0.2);
+        color: #10b981;
+        border: 1px solid #10b981;
+      }
+      .confidence-medium {
+        background: rgba(245, 158, 11, 0.2);
+        color: #f59e0b;
+        border: 1px solid #f59e0b;
+      }
+      .confidence-low {
+        background: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+        border: 1px solid #ef4444;
+      }
+
+      /* 반응형: 체크리스트 섹션 2열 레이아웃 */
+      @media (max-width: 1024px) {
+        #checklist .section-container > div[style*="grid-template-columns"] {
+          grid-template-columns: 1fr !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Premium Navigation -->
+    <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+    <header class="premium-header">
+      <nav class="premium-nav">
+        <div class="nav-brand">
+          <a
+            href="#"
+            class="brand-icon"
+            style="
+              text-decoration: none;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              transition: transform 0.3s ease;
+            "
+            onmouseover="this.style.transform='scale(1.1)'"
+            onmouseout="this.style.transform='scale(1)'"
+            onclick="event.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'});"
+          >
+            <img
+              src="탐정사진/탐정사진 기본.png"
+              alt="PIIP Detective"
+              style="
+                width: 50px;
+                height: 50px;
+                object-fit: contain;
+                border-radius: 50%;
+                cursor: pointer;
+              "
+            />
+          </a>
+          <span class="brand-text"
+            >PIIP<span class="brand-accent">Detective</span></span
+          >
+        </div>
+        <ul class="nav-links">
+          <li><a href="#services" class="nav-link">서비스</a></li>
+          <li><a href="#platform" class="nav-link">플랫폼</a></li>
+          <li><a href="#detectives" class="nav-link">전문가</a></li>
+          <li><a href="#cases" class="nav-link">사례</a></li>
+          <li><a href="#pricing" class="nav-link">요금</a></li>
+          <li><a href="#login" class="nav-link">사건접수</a></li>
+          <li><a href="#monitoring" class="nav-link">모니터링</a></li>
+          <li><a href="#search" class="nav-link">검색</a></li>
+          <li><a href="#checklist" class="nav-link">체크리스트</a></li>
+        </ul>
+        <div class="nav-actions">
+          <button class="theme-toggle" aria-label="테마 전환">
+            <span class="material-icons">dark_mode</span>
+          </button>
+          <a href="#login" class="btn btn-ghost">로그인</a>
+          <a href="#request" class="btn btn-gradient">무료 상담</a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Hero Section with Premium Design -->
+    <section id="main" class="hero-premium">
+      <div class="hero-bg-effects">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+      </div>
+
+      <div class="hero-container">
+        <div class="section-header">
+          <span class="section-badge">AI 기반 스마트 매칭 시스템</span>
+          <h1 class="hero-title section-title">
+            세계 최고 수준의<br />
+            <span class="gradient-text">탐정 전문가</span> 플랫폼
+          </h1>
+          <p class="hero-description section-description">
+            신속하고 안전하게, AI와 전문가가 함께하는<br />
+            차세대 사건 해결 솔루션을 경험하세요
+          </p>
+        </div>
+
+        <div class="hero-content">
+          <div class="hero-cta">
+            <a href="#request" class="btn btn-primary btn-large">
+              <span>무료 상담 신청</span>
+              <span class="material-icons">arrow_forward</span>
+            </a>
+            <a
+              href="#"
+              class="btn btn-secondary btn-large"
+              data-open-video="https://www.youtube.com/embed/4TiS1Q5w7Z4?rel=0&autoplay=1"
+            >
+              <span class="material-icons">play_circle_outline</span>
+              <span>서비스 소개 영상</span>
+            </a>
+          </div>
+
+          <div class="hero-stats">
+            <div class="stat-item">
+              <div class="stat-number">15,000+</div>
+              <div class="stat-label">해결 사건</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <div class="stat-number">98.5%</div>
+              <div class="stat-label">만족도</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <div class="stat-number">24/7</div>
+              <div class="stat-label">긴급 대응</div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-divider"></div>
+        <div class="hero-visual">
+          <div class="section-header" style="margin-bottom: 2rem;">
+            <span class="section-badge">실시간 현황</span>
+          </div>
+
+          <!-- Real-time status marquee -->
+          <div class="photo-marquee" style="margin-bottom: 2rem; position: relative; border-radius: 12px;">
+            <div class="marquee-track">
+              <span class="marquee-item"
+                ><span class="dot"></span> 실시간 상담 연결 중</span
+              >
+              <span class="marquee-item"
+                ><span class="dot"></span> AI 분석 진행률 87%</span
+              >
+              <span class="marquee-item"
+                ><span class="dot"></span> 전문가 배정 완료</span
+              >
+              <span class="marquee-item"
+                ><span class="dot"></span> 보고서 생성 준비</span
+              >
+              <span class="marquee-item"
+                ><span class="dot"></span> 위험요소 모니터링</span
+              >
+              <!-- Duplicate for seamless scroll -->
+              <span class="marquee-item"
+                ><span class="dot"></span> 실시간 상담 연결 중</span
+              >
+              <span class="marquee-item"
+                ><span class="dot"></span> AI 분석 진행률 87%</span
+              >
+              <span class="marquee-item"
+                ><span class="dot"></span> 전문가 배정 완료</span
+              >
+              <span class="marquee-item"
+                ><span class="dot"></span> 보고서 생성 준비</span
+              >
+              <span class="marquee-item"
+                ><span class="dot"></span> 위험요소 모니터링</span
+              >
+            </div>
+          </div>
+
+          <!-- Status cards in grid layout -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+            <!-- 실시간 상담 카드 -->
+            <div class="visual-card">
+                <div class="card-glow"></div>
+                <div
+                  class="card-content"
+                  style="display: block; padding: 1.75rem"
+                >
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 1rem;
+                      margin-bottom: 1rem;
+                    "
+                  >
+                    <div class="card-icon" style="font-size: 3rem">💬</div>
+                    <div>
+                      <h3
+                        style="margin: 0; font-size: 1.25rem; font-weight: 700"
+                      >
+                        실시간 상담
+                      </h3>
+                      <p
+                        style="
+                          margin: 0;
+                          font-size: 1rem;
+                          color: var(--text-dim);
+                        "
+                      >
+                        24시간 전문가 대기 중
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 0.75rem;
+                      padding-top: 1rem;
+                      border-top: 1px solid var(--border);
+                    "
+                  >
+                    <div
+                      style="
+                        width: 10px;
+                        height: 10px;
+                        background: #10b981;
+                        border-radius: 50%;
+                        box-shadow: 0 0 12px #10b981;
+                      "
+                    ></div>
+                    <span
+                      style="
+                        font-size: 1rem;
+                        color: var(--text-dim);
+                        font-weight: 500;
+                      "
+                      >현재 32명 상담 중</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <!-- AI 분석 카드 -->
+              <div class="visual-card">
+                <div class="card-glow"></div>
+                <div
+                  class="card-content"
+                  style="display: block; padding: 1.75rem"
+                >
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 1rem;
+                      margin-bottom: 1rem;
+                    "
+                  >
+                    <div class="card-icon" style="font-size: 3rem">🔍</div>
+                    <div>
+                      <h3
+                        style="margin: 0; font-size: 1.25rem; font-weight: 700"
+                      >
+                        AI 자동 분석
+                      </h3>
+                      <p
+                        style="
+                          margin: 0;
+                          font-size: 1rem;
+                          color: var(--text-dim);
+                        "
+                      >
+                        평균 3분 내 결과 제공
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      padding-top: 1rem;
+                      border-top: 1px solid var(--border);
+                    "
+                  >
+                    <div
+                      style="
+                        display: flex;
+                        justify-content: space-between;
+                        font-size: 1rem;
+                        margin-bottom: 0.75rem;
+                      "
+                    >
+                      <span style="color: var(--text-dim); font-weight: 500"
+                        >분석 진행률</span
+                      >
+                      <span
+                        style="
+                          font-weight: 700;
+                          color: var(--primary);
+                          font-size: 1.25rem;
+                        "
+                        >87%</span
+                      >
+                    </div>
+                    <div
+                      style="
+                        height: 8px;
+                        background: var(--border);
+                        border-radius: 999px;
+                        overflow: hidden;
+                      "
+                    >
+                      <div
+                        style="
+                          width: 87%;
+                          height: 100%;
+                          background: linear-gradient(
+                            90deg,
+                            var(--primary),
+                            var(--accent)
+                          );
+                          border-radius: 999px;
+                          box-shadow: 0 0 12px var(--glow);
+                        "
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- 전문가 매칭 카드 -->
+              <div class="visual-card">
+                <div class="card-glow"></div>
+                <div
+                  class="card-content"
+                  style="display: block; padding: 1.75rem"
+                >
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 1rem;
+                      margin-bottom: 1rem;
+                    "
+                  >
+                    <div class="card-icon" style="font-size: 3rem">⚖️</div>
+                    <div>
+                      <h3
+                        style="margin: 0; font-size: 1.25rem; font-weight: 700"
+                      >
+                        전문가 배정 완료
+                      </h3>
+                      <p
+                        style="
+                          margin: 0;
+                          font-size: 1rem;
+                          color: var(--text-dim);
+                        "
+                      >
+                        최적의 전문가 매칭
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 1rem;
+                      padding-top: 1rem;
+                      border-top: 1px solid var(--border);
+                    "
+                  >
+                    <img
+                      src="https://i.pravatar.cc/48?img=12"
+                      alt="전문가"
+                      style="
+                        width: 48px;
+                        height: 48px;
+                        border-radius: 50%;
+                        border: 2px solid var(--primary);
+                      "
+                    />
+                    <div style="flex: 1">
+                      <div
+                        style="
+                          font-size: 1.1rem;
+                          font-weight: 700;
+                          margin-bottom: 0.25rem;
+                        "
+                      >
+                        최창훈 전문가
+                      </div>
+                      <div
+                        style="
+                          font-size: 0.95rem;
+                          color: var(--text-dim);
+                          font-weight: 500;
+                        "
+                      >
+                        ⭐ 5.0 · 경력 40년
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Video Modal -->
+    <div id="video-modal" class="video-modal" hidden>
+      <div class="video-backdrop" data-video-close></div>
+      <div
+        class="video-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-label="소개 영상"
+      >
+        <button class="video-close" data-video-close aria-label="영상 닫기">
+          <span class="material-icons">close</span>
+        </button>
+        <div class="video-frame">
+          <iframe
+            id="video-frame"
+            src=""
+            title="PIIP 소개 영상"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flow Section: Business workflow mapped to UI -->
+    <section id="flow" class="flow-section">
+      <div class="section-container">
+        <div class="section-header">
+          <span class="section-badge">업무 흐름</span>
+          <h2 class="section-title">상담부터 종결까지, 한눈에</h2>
+          <p class="section-description">
+            아래 단계마다 실제 화면과 컴포넌트가 대응됩니다
+          </p>
+        </div>
+        <div class="flow-grid">
+          <div class="feature-card flow-step">
+            <div class="step-index">1</div>
+            <div class="step-title">상담 신청</div>
+            <div class="step-desc">CTA 버튼 → `#login` 폼에서 연락처 제출</div>
+          </div>
+          <div class="feature-card flow-step">
+            <div class="step-index">2</div>
+            <div class="step-title">AI 매칭</div>
+            <div class="step-desc">
+              `#services` 신속/보안/전문 카드 → 매칭 로직 안내
+            </div>
+          </div>
+          <div class="feature-card flow-step">
+            <div class="step-index">3</div>
+            <div class="step-title">전문가 배정</div>
+            <div class="step-desc">
+              `#detectives` 카드 → 프로필/성과/버튼 인터랙션
+            </div>
+          </div>
+          <div class="feature-card flow-step">
+            <div class="step-index">4</div>
+            <div class="step-title">진행·증거 수집</div>
+            <div class="step-desc">보안/포렌식 강조 UI와 진행 상태 안내</div>
+          </div>
+          <div class="feature-card flow-step">
+            <div class="step-index">5</div>
+            <div class="step-title">리포트·종결</div>
+            <div class="step-desc">
+              `#cases` 성공사례/리뷰 + `#pricing` 비용 투명 안내
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Premium Features Section -->
+    <section id="services" class="features-premium">
+      <div class="section-container">
+        <div class="section-header">
+          <span class="section-badge">핵심 가치</span>
+          <h2 class="section-title">왜 PIIP를 선택해야 할까요?</h2>
+          <p class="section-description">
+            최첨단 기술과 전문가의 경험이 만나 최상의 결과를 제공합니다
+          </p>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card card-hover">
+            <div class="feature-icon icon-gradient-1">
+              <span class="material-icons">flash_on</span>
+            </div>
+            <h3 class="feature-title">신속한 대응</h3>
+            <p class="feature-description">
+              평균 15분 이내 전문가 매칭<br />
+              24시간 긴급 상담 지원
+            </p>
+            <ul class="feature-list">
+              <li><span class="check-icon">✓</span>실시간 AI 분석</li>
+              <li><span class="check-icon">✓</span>즉시 알림 시스템</li>
+              <li><span class="check-icon">✓</span>우선순위 처리</li>
+            </ul>
+          </div>
+
+          <div class="feature-card card-hover">
+            <div class="feature-icon icon-gradient-2">
+              <span class="material-icons">shield</span>
+            </div>
+            <h3 class="feature-title">완벽한 보안</h3>
+            <p class="feature-description">
+              군사급 암호화 기술<br />
+              철저한 개인정보 보호
+            </p>
+            <ul class="feature-list">
+              <li><span class="check-icon">✓</span>블록체인 증거 보관</li>
+              <li><span class="check-icon">✓</span>엔드투엔드 암호화</li>
+              <li><span class="check-icon">✓</span>ISO 27001 인증</li>
+            </ul>
+          </div>
+
+          <div class="feature-card card-hover">
+            <div class="feature-icon icon-gradient-3">
+              <span class="material-icons">workspace_premium</span>
+            </div>
+            <h3 class="feature-title">검증된 전문가</h3>
+            <p class="feature-description">
+              엄격한 심사를 통과한<br />
+              최고 수준의 전문가 네트워크
+            </p>
+            <ul class="feature-list">
+              <li><span class="check-icon">✓</span>경력 10년+ 전문가</li>
+              <li><span class="check-icon">✓</span>분야별 전문 인증</li>
+              <li><span class="check-icon">✓</span>실시간 평가 시스템</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Platform Specs Section -->
+    <section id="platform" class="features-premium">
+      <div class="section-container">
+        <div class="section-header">
+          <span class="section-badge">Enterprise Solutions</span>
+          <h2 class="section-title">엔터프라이즈급 통합 플랫폼</h2>
+          <p class="section-description">
+            법인 고객을 위한 전문 조사 솔루션 · 사건 접수부터 최종 보고서까지 전
+            과정 관리
+          </p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card card-hover">
+            <div class="feature-icon icon-gradient-1">
+              <span class="material-icons">business_center</span>
+            </div>
+            <h3 class="feature-title">사건 관리 체계</h3>
+            <ul class="feature-list">
+              <li>
+                <span class="check-icon">✓</span>중앙집중식 등록 및 상태 추적
+              </li>
+              <li>
+                <span class="check-icon">✓</span>다차원 검색 및 필터링 엔진
+              </li>
+              <li>
+                <span class="check-icon">✓</span>연관 사건 자동 분류 시스템
+              </li>
+            </ul>
+            <a class="btn btn-outline btn-small" href="#contact">상세 보기</a>
+          </div>
+
+          <div class="feature-card card-hover">
+            <div class="feature-icon icon-gradient-2">
+              <span class="material-icons">account_tree</span>
+            </div>
+            <h3 class="feature-title">인물 데이터베이스</h3>
+            <ul class="feature-list">
+              <li>
+                <span class="check-icon">✓</span>프로파일 및 관계도 시각화
+              </li>
+              <li><span class="check-icon">✓</span>진술 기록 및 신빙성 분석</li>
+              <li><span class="check-icon">✓</span>동선·사건 연관성 추적</li>
+            </ul>
+            <a class="btn btn-outline btn-small" href="#contact">상세 보기</a>
+          </div>
+
+          <div class="feature-card card-hover">
+            <div class="feature-icon icon-gradient-3">
+              <span class="material-icons">folder_special</span>
+            </div>
+            <h3 class="feature-title">증거 자료 관리</h3>
+            <ul class="feature-list">
+              <li>
+                <span class="check-icon">✓</span>멀티미디어 파일 중앙 저장소
+              </li>
+              <li>
+                <span class="check-icon">✓</span>OCR 및 메타데이터 자동 추출
+              </li>
+              <li><span class="check-icon">✓</span>증거 관리 연속성 보증</li>
+            </ul>
+            <a class="btn btn-outline btn-small" href="#contact">상세 보기</a>
+          </div>
+
+          <div class="feature-card card-hover">
+            <div class="feature-icon icon-gradient-1">
+              <span class="material-icons">location_on</span>
+            </div>
+            <h3 class="feature-title">지리정보 분석</h3>
+            <ul class="feature-list">
+              <li><span class="check-icon">✓</span>사건·인물 위치 통합 맵핑</li>
+              <li><span class="check-icon">✓</span>시계열 기반 동선 재구성</li>
+              <li>
+                <span class="check-icon">✓</span>다중 경로 비교 및 패턴 분석
+              </li>
+            </ul>
+            <a class="btn btn-outline btn-small" href="#contact">상세 보기</a>
+          </div>
+
+          <div class="feature-card card-hover">
+            <div class="feature-icon icon-gradient-2">
+              <span class="material-icons">schedule</span>
+            </div>
+            <h3 class="feature-title">프로젝트 스케줄링</h3>
+            <ul class="feature-list">
+              <li>
+                <span class="check-icon">✓</span>조사 일정 자동 알림 시스템
+              </li>
+              <li>
+                <span class="check-icon">✓</span>팀 역할 배정 및 진행률 관리
+              </li>
+              <li><span class="check-icon">✓</span>외부 캘린더 양방향 연동</li>
+            </ul>
+            <a class="btn btn-outline btn-small" href="#contact">상세 보기</a>
+          </div>
+
+          <div class="feature-card card-hover">
+            <div class="feature-icon icon-gradient-3">
+              <span class="material-icons">summarize</span>
+            </div>
+            <h3 class="feature-title">보고서 자동화</h3>
+            <ul class="feature-list">
+              <li>
+                <span class="check-icon">✓</span>템플릿 기반 자동 요약 생성
+              </li>
+              <li>
+                <span class="check-icon">✓</span>PDF/Word/Excel 다중 포맷 출력
+              </li>
+              <li>
+                <span class="check-icon">✓</span>다국어 번역 및 현지화 지원
+              </li>
+            </ul>
+            <a class="btn btn-outline btn-small" href="#contact">상세 보기</a>
+          </div>
+
+          <div class="feature-card card-hover">
+            <div class="feature-icon icon-gradient-1">
+              <span class="material-icons">psychology</span>
+            </div>
+            <h3 class="feature-title">AI 기반 인사이트</h3>
+            <ul class="feature-list">
+              <li><span class="check-icon">✓</span>머신러닝 기반 패턴 탐지</li>
+              <li><span class="check-icon">✓</span>조사 우선순위 자동 추천</li>
+              <li>
+                <span class="check-icon">✓</span>증거 신빙성 평가 알고리즘
+              </li>
+            </ul>
+            <a class="btn btn-outline btn-small" href="#contact">상세 보기</a>
+          </div>
+
+          <div class="feature-card card-hover">
+            <div class="feature-icon icon-gradient-2">
+              <span class="material-icons">verified_user</span>
+            </div>
+            <h3 class="feature-title">보안 및 컴플라이언스</h3>
+            <ul class="feature-list">
+              <li>
+                <span class="check-icon">✓</span>종단간 암호화 및 권한 체계
+              </li>
+              <li>
+                <span class="check-icon">✓</span>전사 감사 로그 및 이력 추적
+              </li>
+              <li><span class="check-icon">✓</span>GDPR·개인정보보호법 준수</li>
+            </ul>
+            <a class="btn btn-outline btn-small" href="#contact">상세 보기</a>
+          </div>
+
+          <div class="feature-card card-hover">
+            <div class="feature-icon icon-gradient-3">
+              <span class="material-icons">receipt_long</span>
+            </div>
+            <h3 class="feature-title">계약 및 결제 관리</h3>
+            <ul class="feature-list">
+              <li>
+                <span class="check-icon">✓</span>전자 견적·계약·에스크로 통합
+              </li>
+              <li>
+                <span class="check-icon">✓</span>청구서 및 영수증 자동 발행
+              </li>
+              <li>
+                <span class="check-icon">✓</span>분쟁 조정 워크플로우 지원
+              </li>
+            </ul>
+            <a class="btn btn-outline btn-small" href="#contact">상세 보기</a>
+          </div>
+
+          <div class="feature-card card-hover">
+            <div class="feature-icon icon-gradient-1">
+              <span class="material-icons">hub</span>
+            </div>
+            <h3 class="feature-title">시스템 통합 API</h3>
+            <ul class="feature-list">
+              <li>
+                <span class="check-icon">✓</span>REST/GraphQL 표준 인터페이스
+              </li>
+              <li>
+                <span class="check-icon">✓</span>지도·캘린더·결제 서비스 연동
+              </li>
+              <li><span class="check-icon">✓</span>문서·협업·로그 수집 통합</li>
+            </ul>
+            <a class="btn btn-outline btn-small" href="#contact">상세 보기</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Detective Showcase Section -->
+    <section id="detectives" class="detectives-showcase">
+      <div class="section-container">
+        <div class="section-header">
+          <span class="section-badge">전문가 네트워크</span>
+          <h2 class="section-title">최고의 전문가들이 함께합니다</h2>
+          <p class="section-description">
+            각 분야 최고 수준의 전문가들이 귀하의 사건을 담당합니다
+          </p>
+        </div>
+
+        <div class="detective-grid">
+          <div class="detective-card">
+            <div class="detective-image">
+              <img
+                class="detective-photo"
+                src="https://source.unsplash.com/800x450/?detective,office"
+                alt="사무실에서 기록을 검토하는 탐정"
+                loading="lazy"
+                width="800"
+                height="450"
+              />
+              <div class="detective-badge">인증</div>
+            </div>
+            <div class="detective-info">
+              <h3 class="detective-name">김철수 탐정</h3>
+              <p class="detective-specialty">가정/불륜 전문 · 15년 경력</p>
+              <div class="detective-stats">
+                <span class="stat">⭐ 4.9</span>
+                <span class="stat">📊 500+ 사건</span>
+                <span class="stat">✅ 98% 성공률</span>
+              </div>
+              <a href="#request" class="btn btn-outline btn-small">상담 신청</a>
+            </div>
+          </div>
+
+          <div class="detective-card">
+            <div class="detective-image">
+              <img
+                class="detective-photo"
+                src="https://source.unsplash.com/800x450/?investigation,corporate"
+                alt="기업 내부 조사를 수행하는 전문가"
+                loading="lazy"
+                width="800"
+                height="450"
+              />
+              <div class="detective-badge">프리미엄</div>
+            </div>
+            <div class="detective-info">
+              <h3 class="detective-name">이영희 탐정</h3>
+              <p class="detective-specialty">기업범죄 전문 · 20년 경력</p>
+              <div class="detective-stats">
+                <span class="stat">⭐ 5.0</span>
+                <span class="stat">📊 800+ 사건</span>
+                <span class="stat">✅ 99% 성공률</span>
+              </div>
+              <a href="#request" class="btn btn-outline btn-small">상담 신청</a>
+            </div>
+          </div>
+
+          <div class="detective-card">
+            <div class="detective-image">
+              <img
+                class="detective-photo"
+                src="https://source.unsplash.com/800x450/?forensics,cyber"
+                alt="디지털 포렌식 장비로 분석 중인 전문가"
+                loading="lazy"
+                width="800"
+                height="450"
+              />
+              <div class="detective-badge">전문가</div>
+            </div>
+            <div class="detective-info">
+              <h3 class="detective-name">박지성 탐정</h3>
+              <p class="detective-specialty">디지털 포렌식 · 12년 경력</p>
+              <div class="detective-stats">
+                <span class="stat">⭐ 4.8</span>
+                <span class="stat">📊 350+ 사건</span>
+                <span class="stat">✅ 97% 성공률</span>
+              </div>
+              <a href="#request" class="btn btn-outline btn-small">상담 신청</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Success Cases Section -->
+    <section id="cases" class="cases-section">
+      <div class="section-container">
+        <div class="section-header">
+          <span class="section-badge">성공 사례</span>
+          <h2 class="section-title">실제 고객들의 이야기</h2>
+        </div>
+
+        <div class="testimonials-slider">
+          <div class="testimonial-card premium">
+            <div class="testimonial-rating">
+              <span class="star">★★★★★</span>
+              <span class="rating-text">5.0</span>
+            </div>
+            <p class="testimonial-text">
+              "빠르고 전문적인 대응에 감동받았습니다. 복잡한 사건이었지만 2주
+              만에 완벽하게 해결되었어요. 진심으로 감사드립니다!"
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">K</div>
+              <div class="author-info">
+                <div class="author-name">김○○</div>
+                <div class="author-case">가정 문제 해결</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card premium">
+            <div class="testimonial-rating">
+              <span class="star">★★★★★</span>
+              <span class="rating-text">5.0</span>
+            </div>
+            <p class="testimonial-text">
+              "기업 내부 조사가 필요했는데, 철저한 보안 유지와 함께 정확한
+              증거를 확보해주셨습니다. 최고의 서비스입니다."
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">L</div>
+              <div class="author-info">
+                <div class="author-name">이○○</div>
+                <div class="author-case">기업 조사</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card premium">
+            <div class="testimonial-rating">
+              <span class="star">★★★★★</span>
+              <span class="rating-text">5.0</span>
+            </div>
+            <p class="testimonial-text">
+              "디지털 증거 확보가 어려웠는데, 전문가의 도움으로 법적으로 유효한
+              증거를 확보할 수 있었습니다."
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">P</div>
+              <div class="author-info">
+                <div class="author-name">박○○</div>
+                <div class="author-case">디지털 포렌식</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section with Premium Design -->
+    <section id="faq" class="faq-premium">
+      <div class="section-container">
+        <div class="section-header">
+          <span class="section-badge">자주 묻는 질문</span>
+          <h2 class="section-title">궁금하신 점이 있으신가요?</h2>
+        </div>
+
+        <div class="faq-grid">
+          <div class="faq-item-premium">
+            <div class="faq-icon">
+              <span class="material-icons">help_outline</span>
+            </div>
+            <h3>탐정 의뢰는 어떻게 하나요?</h3>
+            <p>
+              간단한 온라인 양식 작성 후 AI가 최적의 전문가를 즉시 매칭합니다.
+              평균 15분 이내 1차 상담이 진행됩니다.
+            </p>
+          </div>
+
+          <div class="faq-item-premium">
+            <div class="faq-icon">
+              <span class="material-icons">lock</span>
+            </div>
+            <h3>개인정보는 안전한가요?</h3>
+            <p>
+              군사급 암호화와 블록체인 기술로 모든 데이터를 보호합니다. ISO
+              27001 인증을 획득한 보안 시스템을 운영합니다.
+            </p>
+          </div>
+
+          <div class="faq-item-premium">
+            <div class="faq-icon">
+              <span class="material-icons">payments</span>
+            </div>
+            <h3>비용은 어떻게 되나요?</h3>
+            <p>
+              사건 유형과 난이도에 따라 투명한 견적을 제공합니다. 무료 상담 후
+              정확한 비용을 안내드립니다.
+            </p>
+          </div>
+
+          <div class="faq-item-premium">
+            <div class="faq-icon">
+              <span class="material-icons">schedule</span>
+            </div>
+            <h3>처리 기간은 얼마나 걸리나요?</h3>
+            <p>
+              사건별로 다르지만 평균 2-4주 이내 완료됩니다. 긴급 사건의 경우
+              24시간 내 초기 대응이 가능합니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section">
+      <div class="section-container">
+        <div class="section-header">
+          <span class="section-badge">요금 안내</span>
+          <h2 class="section-title">투명하고 합리적인 플랜</h2>
+          <p class="section-description">
+            사건 유형과 난이도에 맞게 선택하세요
+          </p>
+        </div>
+
+        <div class="pricing-grid">
+          <div class="feature-card">
+            <h3 class="plan-name">Basic</h3>
+            <p class="plan-desc">간단한 사실 확인 및 초기 대응</p>
+            <div class="price">
+              <span class="amount">₩490,000</span><span class="term">/건</span>
+            </div>
+            <ul class="feature-list">
+              <li><span class="check-icon">✓</span>전문가 1인 배정</li>
+              <li><span class="check-icon">✓</span>초기 리포트 제공</li>
+              <li><span class="check-icon">✓</span>72시간 내 진행</li>
+            </ul>
+            <a class="btn btn-primary btn-large" href="#request">시작하기</a>
+          </div>
+
+          <div class="feature-card highlighted">
+            <div class="badge best">가장 인기</div>
+            <h3 class="plan-name">Professional</h3>
+            <p class="plan-desc">표준 사건 해결에 최적화</p>
+            <div class="price">
+              <span class="amount">₩1,290,000</span
+              ><span class="term">/건</span>
+            </div>
+            <ul class="feature-list">
+              <li><span class="check-icon">✓</span>전문가 2인 팀</li>
+              <li><span class="check-icon">✓</span>증거 수집·분석</li>
+              <li><span class="check-icon">✓</span>법적 효력 문서화</li>
+            </ul>
+            <a class="btn btn-gradient btn-large" href="#request">무료 상담</a>
+          </div>
+
+          <div class="feature-card">
+            <h3 class="plan-name">Enterprise</h3>
+            <p class="plan-desc">기업 범죄·고난도 맞춤 대응</p>
+            <div class="price">
+              <span class="amount">견적</span
+              ><span class="term">/프로젝트</span>
+            </div>
+            <ul class="feature-list">
+              <li><span class="check-icon">✓</span>전담 PM·전문가 풀</li>
+              <li><span class="check-icon">✓</span>보안·컴플라이언스</li>
+              <li><span class="check-icon">✓</span>24/7 온콜 지원</li>
+            </ul>
+            <a class="btn btn-secondary btn-large" href="#contact">상담 문의</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Login Section -->
+    <section id="login" class="login-section">
+      <div class="section-container">
+        <div class="section-header">
+          <span class="section-badge">상담 신청</span>
+          <h2 class="section-title">
+            망설이지 말고 지금 바로 무료로 상담신청하세요
+          </h2>
+          <p class="section-description">
+            전문가와의 무료 상담으로 귀하의 문제를 해결할 수 있습니다.<br />
+            비회원도 본인확인 후 사건을 빠르게 접수할 수 있습니다.
+          </p>
+        </div>
+
+        <div class="login-card feature-card">
+          <!-- CTA 기능 바 -->
+          <div
+            style="
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 1rem;
+              margin-bottom: 2rem;
+              padding: 1.5rem;
+              background: var(--bg-alt);
+              border: 1px solid var(--border);
+              border-radius: 12px;
+            "
+          >
+            <button
+              onclick="document.getElementById('contact-form').scrollIntoView({behavior: 'smooth', block: 'center'})"
+              class="btn btn-primary btn-large"
+              style="width: 100%"
+            >
+              <span
+                class="material-icons"
+                style="vertical-align: middle; margin-right: 0.5rem"
+                >assignment</span
+              >
+              <span>무료 상담 신청</span>
+            </button>
+            <a
+              href="tel:1577-0000"
+              class="btn btn-outline btn-large"
+              style="width: 100%; text-decoration: none"
+            >
+              <span
+                class="material-icons"
+                style="vertical-align: middle; margin-right: 0.5rem"
+                >call</span
+              >
+              <span>1577-0000</span>
+            </a>
+            <div
+              style="
+                grid-column: 1 / -1;
+                display: flex;
+                gap: 2rem;
+                justify-content: center;
+                margin-top: 0.5rem;
+                flex-wrap: wrap;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                  color: var(--text-dim);
+                "
+              >
+                <span class="material-icons" style="font-size: 1.2rem"
+                  >schedule</span
+                >
+                <span>24시간 상담 가능</span>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                  color: var(--text-dim);
+                "
+              >
+                <span class="material-icons" style="font-size: 1.2rem"
+                  >lock</span
+                >
+                <span>비밀 보장</span>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                  color: var(--text-dim);
+                "
+              >
+                <span class="material-icons" style="font-size: 1.2rem"
+                  >request_quote</span
+                >
+                <span>무료 견적</span>
+              </div>
+            </div>
+          </div>
+
+          <form id="contact-form" class="login-form">
+            <!-- 본인확인 영역 -->
+            <div
+              style="
+                margin-bottom: 2rem;
+                padding: 1.5rem;
+                background: var(--bg-alt);
+                border: 1px solid var(--border);
+                border-radius: 12px;
+              "
+            >
+              <h3 style="margin-bottom: 1rem; font-size: 1.1rem">
+                <span
+                  class="material-icons"
+                  style="vertical-align: middle; margin-right: 0.5rem"
+                  >verified_user</span
+                >
+                본인확인
+              </h3>
+
+              <!-- 약관 동의 (먼저 진행) -->
+              <div
+                style="
+                  margin-bottom: 1.5rem;
+                  padding-bottom: 1.5rem;
+                  border-bottom: 1px solid var(--border);
+                "
+              >
+                <label
+                  style="
+                    display: flex;
+                    align-items: start;
+                    gap: 0.75rem;
+                    cursor: pointer;
+                    margin-bottom: 0.75rem;
+                  "
+                >
+                  <input
+                    type="checkbox"
+                    id="agree-all"
+                    style="
+                      margin-top: 0.25rem;
+                      width: 18px;
+                      height: 18px;
+                      cursor: pointer;
+                    "
+                  />
+                  <span style="font-weight: 600">전체 동의</span>
+                </label>
+                <div
+                  style="
+                    margin-left: 1.75rem;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                  "
+                >
+                  <label
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 0.5rem;
+                      cursor: pointer;
+                    "
+                  >
+                    <input
+                      type="checkbox"
+                      id="agree-terms"
+                      name="agree-terms"
+                      required
+                      style="width: 16px; height: 16px; cursor: pointer"
+                    />
+                    <span style="color: var(--text-dim); font-size: 0.95rem"
+                      >[필수]
+                      <a
+                        href="#terms-modal"
+                        style="
+                          text-decoration: underline;
+                          color: var(--text-dim);
+                        "
+                        >이용약관</a
+                      >
+                      동의</span
+                    >
+                  </label>
+                  <label
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 0.5rem;
+                      cursor: pointer;
+                    "
+                  >
+                    <input
+                      type="checkbox"
+                      id="agree-privacy"
+                      name="agree-privacy"
+                      required
+                      style="width: 16px; height: 16px; cursor: pointer"
+                    />
+                    <span style="color: var(--text-dim); font-size: 0.95rem"
+                      >[필수]
+                      <a
+                        href="#privacy-modal"
+                        style="
+                          text-decoration: underline;
+                          color: var(--text-dim);
+                        "
+                        >개인정보 처리방침</a
+                      >
+                      동의</span
+                    >
+                  </label>
+                  <label
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 0.5rem;
+                      cursor: pointer;
+                    "
+                  >
+                    <input
+                      type="checkbox"
+                      id="agree-marketing"
+                      name="agree-marketing"
+                      style="width: 16px; height: 16px; cursor: pointer"
+                    />
+                    <span style="color: var(--text-dim); font-size: 0.95rem"
+                      >[선택] 마케팅 정보 수신 동의</span
+                    >
+                  </label>
+                </div>
+              </div>
+
+              <div
+                class="form-row"
+                style="display: flex; gap: 1rem; flex-wrap: wrap"
+              >
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="이름"
+                  required
+                  style="
+                    flex: 1;
+                    min-width: 200px;
+                    padding: 0.9rem 1rem;
+                    font-size: 1rem;
+                    border: 1px solid var(--border);
+                    border-radius: 8px;
+                    background: var(--card);
+                    color: var(--text);
+                  "
+                />
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder="휴대폰 번호"
+                  pattern="[0-9]{10,11}"
+                  required
+                  style="
+                    flex: 1;
+                    min-width: 200px;
+                    padding: 0.9rem 1rem;
+                    font-size: 1rem;
+                    border: 1px solid var(--border);
+                    border-radius: 8px;
+                    background: var(--card);
+                    color: var(--text);
+                  "
+                />
+              </div>
+              <div class="form-row">
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="이메일 (선택)"
+                  style="
+                    width: 100%;
+                    padding: 0.9rem 1rem;
+                    font-size: 1rem;
+                    border: 1px solid var(--border);
+                    border-radius: 8px;
+                    background: var(--card);
+                    color: var(--text);
+                    resize: horizontal;
+                  "
+                />
+              </div>
+              <div class="form-row">
+                <button
+                  type="button"
+                  id="nice-auth"
+                  class="btn btn-primary"
+                  style="
+                    width: auto;
+                    min-width: 300px;
+                    padding: 1rem 1.5rem;
+                    font-size: 1rem;
+                    white-space: nowrap;
+                  "
+                  disabled
+                >
+                  <span
+                    class="material-icons"
+                    style="vertical-align: middle; margin-right: 0.5rem"
+                    >phone_android</span
+                  >
+                  휴대폰 본인인증 (약관 동의 필요)
+                </button>
+              </div>
+
+              <div
+                id="auth-status"
+                style="
+                  display: none;
+                  margin-top: 1rem;
+                  padding: 1rem;
+                  background: var(--success-bg, #d4edda);
+                  border: 1px solid var(--success-border, #c3e6cb);
+                  border-radius: 8px;
+                  color: var(--success-text, #155724);
+                "
+              >
+                <span
+                  class="material-icons"
+                  style="
+                    vertical-align: middle;
+                    margin-right: 0.5rem;
+                    color: var(--success-text, #155724);
+                  "
+                  >check_circle</span
+                >
+                본인인증이 완료되었습니다.
+              </div>
+              <small
+                style="
+                  color: var(--text-mute);
+                  margin-top: 1rem;
+                  display: block;
+                "
+                >※ 약관에 동의하신 후 휴대폰 본인인증을 진행해 주세요.</small
+              >
+            </div>
+
+            <!-- 사건 정보 입력 영역 -->
+            <div class="section-container">
+              <div
+                style="
+                  margin-bottom: 2rem;
+                  padding: 2rem;
+                  background: var(--bg-alt);
+                  border: 1px solid var(--border);
+                  border-radius: 12px;
+                "
+              >
+                <h3 style="margin-bottom: 1.5rem; font-size: 1.25rem">
+                  <span
+                    class="material-icons"
+                    style="vertical-align: middle; margin-right: 0.5rem"
+                    >description</span
+                  >
+                  사건 정보
+                </h3>
+                <div class="form-row" style="max-width: 100%">
+                  <select
+                    name="case-type"
+                    class="ui-select"
+                    required
+                    style="
+                      width: auto;
+                      min-width: 300px;
+                      max-width: 100%;
+                      padding: 1rem 1.2rem;
+                      background: var(--card);
+                      border: 1px solid var(--border);
+                      border-radius: 12px;
+                      color: var(--text);
+                      font-size: 1.05rem;
+                    "
+                  >
+                    <option value="">사건 유형 선택 *</option>
+                    <option value="가정문제/불륜">가정문제 및 불륜조사</option>
+                    <option value="행방조사">실종자 및 가출인 행방조사</option>
+                    <option value="사실확인">사실관계 확인조사</option>
+                    <option value="디지털증거">디지털 증거 수집</option>
+                    <option value="배경조사">인물 배경조사</option>
+                    <option value="기업조사">기업 실사 및 조사</option>
+                    <option value="행적조사">행적 및 동선 확인</option>
+                    <option value="보험사기">보험사기 조사</option>
+                    <option value="기타상담">기타 상담</option>
+                  </select>
+                </div>
+                <div class="form-row case-detail-row" style="max-width: 100%">
+                  <textarea
+                    name="case-detail"
+                    class="auto-expand js-auto-expand"
+                    placeholder="사건 상세 내용을 자세히 입력해주세요 *&#10;&#10;예시:&#10;- 사건 발생 일시 및 장소&#10;- 관련 인물 정보&#10;- 현재까지 진행 상황&#10;- 확보한 증거 자료&#10;- 요청하시는 조사 범위&#10;- 기타 참고사항"
+                    required
+                    style="
+                      width: 100%;
+                      max-width: 100%;
+                      min-height: 350px;
+                      padding: 1.5rem;
+                      background: var(--card);
+                      border: 2px solid var(--border);
+                      border-radius: 12px;
+                      color: var(--text);
+                      font-size: 1.05rem;
+                      line-height: 1.7;
+                      resize: none;
+                      box-sizing: border-box;
+                      font-family: inherit;
+                    "
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- File Upload Section -->
+            <div class="file-upload-section">
+              <div class="upload-header">
+                <span class="material-icons">cloud_upload</span>
+                <h3>사건 관련 자료 업로드</h3>
+                <p class="upload-desc">
+                  문서, 이미지, 음성, 영상 등 관련 파일을 업로드하세요<br />
+                  AI가 바로 자동으로 분석하여 안내해드립니다.
+                </p>
+              </div>
+
+              <div class="file-drop-zone" id="file-drop-zone">
+                <span class="material-icons">add_photo_alternate</span>
+                <p>파일을 드래그하거나 클릭하여 업로드</p>
+                <p class="upload-hint">
+                  지원: 이미지(JPG, PNG, PDF), 음성(MP3, WAV, M4A), 영상(MP4,
+                  MOV, AVI) - 최대 50MB
+                </p>
+                <input
+                  type="file"
+                  id="file-input"
+                  name="files"
+                  multiple
+                  accept="image/*,audio/*,video/*,.pdf,.doc,.docx"
+                  style="display: none"
+                />
+              </div>
+
+              <div id="file-preview-list" class="file-preview-list"></div>
+
+              <div
+                id="ai-analysis-status"
+                class="ai-analysis-status"
+                style="display: none"
+              >
+                <div class="analysis-header">
+                  <span class="material-icons spinning">psychology</span>
+                  <span>AI 분석 중...</span>
+                </div>
+                <div class="analysis-progress">
+                  <div class="progress-bar">
+                    <div class="progress-fill" id="analysis-progress"></div>
+                  </div>
+                  <div id="analysis-text" class="analysis-text">
+                    파일을 분석하고 있습니다...
+                  </div>
+                </div>
+              </div>
+
+              <div
+                id="ai-analysis-result"
+                class="ai-analysis-result"
+                style="display: none"
+              >
+                <div class="result-header">
+                  <span class="material-icons">check_circle</span>
+                  <h4>AI 분석 완료</h4>
+                </div>
+                <div id="analysis-content" class="analysis-content"></div>
+              </div>
+            </div>
+
+            <button
+              class="btn btn-primary btn-large"
+              type="submit"
+              style="
+                width: auto;
+                min-width: 250px;
+                margin-top: 1rem;
+                padding: 1rem 2rem;
+                font-size: 1.1rem;
+              "
+            >
+              <span class="material-icons">send</span>
+              사건접수
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- 모니터링 섹션 (로그인 필요) -->
+    <section id="monitoring" class="cases-section">
+      <div class="section-container">
+        <div class="section-header">
+          <span class="section-badge">모니터링</span>
+          <h2 class="section-title">진행 현황 모니터링</h2>
+          <p class="section-description">
+            로그인 후 접수한 사건의 실시간 진행 상태를 확인할 수 있습니다.
+          </p>
+        </div>
+        <div
+          class="feature-card"
+          style="
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(
+              135deg,
+              rgba(102, 126, 234, 0.1) 0%,
+              rgba(118, 75, 162, 0.1) 100%
+            );
+            border: 2px dashed var(--border);
+          "
+        >
+          <span
+            class="material-icons"
+            style="
+              font-size: 4rem;
+              color: var(--primary);
+              margin-bottom: 1rem;
+              display: block;
+            "
+            >lock</span
+          >
+          <h3 style="margin-bottom: 1rem; font-size: 1.5rem">
+            로그인이 필요합니다
+          </h3>
+          <p
+            style="
+              color: var(--text-dim);
+              margin-bottom: 2rem;
+              line-height: 1.6;
+            "
+          >
+            사건 진행 현황 모니터링은 본인 확인 후 이용 가능합니다.<br />
+            로그인하시면 다음 정보를 확인하실 수 있습니다:
+          </p>
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+              gap: 1rem;
+              margin-bottom: 2rem;
+              text-align: left;
+            "
+          >
+            <div
+              style="
+                padding: 1rem;
+                background: var(--card);
+                border-radius: 8px;
+                border: 1px solid var(--border);
+              "
+            >
+              <span
+                class="material-icons"
+                style="color: var(--primary); margin-bottom: 0.5rem"
+                >trending_up</span
+              >
+              <div style="font-weight: 600; margin-bottom: 0.25rem">
+                진행 상태
+              </div>
+              <div style="font-size: 0.9rem; color: var(--text-dim)">
+                AI 분석 → 전문가 배정 → 증거 수집 → 리포트
+              </div>
+            </div>
+            <div
+              style="
+                padding: 1rem;
+                background: var(--card);
+                border-radius: 8px;
+                border: 1px solid var(--border);
+              "
+            >
+              <span
+                class="material-icons"
+                style="color: var(--primary); margin-bottom: 0.5rem"
+                >notifications_active</span
+              >
+              <div style="font-weight: 600; margin-bottom: 0.25rem">
+                실시간 알림
+              </div>
+              <div style="font-size: 0.9rem; color: var(--text-dim)">
+                단계별 진행 상황 알림
+              </div>
+            </div>
+            <div
+              style="
+                padding: 1rem;
+                background: var(--card);
+                border-radius: 8px;
+                border: 1px solid var(--border);
+              "
+            >
+              <span
+                class="material-icons"
+                style="color: var(--primary); margin-bottom: 0.5rem"
+                >chat</span
+              >
+              <div style="font-weight: 600; margin-bottom: 0.25rem">
+                실시간 상담
+              </div>
+              <div style="font-size: 0.9rem; color: var(--text-dim)">
+                담당 전문가와 직접 소통
+              </div>
+            </div>
+          </div>
+          <button
+            onclick="document.getElementById('login').scrollIntoView({behavior: 'smooth'})"
+            class="btn btn-primary btn-large"
+            style="padding: 1rem 2rem; font-size: 1.1rem"
+          >
+            <span
+              class="material-icons"
+              style="vertical-align: middle; margin-right: 0.5rem"
+              >login</span
+            >
+            사건진행사항 확인
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 검색 섹션 (로그인 필요) -->
+    <section id="search" class="cases-section">
+      <div class="section-container">
+        <div class="section-header">
+          <span class="section-badge">검색</span>
+          <h2 class="section-title">사건/전문가/자료 검색</h2>
+          <p class="section-description">
+            로그인 후 사건번호, 키워드, 전문가명 등으로 검색할 수 있습니다.
+          </p>
+        </div>
+        <div
+          class="feature-card"
+          style="
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(
+              135deg,
+              rgba(102, 126, 234, 0.1) 0%,
+              rgba(118, 75, 162, 0.1) 100%
+            );
+            border: 2px dashed var(--border);
+          "
+        >
+          <span
+            class="material-icons"
+            style="
+              font-size: 4rem;
+              color: var(--primary);
+              margin-bottom: 1rem;
+              display: block;
+            "
+            >search</span
+          >
+          <h3 style="margin-bottom: 1rem; font-size: 1.5rem">
+            로그인이 필요합니다
+          </h3>
+          <p style="color: var(--text-dim); margin-bottom: 2rem">
+            검색 기능은 본인 확인 후 이용 가능합니다.
+          </p>
+          <button
+            onclick="document.getElementById('login').scrollIntoView({behavior: 'smooth'})"
+            class="btn btn-primary btn-large"
+            style="padding: 1rem 2rem; font-size: 1.1rem"
+          >
+            <span
+              class="material-icons"
+              style="vertical-align: middle; margin-right: 0.5rem"
+              >login</span
+            >
+            사건/전문가/자료검색
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 체크리스트 섹션 -->
+    <section id="checklist" class="cases-section">
+      <div class="section-container">
+        <div class="section-header">
+          <span class="section-badge">서비스 안내</span>
+          <h2 class="section-title">전문 서비스 체크리스트</h2>
+          <p class="section-description">
+            사건 진행 단계별로 필요한 준비사항을 안내합니다.
+          </p>
+        </div>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+          "
+        >
+          <!-- 의뢰자 체크리스트 -->
+          <div class="feature-card">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                margin-bottom: 1rem;
+              "
+            >
+              <span
+                class="material-icons"
+                style="color: var(--primary); font-size: 2rem"
+                >person</span
+              >
+              <h3 style="margin: 0">의뢰자</h3>
+            </div>
+            <ul style="list-style: none; padding: 0; margin: 0">
+              <li
+                style="
+                  padding: 0.75rem 0;
+                  border-bottom: 1px solid var(--border);
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                "
+              >
+                <span
+                  class="material-icons"
+                  style="color: var(--success, #28a745); font-size: 1.2rem"
+                  >check_circle</span
+                >
+                <span>본인확인 및 약관 동의</span>
+              </li>
+              <li
+                style="
+                  padding: 0.75rem 0;
+                  border-bottom: 1px solid var(--border);
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                "
+              >
+                <span
+                  class="material-icons"
+                  style="color: var(--success, #28a745); font-size: 1.2rem"
+                  >check_circle</span
+                >
+                <span>사건 상세 내용 작성</span>
+              </li>
+              <li
+                style="
+                  padding: 0.75rem 0;
+                  border-bottom: 1px solid var(--border);
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                "
+              >
+                <span
+                  class="material-icons"
+                  style="color: var(--success, #28a745); font-size: 1.2rem"
+                  >check_circle</span
+                >
+                <span>관련 자료 업로드</span>
+              </li>
+              <li
+                style="
+                  padding: 0.75rem 0;
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                "
+              >
+                <span
+                  class="material-icons"
+                  style="color: var(--success, #28a745); font-size: 1.2rem"
+                  >check_circle</span
+                >
+                <span>진행 상황 모니터링</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- 전문가 체크리스트 -->
+          <div class="feature-card">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                margin-bottom: 1rem;
+              "
+            >
+              <span
+                class="material-icons"
+                style="color: var(--primary); font-size: 2rem"
+                >shield</span
+              >
+              <h3 style="margin: 0">전문가</h3>
+            </div>
+            <ul style="list-style: none; padding: 0; margin: 0">
+              <li
+                style="
+                  padding: 0.75rem 0;
+                  border-bottom: 1px solid var(--border);
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                "
+              >
+                <span
+                  class="material-icons"
+                  style="color: var(--primary); font-size: 1.2rem"
+                  >analytics</span
+                >
+                <span>사건 분석 및 검토</span>
+              </li>
+              <li
+                style="
+                  padding: 0.75rem 0;
+                  border-bottom: 1px solid var(--border);
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                "
+              >
+                <span
+                  class="material-icons"
+                  style="color: var(--primary); font-size: 1.2rem"
+                  >search</span
+                >
+                <span>증거 수집 및 조사</span>
+              </li>
+              <li
+                style="
+                  padding: 0.75rem 0;
+                  border-bottom: 1px solid var(--border);
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                "
+              >
+                <span
+                  class="material-icons"
+                  style="color: var(--primary); font-size: 1.2rem"
+                  >description</span
+                >
+                <span>리포트 작성 및 제출</span>
+              </li>
+              <li
+                style="
+                  padding: 0.75rem 0;
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                "
+              >
+                <span
+                  class="material-icons"
+                  style="color: var(--primary); font-size: 1.2rem"
+                  >support_agent</span
+                >
+                <span>의뢰자 상담 및 피드백</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- 관리자 체크리스트 -->
+          <div class="feature-card">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                margin-bottom: 1rem;
+              "
+            >
+              <span
+                class="material-icons"
+                style="color: var(--primary); font-size: 2rem"
+                >admin_panel_settings</span
+              >
+              <h3 style="margin: 0">관리자</h3>
+            </div>
+            <ul style="list-style: none; padding: 0; margin: 0">
+              <li
+                style="
+                  padding: 0.75rem 0;
+                  border-bottom: 1px solid var(--border);
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                "
+              >
+                <span
+                  class="material-icons"
+                  style="color: var(--accent, #17a2b8); font-size: 1.2rem"
+                  >dashboard</span
+                >
+                <span>전체 현황 모니터링</span>
+              </li>
+              <li
+                style="
+                  padding: 0.75rem 0;
+                  border-bottom: 1px solid var(--border);
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                "
+              >
+                <span
+                  class="material-icons"
+                  style="color: var(--accent, #17a2b8); font-size: 1.2rem"
+                  >verified</span
+                >
+                <span>품질 관리 및 검수</span>
+              </li>
+              <li
+                style="
+                  padding: 0.75rem 0;
+                  border-bottom: 1px solid var(--border);
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                "
+              >
+                <span
+                  class="material-icons"
+                  style="color: var(--accent, #17a2b8); font-size: 1.2rem"
+                  >notifications</span
+                >
+                <span>알림 설정 및 관리</span>
+              </li>
+              <li
+                style="
+                  padding: 0.75rem 0;
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                "
+              >
+                <span
+                  class="material-icons"
+                  style="color: var(--accent, #17a2b8); font-size: 1.2rem"
+                  >assessment</span
+                >
+                <span>통계 분석 및 리포트</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 탐정 활동 갤러리 -->
+        <div class="section-header" style="margin-top: 4rem">
+          <span class="section-badge">활동 현장</span>
+          <h2 class="section-title">
+            <span class="material-icons" style="vertical-align: middle; margin-right: 0.5rem">photo_library</span>
+            실제 탐정 활동 현장
+          </h2>
+          <p class="section-description">
+            전문 탐정들의 실제 조사 활동과 현장 사진을 확인하세요
+          </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+          <div class="feature-card" style="padding: 0; overflow: hidden;">
+            <img src="/assets/file_00000000a0a861f9a5762d995a98860a-C9T0PtVD.png" alt="탐정 활동 1" style="width: 100%; height: 250px; object-fit: cover;">
+            <div style="padding: 1.5rem;">
+              <h4 style="margin: 0 0 0.5rem; font-size: 1.1rem;">현장 조사</h4>
+              <p style="margin: 0; color: var(--text-dim); font-size: 0.95rem;">전문 탐정의 현장 조사 활동</p>
+            </div>
+          </div>
+
+          <div class="feature-card" style="padding: 0; overflow: hidden;">
+            <img src="/assets/file_00000000e76c61f995b3759a8380ff72-CsM-d5yN.png" alt="탐정 활동 2" style="width: 100%; height: 250px; object-fit: cover;">
+            <div style="padding: 1.5rem;">
+              <h4 style="margin: 0 0 0.5rem; font-size: 1.1rem;">증거 수집</h4>
+              <p style="margin: 0; color: var(--text-dim); font-size: 0.95rem;">법적 효력이 있는 증거 확보</p>
+            </div>
+          </div>
+
+          <div class="feature-card" style="padding: 0; overflow: hidden;">
+            <img src="/assets/file_00000000ef0461f6a1c35bb8f13522ff-B3KR6m0w.png" alt="탐정 활동 3" style="width: 100%; height: 250px; object-fit: cover;">
+            <div style="padding: 1.5rem;">
+              <h4 style="margin: 0 0 0.5rem; font-size: 1.1rem;">보고서 작성</h4>
+              <p style="margin: 0; color: var(--text-dim); font-size: 0.95rem;">상세한 조사 결과 보고</p>
+            </div>
+          </div>
+
+          <div class="feature-card" style="padding: 0; overflow: hidden;">
+            <img src="/assets/file_0000000084d861f6818728ad922009fe-CF-Y4n7a.png" alt="탐정 활동 4" style="width: 100%; height: 250px; object-fit: cover;">
+            <div style="padding: 1.5rem;">
+              <h4 style="margin: 0 0 0.5rem; font-size: 1.1rem;">전문 상담</h4>
+              <p style="margin: 0; color: var(--text-dim); font-size: 0.95rem;">의뢰인과의 심층 상담</p>
+            </div>
+          </div>
+
+          <div class="feature-card" style="padding: 0; overflow: hidden;">
+            <img src="/assets/file_000000004c7c61f99c4c3e5570dc8a2e-CKqLSiZn.png" alt="탐정 활동 5" style="width: 100%; height: 250px; object-fit: cover;">
+            <div style="padding: 1.5rem;">
+              <h4 style="margin: 0 0 0.5rem; font-size: 1.1rem;">야간 조사</h4>
+              <p style="margin: 0; color: var(--text-dim); font-size: 0.95rem;">24시간 감시 체계</p>
+            </div>
+          </div>
+
+          <div class="feature-card" style="padding: 0; overflow: hidden;">
+            <img src="탐정사진/탐정사진 기본.png" alt="탐정 활동 6" style="width: 100%; height: 250px; object-fit: cover;">
+            <div style="padding: 1.5rem;">
+              <h4 style="margin: 0 0 0.5rem; font-size: 1.1rem;">팀 협업</h4>
+              <p style="margin: 0; color: var(--text-dim); font-size: 0.95rem;">전문가 팀의 협력 조사</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 협업 파트너 -->
+        <div class="section-header" style="margin-top: 3rem">
+          <span class="section-badge">파트너십</span>
+          <h2 class="section-title">
+            <span
+              class="material-icons"
+              style="vertical-align: middle; margin-right: 0.5rem"
+              >handshake</span
+            >
+            전문 협업 파트너
+          </h2>
+          <p class="section-description">
+            법률, 세무, 디지털 포렌식 등 전문 기관과의 전략적 제휴를 통해 통합
+            솔루션을 제공합니다.
+          </p>
+        </div>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+          "
+        >
+          <div
+            class="feature-card"
+            style="text-align: center; padding: 2rem 1.5rem"
+          >
+            <div style="font-size: 3rem; margin-bottom: 1rem">⚖️</div>
+            <h4 style="margin: 0 0 0.5rem 0; font-size: 1.1rem">법무법인</h4>
+            <p style="margin: 0; color: var(--text-dim); font-size: 0.95rem">
+              법률 자문 및 소송 지원
+            </p>
+          </div>
+
+          <div
+            class="feature-card"
+            style="text-align: center; padding: 2rem 1.5rem"
+          >
+            <div style="font-size: 3rem; margin-bottom: 1rem">💼</div>
+            <h4 style="margin: 0 0 0.5rem 0; font-size: 1.1rem">세무법인</h4>
+            <p style="margin: 0; color: var(--text-dim); font-size: 0.95rem">
+              세무 조사 및 자문
+            </p>
+          </div>
+
+          <div
+            class="feature-card"
+            style="text-align: center; padding: 2rem 1.5rem"
+          >
+            <div style="font-size: 3rem; margin-bottom: 1rem">📋</div>
+            <h4 style="margin: 0 0 0.5rem 0; font-size: 1.1rem">법무사</h4>
+            <p style="margin: 0; color: var(--text-dim); font-size: 0.95rem">
+              등기 및 법률 문서 작성
+            </p>
+          </div>
+
+          <div
+            class="feature-card"
+            style="text-align: center; padding: 2rem 1.5rem"
+          >
+            <div style="font-size: 3rem; margin-bottom: 1rem">💻</div>
+            <h4 style="margin: 0 0 0.5rem 0; font-size: 1.1rem">
+              디지털 포렌식
+            </h4>
+            <p style="margin: 0; color: var(--text-dim); font-size: 0.95rem">
+              디지털 증거 수집 및 분석
+            </p>
+          </div>
+
+          <div
+            class="feature-card"
+            style="text-align: center; padding: 2rem 1.5rem"
+          >
+            <div style="font-size: 3rem; margin-bottom: 1rem">🔒</div>
+            <h4 style="margin: 0 0 0.5rem 0; font-size: 1.1rem">
+              보안 전문기업
+            </h4>
+            <p style="margin: 0; color: var(--text-dim); font-size: 0.95rem">
+              정보 보안 및 위협 분석
+            </p>
+          </div>
+
+          <div
+            class="feature-card"
+            style="text-align: center; padding: 2rem 1.5rem"
+          >
+            <div style="font-size: 3rem; margin-bottom: 1rem">🏥</div>
+            <h4 style="margin: 0 0 0.5rem 0; font-size: 1.1rem">의료기관</h4>
+            <p style="margin: 0; color: var(--text-dim); font-size: 0.95rem">
+              의료 사고 조사 및 감정
+            </p>
+          </div>
+
+          <div
+            class="feature-card"
+            style="text-align: center; padding: 2rem 1.5rem"
+          >
+            <div style="font-size: 3rem; margin-bottom: 1rem">📝</div>
+            <h4 style="margin: 0 0 0.5rem 0; font-size: 1.1rem">행정사</h4>
+            <p style="margin: 0; color: var(--text-dim); font-size: 0.95rem">
+              인허가 및 행정 서류 대행
+            </p>
+          </div>
+
+          <div
+            class="feature-card"
+            style="text-align: center; padding: 2rem 1.5rem"
+          >
+            <div style="font-size: 3rem; margin-bottom: 1rem">🏠</div>
+            <h4 style="margin: 0 0 0.5rem 0; font-size: 1.1rem">부동산</h4>
+            <p style="margin: 0; color: var(--text-dim); font-size: 0.95rem">
+              거래 조사 및 가치 평가
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer
+      class="premium-footer"
+      style="
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        color: #fff;
+        padding: 4rem 2rem 2rem;
+      "
+    >
+      <div class="footer-container" style="max-width: 1400px; margin: 0 auto">
+        <div
+          class="footer-main"
+          style="
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+          "
+        >
+          <div class="footer-brand" style="max-width: 350px">
+            <a
+              class="brand-icon"
+              style="
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                transition: transform 0.3s ease;
+                margin-bottom: 1rem;
+              "
+              onmouseover="this.style.transform='scale(1.1)'"
+              onmouseout="this.style.transform='scale(1)'"
+              onclick="event.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'});"
+            >
+              <img
+                src="탐정사진/탐정사진 기본.png"
+                alt="PIIP Detective"
+                style="
+                  width: 50px;
+                  height: 50px;
+                  object-fit: contain;
+                  border-radius: 50%;
+                  cursor: pointer;
+                "
+              />
+            </a>
+            <h2
+              style="
+                font-size: 1.75rem;
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+              "
+            >
+              PIIP<span style="color: #667eea">Detective</span>
+            </h2>
+            <p
+              class="footer-tagline"
+              style="
+                color: rgba(255, 255, 255, 0.7);
+                line-height: 1.7;
+                margin-bottom: 1.5rem;
+              "
+            >
+              세계 최고 수준의 탐정 전문가 플랫폼
+            </p>
+            <div class="footer-social social-links">
+              <a href="#" class="social-link" aria-label="Facebook 공식 페이지">
+                <span class="material-icons">facebook</span>
+                <span class="sr-only">Facebook</span>
+              </a>
+              <a href="#" class="social-link" aria-label="PIIP 브랜드 아이콘">
+                <span class="material-icons">adjust</span>
+                <span class="sr-only">브랜드 심볼</span>
+              </a>
+              <a href="#" class="social-link" aria-label="조사 사진 갤러리">
+                <span class="material-icons">photo_camera</span>
+                <span class="sr-only">사진 갤러리</span>
+              </a>
+              <a href="#" class="social-link" aria-label="영상 및 브리핑">
+                <span class="material-icons">smart_display</span>
+                <span class="sr-only">영상 브리핑</span>
+              </a>
+            </div>
+          </div>
+
+          <div
+            class="footer-links-group"
+            style="
+              display: grid;
+              grid-template-columns: repeat(4, 1fr);
+              gap: 2rem;
+            "
+          >
+            <div class="footer-column">
+              <h4
+                style="
+                  font-size: 1rem;
+                  font-weight: 600;
+                  margin-bottom: 1rem;
+                  color: #fff;
+                "
+              >
+                서비스
+              </h4>
+              <a
+                href="#services"
+                style="
+                  display: block;
+                  color: rgba(255, 255, 255, 0.7);
+                  text-decoration: none;
+                  margin-bottom: 0.5rem;
+                  transition: color 0.3s;
+                "
+                onmouseover="this.style.color='#fff'"
+                onmouseout="this.style.color='rgba(255,255,255,0.7)'"
+                >전문가 매칭</a
+              >
+              <a
+                href="#detectives"
+                style="
+                  display: block;
+                  color: rgba(255, 255, 255, 0.7);
+                  text-decoration: none;
+                  margin-bottom: 0.5rem;
+                  transition: color 0.3s;
+                "
+                onmouseover="this.style.color='#fff'"
+                onmouseout="this.style.color='rgba(255,255,255,0.7)'"
+                >탐정 찾기</a
+              >
+              <a
+                href="#cases"
+                style="
+                  display: block;
+                  color: rgba(255, 255, 255, 0.7);
+                  text-decoration: none;
+                  margin-bottom: 0.5rem;
+                  transition: color 0.3s;
+                "
+                onmouseover="this.style.color='#fff'"
+                onmouseout="this.style.color='rgba(255,255,255,0.7)'"
+                >성공 사례</a
+              >
+              <a
+                href="#pricing"
+                style="
+                  display: block;
+                  color: rgba(255, 255, 255, 0.7);
+                  text-decoration: none;
+                  margin-bottom: 0.5rem;
+                  transition: color 0.3s;
+                "
+                onmouseover="this.style.color='#fff'"
+                onmouseout="this.style.color='rgba(255,255,255,0.7)'"
+                >요금 안내</a
+              >
+            </div>
+
+            <div class="footer-column">
+              <h4
+                style="
+                  font-size: 1rem;
+                  font-weight: 600;
+                  margin-bottom: 1rem;
+                  color: #fff;
+                "
+              >
+                회사
+              </h4>
+              <a
+                href="#about"
+                style="
+                  display: block;
+                  color: rgba(255, 255, 255, 0.7);
+                  text-decoration: none;
+                  margin-bottom: 0.5rem;
+                  transition: color 0.3s;
+                "
+                onmouseover="this.style.color='#fff'"
+                onmouseout="this.style.color='rgba(255,255,255,0.7)'"
+                >회사 소개</a
+              >
+              <a
+                href="#team"
+                style="
+                  display: block;
+                  color: rgba(255, 255, 255, 0.7);
+                  text-decoration: none;
+                  margin-bottom: 0.5rem;
+                  transition: color 0.3s;
+                "
+                onmouseover="this.style.color='#fff'"
+                onmouseout="this.style.color='rgba(255,255,255,0.7)'"
+                >팀 소개</a
+              >
+              <a
+                href="#careers"
+                style="
+                  display: block;
+                  color: rgba(255, 255, 255, 0.7);
+                  text-decoration: none;
+                  margin-bottom: 0.5rem;
+                  transition: color 0.3s;
+                "
+                onmouseover="this.style.color='#fff'"
+                onmouseout="this.style.color='rgba(255,255,255,0.7)'"
+                >채용</a
+              >
+              <a
+                href="#press"
+                style="
+                  display: block;
+                  color: rgba(255, 255, 255, 0.7);
+                  text-decoration: none;
+                  margin-bottom: 0.5rem;
+                  transition: color 0.3s;
+                "
+                onmouseover="this.style.color='#fff'"
+                onmouseout="this.style.color='rgba(255,255,255,0.7)'"
+                >보도자료</a
+              >
+            </div>
+
+            <div class="footer-column">
+              <h4
+                style="
+                  font-size: 1rem;
+                  font-weight: 600;
+                  margin-bottom: 1rem;
+                  color: #fff;
+                "
+              >
+                지원
+              </h4>
+              <a
+                href="#contact"
+                style="
+                  display: block;
+                  color: rgba(255, 255, 255, 0.7);
+                  text-decoration: none;
+                  margin-bottom: 0.5rem;
+                  transition: color 0.3s;
+                "
+                onmouseover="this.style.color='#fff'"
+                onmouseout="this.style.color='rgba(255,255,255,0.7)'"
+                >고객센터</a
+              >
+              <a
+                href="#faq"
+                style="
+                  display: block;
+                  color: rgba(255, 255, 255, 0.7);
+                  text-decoration: none;
+                  margin-bottom: 0.5rem;
+                  transition: color 0.3s;
+                "
+                onmouseover="this.style.color='#fff'"
+                onmouseout="this.style.color='rgba(255,255,255,0.7)'"
+                >자주 묻는 질문</a
+              >
+              <a
+                href="#guide"
+                style="
+                  display: block;
+                  color: rgba(255, 255, 255, 0.7);
+                  text-decoration: none;
+                  margin-bottom: 0.5rem;
+                  transition: color 0.3s;
+                "
+                onmouseover="this.style.color='#fff'"
+                onmouseout="this.style.color='rgba(255,255,255,0.7)'"
+                >이용 가이드</a
+              >
+              <a
+                href="tel:1577-0000"
+                style="
+                  display: block;
+                  color: rgba(255, 255, 255, 0.7);
+                  text-decoration: none;
+                  margin-bottom: 0.5rem;
+                  transition: color 0.3s;
+                "
+                onmouseover="this.style.color='#fff'"
+                onmouseout="this.style.color='rgba(255,255,255,0.7)'"
+                >1577-0000</a
+              >
+              <a
+                href="docs/swagger.html"
+                target="_blank"
+                rel="noopener"
+                style="
+                  display: block;
+                  color: rgba(255, 255, 255, 0.7);
+                  text-decoration: none;
+                  margin-bottom: 0.5rem;
+                  transition: color 0.3s;
+                "
+                onmouseover="this.style.color='#fff'"
+                onmouseout="this.style.color='rgba(255,255,255,0.7)'"
+                >API 문서 (Swagger)</a
+              >
+            </div>
+
+            <div class="footer-column">
+              <h4
+                style="
+                  font-size: 1rem;
+                  font-weight: 600;
+                  margin-bottom: 1rem;
+                  color: #fff;
+                "
+              >
+                법률
+              </h4>
+              <a
+                href="#privacy"
+                style="
+                  display: block;
+                  color: rgba(255, 255, 255, 0.7);
+                  text-decoration: none;
+                  margin-bottom: 0.5rem;
+                  transition: color 0.3s;
+                "
+                onmouseover="this.style.color='#fff'"
+                onmouseout="this.style.color='rgba(255,255,255,0.7)'"
+                >개인정보처리방침</a
+              >
+              <a
+                href="#terms"
+                style="
+                  display: block;
+                  color: rgba(255, 255, 255, 0.7);
+                  text-decoration: none;
+                  margin-bottom: 0.5rem;
+                  transition: color 0.3s;
+                "
+                onmouseover="this.style.color='#fff'"
+                onmouseout="this.style.color='rgba(255,255,255,0.7)'"
+                >이용약관</a
+              >
+              <a
+                href="#security"
+                style="
+                  display: block;
+                  color: rgba(255, 255, 255, 0.7);
+                  text-decoration: none;
+                  margin-bottom: 0.5rem;
+                  transition: color 0.3s;
+                "
+                onmouseover="this.style.color='#fff'"
+                onmouseout="this.style.color='rgba(255,255,255,0.7)'"
+                >보안정책</a
+              >
+              <a
+                href="#compliance"
+                style="
+                  display: block;
+                  color: rgba(255, 255, 255, 0.7);
+                  text-decoration: none;
+                  margin-bottom: 0.5rem;
+                  transition: color 0.3s;
+                "
+                onmouseover="this.style.color='#fff'"
+                onmouseout="this.style.color='rgba(255,255,255,0.7)'"
+                >규정 준수</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="footer-bottom"
+          style="
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+          "
+        >
+          <div
+            class="footer-certifications"
+            style="
+              display: flex;
+              justify-content: center;
+              gap: 1.5rem;
+              margin-bottom: 1.5rem;
+              flex-wrap: wrap;
+            "
+          >
+            <div
+              class="cert-badge"
+              style="
+                padding: 0.5rem 1rem;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                font-size: 0.9rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+              "
+            >
+              <span>🏆</span>
+              <span>ISO 27001 인증</span>
+            </div>
+            <div
+              class="cert-badge"
+              style="
+                padding: 0.5rem 1rem;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                font-size: 0.9rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+              "
+            >
+              <span>🔐</span>
+              <span>개인정보보호 우수 기업</span>
+            </div>
+            <div
+              class="cert-badge"
+              style="
+                padding: 0.5rem 1rem;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                font-size: 0.9rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+              "
+            >
+              <span>✓</span>
+              <span>법률 서비스 인증</span>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin-top: 1.5rem">
+            <p
+              class="footer-copyright"
+              style="
+                color: rgba(255, 255, 255, 0.7);
+                font-size: 0.9rem;
+                margin: 0 0 0.5rem 0;
+              "
+            >
+              © 2025 PIIP Detective Platform. All rights reserved.
+            </p>
+            <p
+              class="footer-credits"
+              style="
+                color: rgba(255, 255, 255, 0.5);
+                font-size: 0.85rem;
+                margin: 0;
+              "
+            >
+              이미지: Unsplash (키워드 기반 랜덤 결과)
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+      // Register service worker for PWA support
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("/sw.js")
+            .then((registration) => {
+              console.log("ServiceWorker registered:", registration.scope);
+            })
+            .catch((error) => {
+              console.log("ServiceWorker registration failed:", error);
+            });
+        });
+      }
+
+      // Auto-expanding textarea
+      (function () {
+        function autoResize(el) {
+          // Guard: only textareas
+          if (!el || el.nodeName !== "TEXTAREA") return;
+          const cs = window.getComputedStyle(el);
+          const minH = parseInt(cs.minHeight, 10) || 0;
+          el.style.height = "auto"; // shrink first
+          const newH = Math.max(el.scrollHeight, minH);
+          el.style.height = newH + "px";
+        }
+
+        function bindAutoExpand(textarea) {
+          if (!textarea) return;
+          // Initialize
+          autoResize(textarea);
+          // Recalculate on input and change
+          textarea.addEventListener("input", () => autoResize(textarea));
+          textarea.addEventListener("change", () => autoResize(textarea));
+          // Optional: adjust on window resize to handle wrapping changes
+          window.addEventListener("resize", () => autoResize(textarea));
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+          const areas = document.querySelectorAll(".js-auto-expand");
+          areas.forEach(bindAutoExpand);
+        });
+      })();
+    </script>
+  </body>
+</html>
