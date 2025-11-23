@@ -1,0 +1,24 @@
+{
+  "name": "piip-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "전 세계 최고 전문가 수준의 탐정 플랫폼",
+  "type": "module",
+  "engines": {
+    "node": ">=20 <25"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "preinstall": "node check-node.cjs",
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces"
+  },
+  "keywords": [
+    "detective",
+    "platform"
+  ],
+  "author": "polhun0304",
+  "license": "MIT"
+}
