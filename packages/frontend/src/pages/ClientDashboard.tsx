@@ -15,6 +15,8 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import CaseItem from '../components/ui/CaseItem';
+import CaseSkeleton from '../components/ui/CaseSkeleton';
 import { Add as AddIcon, Assignment as AssignmentIcon } from '@mui/icons-material';
 
 interface Case {
@@ -62,9 +64,13 @@ const ClientDashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
-        <CircularProgress />
-      </Box>
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <CaseSkeleton />
+          <CaseSkeleton />
+          <CaseSkeleton />
+        </Box>
+      </Container>
     );
   }
 
@@ -120,31 +126,24 @@ const ClientDashboard: React.FC = () => {
               <List>
                 {cases.map((c) => (
                   <React.Fragment key={c.id}>
-                    <ListItem
-                      button
-                      onClick={() => navigate(`/cases/${c.id}`)}
-                      secondaryAction={
-                        <Chip
-                          label={c.status}
-                          color={getStatusColor(c.status) as any}
-                          size="small"
-                        />
-                      }
-                    >
-                      <ListItemText
-                        primary={c.title}
-                        secondary={
-                          <>
-                            <Typography component="span" variant="body2" color="text.primary">
-                              {c.date}
-                            </Typography>
-                            {' — ' +
-                              (c.description?.substring(0, 50) || '') +
-                              (c.description?.length > 50 ? '...' : '')}
-                          </>
+                    <CaseItem
+                      id={c.id}
+                      title={c.title}
+                      date={c.date}
+                      description={c.description}
+                      status={c.status}
+                      onClick={async (id) => {
+                        try {
+                          await api.get(`/cases/${id}`);
+                          navigate(`/cases/${id}`);
+                        } catch (err) {
+                          console.error('Failed to open case', err);
+                          setError(
+                            '사건 상세를 불러오는 중 오류가 발생했습니다. 잠시 후 시도해주세요.'
+                          );
                         }
-                      />
-                    </ListItem>
+                      }}
+                    />
                     <Divider component="li" />
                   </React.Fragment>
                 ))}

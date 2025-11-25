@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-// TEMP: SDK import disabled until package.json is created
-// import { AuthService, OpenAPI, type UserSummary } from '../../../sdk';
+import api from '../../services/api';
 
 // Temporary type definitions
 type UserSummary = {
@@ -11,11 +10,18 @@ type UserSummary = {
 
 const AuthService = {
   getCurrentUser: async (): Promise<UserSummary> => {
-    throw new Error('Backend not available');
+    const res = await api.get('/auth/me');
+    // backend returns { user: {...}, detective: ... }
+    return res.data.user as UserSummary;
   },
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  login: async (_params: any): Promise<any> => {
-    throw new Error('Backend not available');
+  // login wrapper against backend
+  login: async (params: any): Promise<any> => {
+    const res = await api.post('/auth/login', params.requestBody);
+    return {
+      accessToken: res.data.token,
+      user: res.data.user,
+      raw: res.data,
+    };
   },
 };
 
@@ -31,7 +37,8 @@ export interface AuthState {
   remember: boolean;
 }
 
-const STORAGE_KEY = 'auth_token';
+// Use the same storage key as authService and other frontend modules
+const STORAGE_KEY = 'piip_token';
 
 export const initializeAuthFromStorage = createAsyncThunk(
   'auth/initializeFromStorage',
@@ -108,6 +115,18 @@ const authSlice = createSlice({
     setRemember(state, action: PayloadAction<boolean>) {
       state.remember = action.payload;
     },
+    setCredentials(state, action: PayloadAction<{ token: string; user: UserSummary }>) {
+      state.token = action.payload.token;
+      state.user = action.payload.user;
+      state.loading = false;
+      state.error = undefined;
+    },
+    clearCredentials(state) {
+      state.token = null;
+      state.user = null;
+      state.loading = false;
+      state.error = undefined;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -144,5 +163,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setRemember } = authSlice.actions;
+export const { setRemember, setCredentials, clearCredentials } = authSlice.actions;
 export default authSlice.reducer;

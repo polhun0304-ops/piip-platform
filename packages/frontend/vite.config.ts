@@ -6,10 +6,10 @@ export default defineConfig({
   server: {
     port: 5173,
     host: '0.0.0.0',
-    strictPort: true, // Ensure port 5173 is always used
+    strictPort: false, // Allow using next available port
     proxy: {
       '/api': {
-        target: 'http://backend:5001', // Docker service name
+        target: 'http://localhost:5001', // Local development
         changeOrigin: true,
         secure: false,
       },

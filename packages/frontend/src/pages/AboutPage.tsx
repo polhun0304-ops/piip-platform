@@ -32,6 +32,7 @@ import {
   Bolt as BoltIcon,
   People as PeopleIcon,
 } from '@mui/icons-material';
+import PlatformIntroContent from '../components/PlatformIntroContent';
 // import { useNavigate } from 'react-router-dom';
 
 const AboutPage: React.FC = () => {
@@ -145,6 +146,9 @@ const AboutPage: React.FC = () => {
             솔루션을 제공합니다.
           </Typography>
         </Box>
+
+        {/* Platform intro moved into About page */}
+        <PlatformIntroContent variant="about" />
 
         {/* AI 기반 스마트 매칭 시스템 */}
         <Box sx={{ mb: 6 }}>

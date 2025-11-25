@@ -15,6 +15,11 @@ import {
   ListItemText,
   ListItemAvatar,
   Snackbar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
 } from '@mui/material';
 import {
   Security,
@@ -29,6 +34,8 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import CaseItem from '../components/ui/CaseItem';
+import CaseSkeleton from '../components/ui/CaseSkeleton';
 
 interface CaseAssignment {
   id: string;
@@ -67,9 +74,43 @@ const DetectiveDashboard: React.FC = () => {
     fetchCases();
   }, []);
 
-  const handleAccept = async (id: string) => {
+  // sort by priority: '긴급' first
+  const sortedMyActiveCases = [...myActiveCases].sort((a, b) => {
+    const aUrgent = a.status === '긴급' ? 1 : 0;
+    const bUrgent = b.status === '긴급' ? 1 : 0;
+    return bUrgent - aUrgent;
+  });
+
+  const [confirmOpen, setConfirmOpen] = React.useState(false);
+  const [selectedCaseToAccept, setSelectedCaseToAccept] = React.useState<string | null>(null);
+  const [acceptNote, setAcceptNote] = React.useState('');
+
+  const openAcceptModal = (id: string) => {
+    setSelectedCaseToAccept(id);
+    setAcceptNote('');
+    setConfirmOpen(true);
+  };
+
+  const closeAcceptModal = () => {
+    setConfirmOpen(false);
+    setSelectedCaseToAccept(null);
+    setAcceptNote('');
+  };
+
+  const confirmAccept = async () => {
+    if (!selectedCaseToAccept) return;
     try {
-      await api.post(`/cases/${id}/accept`);
+      await handleAccept(selectedCaseToAccept, acceptNote);
+      closeAcceptModal();
+    } catch (err) {
+      console.error(err);
+      setMessage('수임 처리 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleAccept = async (id: string, note?: string) => {
+    try {
+      await api.post(`/cases/${id}/accept`, { note });
       setMessage('사건을 수임했습니다.');
       fetchCases();
     } catch (error) {
@@ -78,15 +119,51 @@ const DetectiveDashboard: React.FC = () => {
     }
   };
 
-  const handleReject = async (id: string) => {
-    if (!window.confirm('정말로 이 사건 배정을 거절하시겠습니까?')) return;
+  const [rejectOpen, setRejectOpen] = React.useState(false);
+  const [selectedCaseToReject, setSelectedCaseToReject] = React.useState<string | null>(null);
+  const [rejectReason, setRejectReason] = React.useState('');
+
+  const openRejectModal = (id: string) => {
+    setSelectedCaseToReject(id);
+    setRejectReason('');
+    setRejectOpen(true);
+  };
+
+  const closeRejectModal = () => {
+    setRejectOpen(false);
+    setSelectedCaseToReject(null);
+    setRejectReason('');
+  };
+
+  const confirmReject = async () => {
+    if (!selectedCaseToReject) return;
     try {
-      await api.post(`/cases/${id}/reject`);
+      await handleReject(selectedCaseToReject, rejectReason);
+      closeRejectModal();
+    } catch (err) {
+      console.error(err);
+      setMessage('거절 처리 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleReject = async (id: string, reason?: string) => {
+    try {
+      await api.post(`/cases/${id}/reject`, { reason });
       setMessage('사건 배정을 거절했습니다.');
       fetchCases();
     } catch (error) {
       console.error('Failed to reject case:', error);
       setMessage('거절 처리 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleNavigate = async (id: string) => {
+    try {
+      await api.get(`/cases/${id}`);
+      navigate(`/cases/${id}`);
+    } catch (error) {
+      console.error('Failed to prefetch case:', error);
+      setMessage('사건 상세를 불러오는 중 오류가 발생했습니다. 잠시 후 시도해주세요.');
     }
   };
 
@@ -181,7 +258,7 @@ const DetectiveDashboard: React.FC = () => {
                       variant="contained"
                       color="primary"
                       startIcon={<Check />}
-                      onClick={() => handleAccept(c.id)}
+                      onClick={() => openAcceptModal(c.id)}
                       fullWidth
                     >
                       수임 승낙
@@ -190,7 +267,7 @@ const DetectiveDashboard: React.FC = () => {
                       variant="outlined"
                       color="error"
                       startIcon={<Close />}
-                      onClick={() => handleReject(c.id)}
+                      onClick={() => openRejectModal(c.id)}
                       fullWidth
                     >
                       거절
@@ -226,68 +303,29 @@ const DetectiveDashboard: React.FC = () => {
               </Button>
             </Box>
             {loading ? (
-              <Box sx={{ p: 4, textAlign: 'center' }}>
-                <CircularProgress />
+              <Box sx={{ p: 4 }}>
+                <CaseSkeleton />
+                <CaseSkeleton />
               </Box>
-            ) : myActiveCases.length === 0 ? (
+            ) : sortedMyActiveCases.length === 0 ? (
               <Box sx={{ p: 4, textAlign: 'center' }}>
                 <Typography color="text.secondary">진행 중인 사건이 없습니다.</Typography>
               </Box>
             ) : (
               <List>
-                {myActiveCases.map((c, index) => (
+                {sortedMyActiveCases.map((c, index) => (
                   <React.Fragment key={c.id}>
-                    <ListItem
-                      alignItems="flex-start"
-                      button
-                      onClick={() => navigate(`/cases/${c.id}`)}
-                      sx={{ '&:hover': { bgcolor: 'action.hover' } }}
-                    >
-                      <ListItemAvatar>
-                        <Avatar
-                          sx={{ bgcolor: c.status === '조사 중' ? 'primary.main' : 'grey.400' }}
-                        >
-                          <Folder />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <Box
-                            sx={{
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              alignItems: 'center',
-                            }}
-                          >
-                            <Typography variant="subtitle1" fontWeight={600}>
-                              {c.title}
-                            </Typography>
-                            <Chip
-                              label={c.status}
-                              size="small"
-                              color={
-                                c.status === '조사 중'
-                                  ? 'primary'
-                                  : c.status === '긴급'
-                                    ? 'error'
-                                    : 'default'
-                              }
-                              variant="outlined"
-                            />
-                          </Box>
-                        }
-                        secondary={
-                          <React.Fragment>
-                            <Typography component="span" variant="body2" color="text.primary">
-                              {c.date}
-                            </Typography>
-                            {' — '}
-                            {c.description || '설명 없음'}
-                          </React.Fragment>
-                        }
-                      />
-                    </ListItem>
-                    {index < myActiveCases.length - 1 && <Divider variant="inset" component="li" />}
+                    <CaseItem
+                      id={c.id}
+                      title={c.title}
+                      date={c.date}
+                      description={c.description}
+                      status={c.status}
+                      onClick={() => handleNavigate(c.id)}
+                    />
+                    {index < sortedMyActiveCases.length - 1 && (
+                      <Divider variant="inset" component="li" />
+                    )}
                   </React.Fragment>
                 ))}
               </List>
@@ -315,6 +353,79 @@ const DetectiveDashboard: React.FC = () => {
           </Paper>
         </Grid>
       </Grid>
+
+      <Dialog
+        open={confirmOpen}
+        onClose={closeAcceptModal}
+        fullWidth
+        maxWidth="sm"
+        aria-labelledby="accept-dialog-title"
+        aria-describedby="accept-dialog-desc"
+      >
+        <DialogTitle id="accept-dialog-title">사건 수임 확인</DialogTitle>
+        <DialogContent>
+          <Typography id="accept-dialog-desc" variant="body2" paragraph>
+            선택하신 사건을 수임하시겠습니까? 수임 후 추가 메모를 남기실 수 있습니다.
+          </Typography>
+          <TextField
+            label="메모 (선택)"
+            value={acceptNote}
+            onChange={(e) => setAcceptNote(e.target.value)}
+            fullWidth
+            multiline
+            minRows={3}
+            autoFocus
+            inputProps={{ 'aria-label': '수임 메모' }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeAcceptModal} aria-label="수임 취소">
+            취소
+          </Button>
+          <Button
+            variant="contained"
+            onClick={confirmAccept}
+            color="primary"
+            aria-label="수임 확정"
+          >
+            수임 확정
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={rejectOpen}
+        onClose={closeRejectModal}
+        fullWidth
+        maxWidth="sm"
+        aria-labelledby="reject-dialog-title"
+        aria-describedby="reject-dialog-desc"
+      >
+        <DialogTitle id="reject-dialog-title">사건 배정 거절</DialogTitle>
+        <DialogContent>
+          <Typography id="reject-dialog-desc" variant="body2" paragraph>
+            이 사건 배정을 거절하시겠습니까? (사유를 입력하시면 관리자가 참고합니다.)
+          </Typography>
+          <TextField
+            label="거절 사유 (선택)"
+            value={rejectReason}
+            onChange={(e) => setRejectReason(e.target.value)}
+            fullWidth
+            multiline
+            minRows={2}
+            autoFocus
+            inputProps={{ 'aria-label': '거절 사유' }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeRejectModal} aria-label="거절 취소">
+            취소
+          </Button>
+          <Button variant="outlined" color="error" onClick={confirmReject} aria-label="거절 확정">
+            거절 확정
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Snackbar
         open={!!message}

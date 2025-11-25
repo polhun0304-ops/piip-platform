@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { List, ListItemText, Typography, Box, Paper, Chip, ListItemButton } from '@mui/material';
+import api from '../services/api';
 import { RootState } from '../store';
 
 const CaseList: React.FC = () => {
@@ -54,7 +55,18 @@ const CaseList: React.FC = () => {
       <Paper>
         <List>
           {cases.map((c) => (
-            <ListItemButton key={c.id} onClick={() => navigate(`/cases/${c.id}`)}>
+            <ListItemButton
+              key={c.id}
+              onClick={async () => {
+                try {
+                  await api.get(`/cases/${c.id}`);
+                  navigate(`/cases/${c.id}`);
+                } catch (err) {
+                  console.error('Failed to open case', err);
+                  alert('사건 상세를 불러오는 중 오류가 발생했습니다. 잠시 후 시도해주세요.');
+                }
+              }}
+            >
               <ListItemText
                 primary={
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>

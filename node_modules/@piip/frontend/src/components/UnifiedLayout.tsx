@@ -624,12 +624,7 @@ const UnifiedLayout: React.FC<UnifiedLayoutProps> = ({ children }) => {
         {/* Toolbar spacer */}
         <Toolbar />
         {/* Page content */}
-        <Box sx={{ p: { xs: 2, md: 3 } }}>
-          <HeroSection />
-          <FeaturesSection />
-          {children}
-          <Footer />
-        </Box>
+        <Box sx={{ p: { xs: 2, md: 3 } }}>{children}</Box>
       </Box>
     </Box>
   );

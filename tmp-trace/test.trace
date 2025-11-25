@@ -1,0 +1,39 @@
+{"type":"before","callId":"hook@1","wallTime":1763989707079,"startTime":241.403,"class":"Test","method":"step","apiName":"Before Hooks","params":{},"stack":[]}
+{"type":"before","callId":"fixture@2","parentId":"hook@1","wallTime":1763989707098,"startTime":258.975,"class":"Test","method":"step","apiName":"fixture: browser","params":{},"stack":[]}
+{"type":"before","callId":"pw:api@3","parentId":"fixture@2","wallTime":1763989707100,"startTime":261.925,"class":"Test","method":"step","apiName":"browserType.launch","params":{"handleSIGINT":"false","headless":"false","tracesDir":"C:\\Projects\\piip-platform\\packages\\frontend\\test-results\\.playwright-artifacts-0\\traces","ignoreDefaultArgs":"undefined","ignoreAllDefaultArgs":"false","env":"undefined"},"stack":[]}
+{"type":"after","callId":"pw:api@3","endTime":1075.354,"attachments":[]}
+{"type":"after","callId":"fixture@2","endTime":1075.422,"attachments":[]}
+{"type":"before","callId":"fixture@4","parentId":"hook@1","wallTime":1763989707917,"startTime":1077.56,"class":"Test","method":"step","apiName":"fixture: context","params":{},"stack":[]}
+{"type":"before","callId":"pw:api@5","parentId":"fixture@4","wallTime":1763989707920,"startTime":1080.52,"class":"Test","method":"step","apiName":"browser.newContext","params":{"acceptDownloads":"accept","bypassCSP":"false","colorScheme":"light","hasTouch":"false","ignoreHTTPSErrors":"false","isMobile":"false","javaScriptEnabled":"true","locale":"en-US","offline":"false","viewport":"Object","baseURL":"http://localhost:5174","serviceWorkers":"allow","noDefaultViewport":"false","extraHTTPHeaders":"undefined","storageState":"undefined","recordHar":"undefined","reducedMotion":"undefined","forcedColors":"undefined"},"stack":[]}
+{"type":"after","callId":"pw:api@5","endTime":1088.897,"attachments":[]}
+{"type":"after","callId":"fixture@4","endTime":1096.591,"attachments":[]}
+{"type":"before","callId":"fixture@6","parentId":"hook@1","wallTime":1763989707937,"startTime":1097.057,"class":"Test","method":"step","apiName":"fixture: page","params":{},"stack":[]}
+{"type":"before","callId":"pw:api@7","parentId":"fixture@6","wallTime":1763989707937,"startTime":1097.963,"class":"Test","method":"step","apiName":"browserContext.newPage","params":{},"stack":[]}
+{"type":"after","callId":"pw:api@7","endTime":1445.775,"attachments":[]}
+{"type":"after","callId":"fixture@6","endTime":1445.819,"attachments":[]}
+{"type":"after","callId":"hook@1","endTime":1445.876,"attachments":[]}
+{"type":"before","callId":"pw:api@8","wallTime":1763989708289,"startTime":1449.902,"class":"Test","method":"step","apiName":"apiRequestContext.post","params":{"url":"http://127.0.0.1:5001/api/auth/login","params":"undefined","method":"POST","headers":"undefined","postData":"undefined","jsonData":"{\"email\":\"testuser1@piip.com\",\"password\":\"hashedpassword1\"}","formData":"undefined","multipartData":"undefined","timeout":"undefined","failOnStatusCode":"undefined","ignoreHTTPSErrors":"undefined","maxRedirects":"undefined","__testHookLookup":"undefined"},"stack":[{"file":"C:\\Projects\\piip-platform\\packages\\frontend\\playwright\\debug-securechat.spec.js","line":18,"column":39}]}
+{"type":"after","callId":"pw:api@8","endTime":1535.8719999999998,"attachments":[]}
+{"type":"before","callId":"pw:api@9","wallTime":1763989708376,"startTime":1536.894,"class":"Test","method":"step","apiName":"apiResponse.json","params":{"fetchUid":"c0e1cfe01fe4a66e8b6e16a1121d6bd1"},"stack":[{"file":"C:\\Projects\\piip-platform\\packages\\frontend\\playwright\\debug-securechat.spec.js","line":22,"column":33}]}
+{"type":"after","callId":"pw:api@9","endTime":1539.159,"attachments":[]}
+{"type":"before","callId":"pw:api@10","wallTime":1763989708380,"startTime":1540.882,"class":"Test","method":"step","apiName":"page.addInitScript","params":{"source":"((token, user) => {\n      localStorage.setItem('piip_token', token);\n      localStorage.setItem('piip_user', JSON.stringify(user));\n      localStorage.setItem('piip_role', user.role);\n    })(\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhMmE0YzUzNS1hMGI3LTQ3NmItOGE2OS04MmExY2VkYjYwZmMiLCJlbWFpbCI6InRlc3R1c2VyMUBwaWlwLmNvbSIsInJvbGUiOiJjbGllbnQiLCJkZXRlY3RpdmVJZCI6bnVsbCwiaWF0IjoxNzYzOTg5NzA4LCJleHAiOjE3NjQ1OTQ1MDh9.E0kDKmfdxHn-9W_GEfTCkMZfgMrkQYVWpdyOtJS3hZw\")"},"stack":[{"file":"C:\\Projects\\piip-platform\\packages\\frontend\\playwright\\debug-securechat.spec.js","line":23,"column":5}]}
+{"type":"after","callId":"pw:api@10","endTime":1543.3780000000002,"attachments":[]}
+{"type":"before","callId":"pw:api@11","wallTime":1763989708384,"startTime":1544.923,"class":"Test","method":"step","apiName":"page.goto","params":{"url":"http://localhost:5177","waitUntil":"networkidle"},"stack":[{"file":"C:\\Projects\\piip-platform\\packages\\frontend\\playwright\\debug-securechat.spec.js","line":37,"column":14}]}
+{"type":"stdout","timestamp":1958.384,"text":"[browser console] debug [vite] connecting...\n"}
+{"type":"stdout","timestamp":2078.478,"text":"[browser console] error Failed to load resource: the server responded with a status of 500 (Internal Server Error)\n"}
+{"type":"stdout","timestamp":2079.467,"text":"[request failed] GET http://localhost:5177/src/pages/Home.tsx -> net::ERR_ABORTED\n"}
+{"type":"stdout","timestamp":2085.67,"text":"[browser console] log ✅ DOM Content Loaded\n"}
+{"type":"stdout","timestamp":2131.895,"text":"[browser console] error Failed to load resource: the server responded with a status of 404 (Not Found)\n"}
+{"type":"stdout","timestamp":2268.869,"text":"[browser console] debug [vite] connected.\n"}
+{"type":"after","callId":"pw:api@11","endTime":2803.145,"attachments":[]}
+{"type":"before","callId":"pw:api@12","wallTime":1763989709644,"startTime":2804.714,"class":"Test","method":"step","apiName":"page.waitForSelector","params":{"selector":"text=나의 사건 목록, 등록된 사건이 없습니다.","timeout":"5000"},"stack":[{"file":"C:\\Projects\\piip-platform\\packages\\frontend\\playwright\\debug-securechat.spec.js","line":42,"column":6}]}
+{"type":"stdout","timestamp":5074.497,"text":"[browser console] error ❌ React not mounted after 3 seconds\n"}
+{"type":"after","callId":"pw:api@12","endTime":7817.954,"attachments":[],"error":{"name":"","message":"Error: page.waitForSelector: Timeout 5000ms exceeded.\nCall log:\n  \u001b[2m- waiting for locator('text=나의 사건 목록, 등록된 사건이 없습니다.') to be visible\u001b[22m\n","stack":"Error: page.waitForSelector: Timeout 5000ms exceeded.\nCall log:\n  \u001b[2m- waiting for locator('text=나의 사건 목록, 등록된 사건이 없습니다.') to be visible\u001b[22m\n\n    at C:\\Projects\\piip-platform\\packages\\frontend\\playwright\\debug-securechat.spec.js:42:6"}}
+{"type":"before","callId":"pw:api@13","wallTime":1763989714659,"startTime":7819.42,"class":"Test","method":"step","apiName":"locator.count","params":{"selector":"li[role=\"button\"] >> nth=0"},"stack":[{"file":"C:\\Projects\\piip-platform\\packages\\frontend\\playwright\\debug-securechat.spec.js","line":47,"column":23}]}
+{"type":"after","callId":"pw:api@13","endTime":7823.375,"attachments":[]}
+{"type":"stdout","timestamp":7823.4349999999995,"text":"No clickable case items found on page\n"}
+{"type":"before","callId":"hook@14","wallTime":1763989714663,"startTime":7823.822,"class":"Test","method":"step","apiName":"After Hooks","params":{},"stack":[]}
+{"type":"before","callId":"fixture@15","parentId":"hook@14","wallTime":1763989714664,"startTime":7824.304,"class":"Test","method":"step","apiName":"fixture: page","params":{},"stack":[]}
+{"type":"after","callId":"fixture@15","endTime":7824.344,"attachments":[]}
+{"type":"before","callId":"fixture@16","parentId":"hook@14","wallTime":1763989714664,"startTime":7824.615,"class":"Test","method":"step","apiName":"fixture: context","params":{},"stack":[]}
+{"type":"after","callId":"fixture@16","endTime":7824.641,"attachments":[]}

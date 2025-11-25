@@ -71,27 +71,7 @@ const HomeSelector: React.FC = () => {
       features: ['HeroGallery', 'IntroSlider', '컴포넌트 기반', '798줄 코드'],
       status: 'current',
     },
-    {
-      id: 'home-full',
-      title: 'Home (풀 디자인 버전)',
-      description:
-        '풍부한 애니메이션과 스타일 컴포넌트로 구성된 완전한 랜딩 페이지. 다양한 시각 효과와 인터랙션을 제공합니다.',
-      path: '/home-full',
-      icon: <AutoAwesomeIcon sx={{ fontSize: 48 }} />,
-      color: 'linear-gradient(135deg, #ffd700 0%, #ffed4e 100%)',
-      features: ['풀 애니메이션', 'Styled Components', '상세한 섹션', '2013줄 코드'],
-      status: 'featured',
-    },
-    {
-      id: 'new-home',
-      title: 'New Home (레거시)',
-      description: '이전에 작업하던 홈페이지 버전. home-full과 동일한 컨텐츠입니다.',
-      path: '/new-home',
-      icon: <LightbulbIcon sx={{ fontSize: 48 }} />,
-      color: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
-      features: ['레거시 라우트', '호환성 유지', '실험적 디자인'],
-      status: 'legacy',
-    },
+    // full-design 버전은 현재 메인 홈으로 통합되어 별도 선택 항목에서 제거되었습니다.
   ];
 
   const getStatusColor = (status: string) => {

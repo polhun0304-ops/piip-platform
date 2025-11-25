@@ -30,6 +30,8 @@ import {
 import api from '../services/api';
 import SecureChat from '../components/SecureChat';
 import AIAnalysis from '../components/AIAnalysis';
+import { authService } from '../services/auth';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 interface Case {
   id: string;
@@ -201,21 +203,25 @@ const CaseDetail: React.FC = () => {
       </CustomTabPanel>
       <CustomTabPanel value={tabValue} index={2}>
         {id && (
-          <SecureChat
-            caseId={id}
-            currentUserId="user_123" // 실제로는 로그인 사용자 ID
-            currentUserRole="detective" // 실제로는 로그인 사용자 역할
-          />
+          <ErrorBoundary>
+            <SecureChat
+              caseId={id}
+              currentUserId={authService.getCurrentUser()?.id || ''}
+              currentUserRole={(authService.getCurrentUser()?.role as any) || 'client'}
+            />
+          </ErrorBoundary>
         )}
       </CustomTabPanel>
       <CustomTabPanel value={tabValue} index={3}>
         {id && (
-          <AIAnalysis
-            caseId={id}
-            evidenceId="evidence_001"
-            evidenceType="image"
-            evidenceUrl="https://example.com/evidence.jpg"
-          />
+          <ErrorBoundary>
+            <AIAnalysis
+              caseId={id}
+              evidenceId="evidence_001"
+              evidenceType="image"
+              evidenceUrl="https://example.com/evidence.jpg"
+            />
+          </ErrorBoundary>
         )}
       </CustomTabPanel>
     </Box>

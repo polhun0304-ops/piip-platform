@@ -127,7 +127,27 @@ router.post("/login", async (req: Request, res: Response) => {
     }
 
     // 사용자 조회
-    const user = await userRepository().findOne({ where: { email } });
+    let user = await userRepository().findOne({ where: { email } });
+
+    // 만약 이메일로 사용자를 찾지 못하면, 입력값이 탐정의 id/licenseNumber/탐정 이메일일 수 있으므로 탐정 테이블에서 탐정 프로필을 조회하고 연결된 User를 찾습니다.
+    if (!user) {
+      try {
+        const detective = await detectiveRepository().findOne({
+          where: [
+            { id: email },
+            { licenseNumber: email },
+            { email: email },
+          ],
+        });
+
+        if (detective) {
+          user = await userRepository().findOne({ where: { detectiveId: detective.id } });
+        }
+      } catch (e) {
+        console.warn('Detective lookup during login failed', e);
+      }
+    }
+
     if (!user) {
       return res.status(401).json({
         error: "이메일 또는 비밀번호가 올바르지 않습니다.",

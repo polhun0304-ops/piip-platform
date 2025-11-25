@@ -34,7 +34,7 @@ import {
 interface SecureChatProps {
   caseId: string;
   currentUserId: string;
-  currentUserRole: 'client' | 'detective' | 'admin';
+  currentUserRole?: 'client' | 'detective' | 'admin' | string;
 }
 
 const SecureChat: React.FC<SecureChatProps> = ({ caseId, currentUserId }) => {
@@ -69,6 +69,10 @@ const SecureChat: React.FC<SecureChatProps> = ({ caseId, currentUserId }) => {
     // Ensure local E2EE keypair and register public key with server (PoC)
     (async () => {
       try {
+        if (!window?.crypto?.subtle) {
+          if (DEBUG_E2EE) console.warn('[E2EE] Web Crypto not available in this environment');
+          return;
+        }
         const kp = await ensureLocalKeypair();
         if (DEBUG_E2EE) console.debug('[E2EE] ensured local keypair', kp);
         setLocalKeys({ publicKey: kp.publicKey, privateKey: kp.privateKey });
@@ -91,7 +95,7 @@ const SecureChat: React.FC<SecureChatProps> = ({ caseId, currentUserId }) => {
           if (DEBUG_E2EE) console.warn('[E2EE] failed to fetch participant keys', err);
         }
       } catch (e) {
-        // ignore
+        console.warn('[SecureChat] E2EE initialization failed', e);
       }
     })();
 

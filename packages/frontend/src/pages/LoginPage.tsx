@@ -10,10 +10,13 @@ import {
   Alert,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { authService } from '../services/auth';
+import { setCredentials } from '../store/slices/authSlice';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -26,8 +29,16 @@ const LoginPage: React.FC = () => {
 
     try {
       const response = await authService.login(email, password);
+
+      // Redux store 업데이트
+      dispatch(
+        setCredentials({
+          token: response.token,
+          user: response.user,
+        })
+      );
+
       const role = response.user.role;
-      window.localStorage.setItem('piip_role', role);
 
       if (role === 'admin') {
         navigate('/admin/db');

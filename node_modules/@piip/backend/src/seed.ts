@@ -39,11 +39,25 @@ async function seedDatabase() {
     await userRepository.clear();
     console.log("✅ Existing data cleared");
 
+    // Admin 계정 생성
+    const adminPassword = await bcrypt.hash("admin123!@#", 10);
+    const admin = userRepository.create({
+      email: "admin@piip.com",
+      password: adminPassword,
+      name: "관리자",
+      phone: "010-0000-0000",
+      role: "admin",
+      isActive: true,
+    });
+    await userRepository.save(admin);
+    console.log("✅ Created admin account: admin@piip.com");
+
     // 회원(User) 10개 생성
+    // Ensure test users map 1->client, 2->detective, 3->admin
     const userRoles: Array<"admin" | "detective" | "client"> = [
-      "admin",
-      "detective",
       "client",
+      "detective",
+      "admin",
     ];
     const userArr: any[] = [];
     for (let i = 1; i <= 10; i++) {
@@ -53,12 +67,12 @@ async function seedDatabase() {
         password: hashedPassword,
         name: `테스트회원${i}`,
         phone: `010-1000-${(1000 + i).toString().padStart(4, "0")}`,
-        role: userRoles[i % userRoles.length],
+        role: userRoles[(i - 1) % userRoles.length],
         isActive: true,
       });
     }
     const users = await userRepository.save(userArr);
-    console.log(`✅ Created ${users.length} users`);
+    console.log(`✅ Created ${users.length} test users`);
 
     // 가격표(PricingTemplate) 5개 생성
     const pricingArr: any[] = [];
