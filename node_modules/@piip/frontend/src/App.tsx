@@ -13,6 +13,8 @@ import CaseList from './pages/CaseList';
 import CaseDetail from './pages/CaseDetail';
 import PersonList from './pages/PersonList';
 import EvidenceList from './pages/EvidenceList';
+import ReportsList from './pages/ReportsList';
+import ReportCreate from './pages/ReportCreate';
 import AdminDashboard from './pages/AdminDashboard';
 import ApiDocsPage from './pages/ApiDocsPage';
 import AboutPage from './pages/AboutPage';
@@ -90,6 +92,8 @@ const App = () => {
                 />
                 <Route path="/cases" element={<CaseList />} />
                 <Route path="/cases/:id" element={<CaseDetail />} />
+                <Route path="/reports" element={<ReportsList />} />
+                <Route path="/reports/new" element={<ReportCreate />} />
                 <Route path="/persons" element={<PersonList />} />
                 <Route path="/evidence" element={<EvidenceList />} />
 

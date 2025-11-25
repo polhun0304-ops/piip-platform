@@ -143,7 +143,12 @@ const CaseDetail: React.FC = () => {
               {caseData.title}
             </Typography>
           </Box>
-          <Button variant="contained" color="primary">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => navigate(`/reports/new?caseId=${caseData.id}`)}
+            data-testid={`report-create-button-${caseData.id}`}
+          >
             보고서 작성
           </Button>
         </Box>
