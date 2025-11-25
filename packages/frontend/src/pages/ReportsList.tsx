@@ -33,7 +33,10 @@ const ReportsList: React.FC = () => {
         <List>
           {reports.map((r) => (
             <ListItemButton key={r.id} onClick={() => navigate(`/reports/${r.id}`)}>
-              <ListItemText primary={r.title || `보고서 ${r.id}`} secondary={`사건: ${r.caseId || '-'} · 상태: ${r.status || '-'}`} />
+              <ListItemText
+                primary={r.title || `보고서 ${r.id}`}
+                secondary={`사건: ${r.caseId || '-'} · 상태: ${r.status || '-'}`}
+              />
             </ListItemButton>
           ))}
         </List>

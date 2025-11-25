@@ -30,7 +30,13 @@ const ReportCreate: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         보고서 작성
       </Typography>
-      <TextField fullWidth label="제목" value={title} onChange={(e) => setTitle(e.target.value)} sx={{ mb: 2 }} />
+      <TextField
+        fullWidth
+        label="제목"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        sx={{ mb: 2 }}
+      />
       <TextField
         fullWidth
         multiline
