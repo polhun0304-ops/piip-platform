@@ -1,0 +1,52 @@
+{"type":"before","callId":"hook@1","wallTime":1764075850709,"startTime":349.324,"class":"Test","method":"step","apiName":"Before Hooks","params":{},"stack":[]}
+{"type":"before","callId":"fixture@2","parentId":"hook@1","wallTime":1764075850725,"startTime":360.946,"class":"Test","method":"step","apiName":"fixture: browser","params":{},"stack":[]}
+{"type":"before","callId":"pw:api@3","parentId":"fixture@2","wallTime":1764075850727,"startTime":363.988,"class":"Test","method":"step","apiName":"browserType.launch","params":{"handleSIGINT":"false","headless":"false","tracesDir":"C:\\Projects\\piip-platform\\packages\\frontend\\test-results\\.playwright-artifacts-1\\traces","ignoreDefaultArgs":"undefined","ignoreAllDefaultArgs":"false","env":"undefined"},"stack":[]}
+{"type":"after","callId":"pw:api@3","endTime":1503.473,"attachments":[]}
+{"type":"after","callId":"fixture@2","endTime":1503.542,"attachments":[]}
+{"type":"before","callId":"fixture@4","parentId":"hook@1","wallTime":1764075851871,"startTime":1506.73,"class":"Test","method":"step","apiName":"fixture: context","params":{},"stack":[]}
+{"type":"before","callId":"pw:api@5","parentId":"fixture@4","wallTime":1764075851875,"startTime":1511.664,"class":"Test","method":"step","apiName":"browser.newContext","params":{"acceptDownloads":"accept","bypassCSP":"false","colorScheme":"light","hasTouch":"false","ignoreHTTPSErrors":"false","isMobile":"false","javaScriptEnabled":"true","locale":"en-US","offline":"false","viewport":"Object","baseURL":"http://localhost:5174","serviceWorkers":"allow","noDefaultViewport":"false","extraHTTPHeaders":"undefined","storageState":"undefined","recordHar":"undefined","reducedMotion":"undefined","forcedColors":"undefined"},"stack":[]}
+{"type":"after","callId":"pw:api@5","endTime":1523.547,"attachments":[]}
+{"type":"after","callId":"fixture@4","endTime":1532.252,"attachments":[]}
+{"type":"before","callId":"fixture@6","parentId":"hook@1","wallTime":1764075851897,"startTime":1532.7440000000001,"class":"Test","method":"step","apiName":"fixture: page","params":{},"stack":[]}
+{"type":"before","callId":"pw:api@7","parentId":"fixture@6","wallTime":1764075851898,"startTime":1533.6770000000001,"class":"Test","method":"step","apiName":"browserContext.newPage","params":{},"stack":[]}
+{"type":"after","callId":"pw:api@7","endTime":1924.817,"attachments":[]}
+{"type":"after","callId":"fixture@6","endTime":1924.973,"attachments":[]}
+{"type":"after","callId":"hook@1","endTime":1925.0839999999998,"attachments":[]}
+{"type":"before","callId":"pw:api@8","wallTime":1764075852293,"startTime":1929.887,"class":"Test","method":"step","apiName":"apiRequestContext.post","params":{"url":"http://localhost:5001/api/auth/login","params":"undefined","method":"POST","headers":"undefined","postData":"undefined","jsonData":"{\"email\":\"testuser1@piip.com\",\"password\":\"hashedpassword1\"}","formData":"undefined","multipartData":"undefined","timeout":"undefined","failOnStatusCode":"undefined","ignoreHTTPSErrors":"undefined","maxRedirects":"undefined","__testHookLookup":"undefined"},"stack":[{"file":"C:\\Projects\\piip-platform\\packages\\frontend\\playwright\\debug-securechat.spec.js","line":18,"column":39}]}
+{"type":"after","callId":"pw:api@8","endTime":2036.868,"attachments":[]}
+{"type":"before","callId":"pw:api@9","wallTime":1764075852402,"startTime":2037.71,"class":"Test","method":"step","apiName":"apiResponse.json","params":{"fetchUid":"c57140748ea3749d92cb94bc7cd72c44"},"stack":[{"file":"C:\\Projects\\piip-platform\\packages\\frontend\\playwright\\debug-securechat.spec.js","line":22,"column":33}]}
+{"type":"after","callId":"pw:api@9","endTime":2039.047,"attachments":[]}
+{"type":"before","callId":"pw:api@10","wallTime":1764075852406,"startTime":2041.438,"class":"Test","method":"step","apiName":"page.addInitScript","params":{"source":"((token, user) => {\n      localStorage.setItem('piip_token', token);\n      localStorage.setItem('piip_user', JSON.stringify(user));\n      localStorage.setItem('piip_role', user.role);\n    })(\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhMmE0YzUzNS1hMGI3LTQ3NmItOGE2OS04MmExY2VkYjYwZmMiLCJlbWFpbCI6InRlc3R1c2VyMUBwaWlwLmNvbSIsInJvbGUiOiJjbGllbnQiLCJkZXRlY3RpdmVJZCI6bnVsbCwiaWF0IjoxNzY0MDc1ODUyLCJleHAiOjE3NjQ2ODA2NTJ9.eUmHE513ykwPhPrsz2G3bNYEu3LgPswPpvCvBE1U3xQ\")"},"stack":[{"file":"C:\\Projects\\piip-platform\\packages\\frontend\\playwright\\debug-securechat.spec.js","line":23,"column":5}]}
+{"type":"after","callId":"pw:api@10","endTime":2043.954,"attachments":[]}
+{"type":"before","callId":"pw:api@11","wallTime":1764075852410,"startTime":2046.395,"class":"Test","method":"step","apiName":"apiRequestContext.get","params":{"url":"http://localhost:5001/api/cases","params":"undefined","method":"GET","headers":"[Object]","postData":"undefined","jsonData":"undefined","formData":"undefined","multipartData":"undefined","timeout":"undefined","failOnStatusCode":"undefined","ignoreHTTPSErrors":"undefined","maxRedirects":"undefined","__testHookLookup":"undefined"},"stack":[{"file":"C:\\Projects\\piip-platform\\packages\\frontend\\playwright\\debug-securechat.spec.js","line":35,"column":43}]}
+{"type":"after","callId":"pw:api@11","endTime":2059.682,"attachments":[]}
+{"type":"before","callId":"pw:api@12","wallTime":1764075852425,"startTime":2060.648,"class":"Test","method":"step","apiName":"apiResponse.json","params":{"fetchUid":"29b97bd978c195c1e6d5b6928003d297"},"stack":[{"file":"C:\\Projects\\piip-platform\\packages\\frontend\\playwright\\debug-securechat.spec.js","line":37,"column":38}]}
+{"type":"after","callId":"pw:api@12","endTime":2061.532,"attachments":[]}
+{"type":"before","callId":"pw:api@13","wallTime":1764075852427,"startTime":2062.804,"class":"Test","method":"step","apiName":"page.goto","params":{"url":"http://localhost:5177","waitUntil":"networkidle"},"stack":[{"file":"C:\\Projects\\piip-platform\\packages\\frontend\\playwright\\debug-securechat.spec.js","line":62,"column":14}]}
+{"type":"stdout","timestamp":2494.0389999999998,"text":"[browser console] debug [vite] connecting...\n"}
+{"type":"stdout","timestamp":2794.641,"text":"[browser console] debug [vite] connected.\n"}
+{"type":"stdout","timestamp":2880.069,"text":"[browser console] info %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold\n"}
+{"type":"stdout","timestamp":2994.767,"text":"[browser console] log 📱 App component loading...\n"}
+{"type":"stdout","timestamp":2997.316,"text":"[browser console] log 🚀 PIIP Platform 시작...\n"}
+{"type":"stdout","timestamp":3004.672,"text":"[browser console] log ✅ Root element found: JSHandle@node\n"}
+{"type":"stdout","timestamp":3004.999,"text":"[browser console] log ✅ React root created\n"}
+{"type":"stdout","timestamp":3005.94,"text":"[browser console] log ✅ React app rendered\n"}
+{"type":"stdout","timestamp":3011.33,"text":"[browser console] log ✅ DOM Content Loaded\n"}
+{"type":"stdout","timestamp":3566.716,"text":"[browser console] log 📱 App component rendering...\n"}
+{"type":"stdout","timestamp":3567.203,"text":"[browser console] log 📱 App component rendering...\n"}
+{"type":"stdout","timestamp":3568.392,"text":"[browser console] warning ⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.\n"}
+{"type":"stdout","timestamp":3569.36,"text":"[browser console] warning ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.\n"}
+{"type":"stdout","timestamp":3569.6620000000003,"text":"[browser console] error Failed to load resource: the server responded with a status of 404 (Not Found)\n"}
+{"type":"stdout","timestamp":3569.737,"text":"[browser console] verbose [DOM] Input elements should have autocomplete attributes (suggested: \"current-password\"): (More info: https://goo.gl/9p2vKq) %o\n"}
+{"type":"after","callId":"pw:api@13","endTime":4074.66,"attachments":[]}
+{"type":"before","callId":"pw:api@14","wallTime":1764075854440,"startTime":4075.748,"class":"Test","method":"step","apiName":"page.waitForSelector","params":{"selector":"text=나의 사건 목록, 등록된 사건이 없습니다.","timeout":"5000"},"stack":[{"file":"C:\\Projects\\piip-platform\\packages\\frontend\\playwright\\debug-securechat.spec.js","line":67,"column":6}]}
+{"type":"stdout","timestamp":6023.137,"text":"[browser console] log ✅ React mounted successfully\n"}
+{"type":"after","callId":"pw:api@14","endTime":9085.44,"attachments":[],"error":{"name":"","message":"Error: page.waitForSelector: Timeout 5000ms exceeded.\nCall log:\n  \u001b[2m- waiting for locator('text=나의 사건 목록, 등록된 사건이 없습니다.') to be visible\u001b[22m\n","stack":"Error: page.waitForSelector: Timeout 5000ms exceeded.\nCall log:\n  \u001b[2m- waiting for locator('text=나의 사건 목록, 등록된 사건이 없습니다.') to be visible\u001b[22m\n\n    at C:\\Projects\\piip-platform\\packages\\frontend\\playwright\\debug-securechat.spec.js:67:6"}}
+{"type":"before","callId":"pw:api@15","wallTime":1764075859451,"startTime":9086.961,"class":"Test","method":"step","apiName":"locator.count","params":{"selector":"li[role=\"button\"] >> nth=0"},"stack":[{"file":"C:\\Projects\\piip-platform\\packages\\frontend\\playwright\\debug-securechat.spec.js","line":72,"column":23}]}
+{"type":"after","callId":"pw:api@15","endTime":9093.859,"attachments":[]}
+{"type":"stdout","timestamp":9093.984,"text":"No clickable case items found on page\n"}
+{"type":"before","callId":"hook@16","wallTime":1764075859459,"startTime":9095.171,"class":"Test","method":"step","apiName":"After Hooks","params":{},"stack":[]}
+{"type":"before","callId":"fixture@17","parentId":"hook@16","wallTime":1764075859461,"startTime":9097.508,"class":"Test","method":"step","apiName":"fixture: page","params":{},"stack":[]}
+{"type":"after","callId":"fixture@17","endTime":9097.658,"attachments":[]}
+{"type":"before","callId":"fixture@18","parentId":"hook@16","wallTime":1764075859463,"startTime":9098.014,"class":"Test","method":"step","apiName":"fixture: context","params":{},"stack":[]}
+{"type":"after","callId":"fixture@18","endTime":9098.067,"attachments":[]}

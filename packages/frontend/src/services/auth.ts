@@ -52,10 +52,15 @@ export const authService = {
 
   getCurrentUser: (): User | null => {
     const userStr = localStorage.getItem('piip_user');
-    if (userStr) {
+    if (!userStr) return null;
+    // Guard against literal strings "undefined" or "null" which can appear
+    if (userStr === 'undefined' || userStr === 'null') return null;
+    try {
       return JSON.parse(userStr);
+    } catch (e) {
+      console.warn('Failed to parse piip_user from localStorage', e, userStr);
+      return null;
     }
-    return null;
   },
 
   isAuthenticated: (): boolean => {

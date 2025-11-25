@@ -561,3 +561,38 @@
 {"level":"info","message":"✅ MongoDB 연결 완료, 서버 시작 준비 중...","timestamp":"2025-11-25 11:41:59"}
 {"level":"info","message":"🚀 Server running on port 5001","timestamp":"2025-11-25 11:41:59"}
 {"level":"info","message":"📡 API available at http://localhost:5001/api","timestamp":"2025-11-25 11:41:59"}
+{"level":"warn","message":"Azure OpenAI SDK not available: %s","timestamp":"2025-11-25 11:48:25"}
+{"level":"info","message":"✅ MongoDB 연결 성공","timestamp":"2025-11-25 11:48:26"}
+{"level":"info","message":"✅ MongoDB 연결 완료, 서버 시작 준비 중...","timestamp":"2025-11-25 11:48:26"}
+{"level":"warn","message":"Azure OpenAI SDK not available: %s","timestamp":"2025-11-25 11:48:25"}
+{"level":"warn","message":"Azure OpenAI SDK not available: %s","timestamp":"2025-11-25 11:48:25"}
+{"level":"info","message":"✅ MongoDB 연결 성공","timestamp":"2025-11-25 11:48:26"}
+{"level":"info","message":"✅ MongoDB 연결 완료, 서버 시작 준비 중...","timestamp":"2025-11-25 11:48:26"}
+{"level":"info","message":"✅ MongoDB 연결 성공","timestamp":"2025-11-25 11:48:26"}
+{"level":"info","message":"✅ MongoDB 연결 완료, 서버 시작 준비 중...","timestamp":"2025-11-25 11:48:26"}
+{"level":"info","message":"🚀 Server running on port 5001","timestamp":"2025-11-25 11:48:26"}
+{"level":"info","message":"📡 API available at http://localhost:5001/api","timestamp":"2025-11-25 11:48:26"}
+{"level":"warn","message":"Azure OpenAI SDK not available: %s","timestamp":"2025-11-25 11:51:09"}
+{"level":"info","message":"✅ MongoDB 연결 성공","timestamp":"2025-11-25 11:51:11"}
+{"level":"info","message":"✅ MongoDB 연결 완료, 서버 시작 준비 중...","timestamp":"2025-11-25 11:51:11"}
+{"level":"info","message":"🚀 Server running on port 5001","timestamp":"2025-11-25 11:51:11"}
+{"level":"info","message":"📡 API available at http://localhost:5001/api","timestamp":"2025-11-25 11:51:11"}
+{"level":"warn","message":"Azure OpenAI SDK not available: %s","timestamp":"2025-11-25 12:04:50"}
+{"level":"info","message":"✅ MongoDB 연결 성공","timestamp":"2025-11-25 12:04:51"}
+{"level":"info","message":"✅ MongoDB 연결 완료, 서버 시작 준비 중...","timestamp":"2025-11-25 12:04:51"}
+{"level":"info","message":"🚀 Server running on port 5001","timestamp":"2025-11-25 12:04:52"}
+{"level":"info","message":"📡 API available at http://localhost:5001/api","timestamp":"2025-11-25 12:04:52"}
+{"level":"warn","message":"Azure OpenAI SDK not available: %s","timestamp":"2025-11-25 21:55:15"}
+{"level":"info","message":"✅ MongoDB 연결 성공","timestamp":"2025-11-25 21:55:19"}
+{"level":"info","message":"✅ MongoDB 연결 완료, 서버 시작 준비 중...","timestamp":"2025-11-25 21:55:19"}
+{"level":"info","message":"🚀 Server running on port 5001","timestamp":"2025-11-25 21:55:19"}
+{"level":"info","message":"📡 API available at http://localhost:5001/api","timestamp":"2025-11-25 21:55:19"}
+{"level":"info","message":"🔌 Client connected: 5fzeleuektAeu2hDAAAC","timestamp":"2025-11-25 22:22:48"}
+{"level":"info","message":"Socket 5fzeleuektAeu2hDAAAC joined room case_a6c32fe0-1397-4627-b098-f4f289a4e281","timestamp":"2025-11-25 22:22:48"}
+{"level":"info","message":"❎ Client disconnected: 5fzeleuektAeu2hDAAAC","timestamp":"2025-11-25 22:22:48"}
+{"level":"info","message":"🔌 Client connected: c3hxQX7tr3KIbjgBAAAF","timestamp":"2025-11-25 22:22:50"}
+{"level":"info","message":"❎ Client disconnected: c3hxQX7tr3KIbjgBAAAF","timestamp":"2025-11-25 22:22:50"}
+{"level":"info","message":"🔌 Client connected: 0V32f20zk1QAeskqAAAK","timestamp":"2025-11-25 22:32:53"}
+{"level":"info","message":"❎ Client disconnected: 0V32f20zk1QAeskqAAAK","timestamp":"2025-11-25 22:32:53"}
+{"level":"info","message":"🔌 Client connected: 6YBzE6lweP6QrQ1CAAAN","timestamp":"2025-11-25 22:40:33"}
+{"level":"info","message":"❎ Client disconnected: 6YBzE6lweP6QrQ1CAAAN","timestamp":"2025-11-25 22:40:33"}

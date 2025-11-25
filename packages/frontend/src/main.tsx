@@ -17,9 +17,6 @@ console.log('🚀 PIIP Platform 시작...');
 
 const queryClient = new QueryClient();
 
-// Initialize auth before rendering
-store.dispatch(initializeAuthFromStorage());
-
 /**
  * Theme wrapper component to manage dynamic theme switching
  */
@@ -62,18 +59,31 @@ const root = createRoot(rootElement);
 
 console.log('✅ React root created');
 
-root.render(
-  <StrictMode>
-    <ErrorBoundary>
-      <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <BrowserRouter>
-            <ThemedApp />
-          </BrowserRouter>
-        </QueryClientProvider>
-      </Provider>
-    </ErrorBoundary>
-  </StrictMode>
-);
+// Wait for auth init to complete before mounting the app to ensure
+// components relying on auth (routes, redirects, case lists) render deterministically.
+async function initApp() {
+  try {
+    await store.dispatch(initializeAuthFromStorage());
+  } catch (e) {
+    // initialization failed, but we still continue to mount the app
+    console.warn('Auth initialization failed or timed out', e);
+  }
 
-console.log('✅ React app rendered');
+  root.render(
+    <StrictMode>
+      <ErrorBoundary>
+        <Provider store={store}>
+          <QueryClientProvider client={queryClient}>
+            <BrowserRouter>
+              <ThemedApp />
+            </BrowserRouter>
+          </QueryClientProvider>
+        </Provider>
+      </ErrorBoundary>
+    </StrictMode>
+  );
+
+  console.log('✅ React app rendered');
+}
+
+initApp();

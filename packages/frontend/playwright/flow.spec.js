@@ -62,9 +62,10 @@ test('Full flow: client creates case -> admin assigns -> detective accepts', asy
     const body = await assignRes.text();
     console.error('Assign failed:', assignRes.status(), body);
   }
-  // Log assign response body for debugging in CI/local runs
+  // Log assign response body for debugging in CI/local runs and capture assignment id
+  let assignBody = null;
   try {
-    const assignBody = await assignRes.json();
+    assignBody = await assignRes.json();
     console.log('Assign response:', assignRes.status(), assignBody);
   } catch (e) {
     console.log('Assign response status:', assignRes.status());
@@ -91,7 +92,11 @@ test('Full flow: client creates case -> admin assigns -> detective accepts', asy
   console.log('Case after assign (polled):', caseWithAssignment ? 'found' : 'not-found');
   // If the case endpoint did not show assignments, poll the assignments list directly
   let foundAssignmentGlobal = null;
-  if (!caseWithAssignment) {
+  // If assign API returned the created assignment, use it first (more reliable)
+  if (assignBody && assignBody.assignment) {
+    foundAssignmentGlobal = assignBody.assignment;
+  }
+  if (!caseWithAssignment && !foundAssignmentGlobal) {
     const startA = Date.now();
     let foundAssignment = null;
     while (Date.now() - startA < 10000) {

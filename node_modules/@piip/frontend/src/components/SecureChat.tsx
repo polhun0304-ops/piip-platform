@@ -53,7 +53,7 @@ const SecureChat: React.FC<SecureChatProps> = ({ caseId, currentUserId }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const theme = useTheme();
   // socket managed by useSocket hook
-  const { on } = useSocket(caseId);
+  const socket = useSocket(caseId);
   const DEBUG_E2EE = (import.meta as any).env?.VITE_DEBUG_E2EE === 'true' || false;
 
   // Use centralized messages hook
@@ -102,48 +102,52 @@ const SecureChat: React.FC<SecureChatProps> = ({ caseId, currentUserId }) => {
     // Socket event subscription done via useSocket.on
     let offFn: (() => void) | undefined;
     try {
-      offFn = on('chat:message', async (msg: MessageDTO) => {
-        if (msg.caseId === caseId) {
-          if (DEBUG_E2EE)
-            console.debug('[E2EE] socket received chat:message', {
-              id: msg.id,
-              senderId: msg.senderId,
-              encrypted: msg.encrypted,
-            });
-          const lk = localKeysRef.current;
-          const pkMap = participantKeysRef.current;
-          const currentUid = currentUserIdRef.current;
-          if (msg.encrypted && msg.recipients && lk?.privateKey) {
-            const entry = msg.recipients.find((r) => r.userId === currentUid);
-            if (entry) {
-              try {
-                const senderPubB64 = pkMap[msg.senderId];
-                if (senderPubB64) {
-                  if (DEBUG_E2EE)
-                    console.debug('[E2EE] attempting decryption for recipient entry', {
-                      iv: entry.iv,
-                      ciphertextLen: entry.ciphertext?.length,
-                    });
-                  let senderPub = importedKeyCache.current[msg.senderId];
-                  if (!senderPub) {
-                    senderPub = await importPublicKeyRaw(senderPubB64);
-                    importedKeyCache.current[msg.senderId] = senderPub;
+      if (!socket || typeof socket.on !== 'function') {
+        if (DEBUG_E2EE) console.warn('[SecureChat] socket.on not available');
+      } else {
+        offFn = socket.on('chat:message', async (msg: MessageDTO) => {
+          if (msg.caseId === caseId) {
+            if (DEBUG_E2EE)
+              console.debug('[E2EE] socket received chat:message', {
+                id: msg.id,
+                senderId: msg.senderId,
+                encrypted: msg.encrypted,
+              });
+            const lk = localKeysRef.current;
+            const pkMap = participantKeysRef.current;
+            const currentUid = currentUserIdRef.current;
+            if (msg.encrypted && msg.recipients && lk?.privateKey) {
+              const entry = msg.recipients.find((r) => r.userId === currentUid);
+              if (entry) {
+                try {
+                  const senderPubB64 = pkMap[msg.senderId];
+                  if (senderPubB64) {
+                    if (DEBUG_E2EE)
+                      console.debug('[E2EE] attempting decryption for recipient entry', {
+                        iv: entry.iv,
+                        ciphertextLen: entry.ciphertext?.length,
+                      });
+                    let senderPub = importedKeyCache.current[msg.senderId];
+                    if (!senderPub) {
+                      senderPub = await importPublicKeyRaw(senderPubB64);
+                      importedKeyCache.current[msg.senderId] = senderPub;
+                    }
+                    const aes = await deriveAesKey(lk.privateKey, senderPub);
+                    const plain = await decryptText(aes, entry.iv || '', entry.ciphertext);
+                    if (DEBUG_E2EE)
+                      console.debug('[E2EE] decryption successful for message id', msg.id);
+                    msg.message = plain;
                   }
-                  const aes = await deriveAesKey(lk.privateKey, senderPub);
-                  const plain = await decryptText(aes, entry.iv || '', entry.ciphertext);
+                } catch (err) {
                   if (DEBUG_E2EE)
-                    console.debug('[E2EE] decryption successful for message id', msg.id);
-                  msg.message = plain;
+                    console.warn('[E2EE] decryption failed for message id', msg.id, err);
                 }
-              } catch (err) {
-                if (DEBUG_E2EE)
-                  console.warn('[E2EE] decryption failed for message id', msg.id, err);
               }
             }
+            appendMessage(msg);
           }
-          appendMessage(msg);
-        }
-      });
+        });
+      }
     } catch (e) {
       console.error('Socket subscription failed', e);
     }
@@ -160,6 +164,64 @@ const SecureChat: React.FC<SecureChatProps> = ({ caseId, currentUserId }) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Local safe message renderer to avoid a single malformed message
+  // from crashing the whole SecureChat component render.
+  const MessageBubble: React.FC<{ msg: MessageDTO }> = ({ msg }) => {
+    try {
+      const isOwnMessage = msg.senderId === currentUserIdRef.current;
+      const text = msg.message ?? '';
+      const time = msg.timestamp ? new Date(msg.timestamp) : new Date();
+      return (
+        <Box
+          key={msg.id}
+          sx={{
+            display: 'flex',
+            justifyContent: isOwnMessage ? 'flex-end' : 'flex-start',
+            mb: 2,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, maxWidth: '70%' }}>
+            {!isOwnMessage && <RolePill role={msg.senderRole} small />}
+            <Box>
+              <Paper
+                elevation={1}
+                sx={{
+                  p: 1.5,
+                  bgcolor: isOwnMessage ? 'primary.main' : 'white',
+                  color: isOwnMessage ? 'white' : 'text.primary',
+                  borderRadius: 2,
+                  wordWrap: 'break-word',
+                }}
+              >
+                <Typography variant="body2">{text}</Typography>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    display: 'block',
+                    mt: 0.5,
+                    opacity: 0.7,
+                    fontSize: '0.7rem',
+                  }}
+                >
+                  {time.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}
+                  {msg.encrypted && ' 🔒'}
+                </Typography>
+              </Paper>
+            </Box>
+            {isOwnMessage && <RolePill role={msg.senderRole} small />}
+          </Box>
+        </Box>
+      );
+    } catch (err) {
+      console.error('[SecureChat] Message render failed', err, msg);
+      return (
+        <Box sx={{ mb: 2 }} key={msg.id || Math.random()}>
+          <Typography color="error">메시지를 표시할 수 없습니다.</Typography>
+        </Box>
+      );
+    }
+  };
 
   // keep refs in sync with state to avoid re-subscribing socket handlers
   useEffect(() => {
@@ -285,54 +347,7 @@ const SecureChat: React.FC<SecureChatProps> = ({ caseId, currentUserId }) => {
             </Typography>
           </Box>
         ) : (
-          messages.map((msg) => {
-            const isOwnMessage = msg.senderId === currentUserId;
-            return (
-              <Box
-                key={msg.id}
-                sx={{
-                  display: 'flex',
-                  justifyContent: isOwnMessage ? 'flex-end' : 'flex-start',
-                  mb: 2,
-                }}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, maxWidth: '70%' }}>
-                  {!isOwnMessage && <RolePill role={msg.senderRole} small />}
-                  <Box>
-                    {/* role label rendered by RolePill for non-own messages */}
-                    <Paper
-                      elevation={1}
-                      sx={{
-                        p: 1.5,
-                        bgcolor: isOwnMessage ? 'primary.main' : 'white',
-                        color: isOwnMessage ? 'white' : 'text.primary',
-                        borderRadius: 2,
-                        wordWrap: 'break-word',
-                      }}
-                    >
-                      <Typography variant="body2">{msg.message}</Typography>
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          display: 'block',
-                          mt: 0.5,
-                          opacity: 0.7,
-                          fontSize: '0.7rem',
-                        }}
-                      >
-                        {new Date(msg.timestamp).toLocaleTimeString('ko-KR', {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                        {msg.encrypted && ' 🔒'}
-                      </Typography>
-                    </Paper>
-                  </Box>
-                  {isOwnMessage && <RolePill role={msg.senderRole} small />}
-                </Box>
-              </Box>
-            );
-          })
+          messages.map((msg) => <MessageBubble key={msg.id || JSON.stringify(msg)} msg={msg} />)
         )}
         <div ref={messagesEndRef} />
       </Box>

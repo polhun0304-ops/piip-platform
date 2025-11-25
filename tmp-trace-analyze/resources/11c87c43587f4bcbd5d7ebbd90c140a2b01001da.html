@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh";
+injectIntoGlobalHook(window);
+window.$RefreshReg$ = () => {};
+window.$RefreshSig$ = () => (type) => type;</script>
+
+    <script type="module" src="/@vite/client"></script>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PIIP Platform</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      }
+      #loading {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+      }
+    </style>
+    <script>
+      window.addEventListener('DOMContentLoaded', () => {
+        console.log('✅ DOM Content Loaded');
+        setTimeout(() => {
+          const root = document.getElementById('root');
+          if (root && root.children.length === 0) {
+            console.error('❌ React not mounted after 3 seconds');
+          } else {
+            console.log('✅ React mounted successfully');
+            const loading = document.getElementById('loading');
+            if (loading) loading.remove();
+          }
+        }, 3000);
+      });
+    </script>
+  </head>
+  <body>
+    <div id="loading">
+      <h2>🔄 PIIP Platform 로딩 중...</h2>
+      <p>잠시만 기다려주세요</p>
+    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx?t=1764031915622"></script>
+  </body>
+</html>

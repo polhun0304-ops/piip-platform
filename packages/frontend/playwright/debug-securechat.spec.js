@@ -18,6 +18,7 @@ test('debug secure chat and AI analysis tabs', async ({ page }) => {
   const loginRes = await page.request.post(`${API_BASE}/api/auth/login`, {
     data: { email: 'testuser1@piip.com', password: 'hashedpassword1' },
   });
+  let firstCaseId = null;
   if (loginRes.ok()) {
     const body = await loginRes.json();
     await page.addInitScript(
@@ -46,7 +47,12 @@ test('debug secure chat and AI analysis tabs', async ({ page }) => {
           });
           if (!createRes.ok()) {
             console.log('Failed to create test case', createRes.status(), await createRes.text());
+          } else {
+            const created = await createRes.json();
+            firstCaseId = created.id || (created._id ? created._id : null);
           }
+        } else {
+          firstCaseId = cases[0]?.id || cases[0]?._id || null;
         }
       } else {
         console.log('Failed to fetch cases for user', casesRes.status(), await casesRes.text());
@@ -58,45 +64,74 @@ test('debug secure chat and AI analysis tabs', async ({ page }) => {
     console.log('Login API failed', loginRes.status(), await loginRes.text());
   }
 
-  // go to app
-  await page.goto(APP_BASE, { waitUntil: 'networkidle' });
-
-  // navigate to first case in list (click first CaseItem link)
-  // Wait for case list items
-  await page
-    .waitForSelector('text=나의 사건 목록, 등록된 사건이 없습니다.', { timeout: 5000 })
-    .catch(() => {});
-
-  // Try to open first case link by clicking a list item anchor or button
-  const caseItem = await page.locator('li[role="button"]', { hasText: '' }).first();
-  if ((await caseItem.count()) === 0) {
-    console.log('No clickable case items found on page');
-    return;
-  }
-  await caseItem.click();
-
-  // Wait for CaseDetail page
-  await page.waitForSelector('text=보안 채팅', { timeout: 5000 });
-
-  // Click '보안 채팅' tab
-  const tabChat = page.locator('role=tab[name="보안 채팅"]');
-  if ((await tabChat.count()) > 0) {
-    await tabChat.click();
-    console.log('Clicked 보안 채팅 tab');
+  // Navigate directly to a case detail if we know the id, otherwise open dashboard and try to click
+  if (firstCaseId) {
+    await page.goto(`${APP_BASE}/cases/${firstCaseId}`, { waitUntil: 'networkidle' });
   } else {
-    await page.click('text=보안 채팅').catch(() => {});
+    await page.goto(`${APP_BASE}/client-dashboard`, { waitUntil: 'networkidle' });
+    // Prefer aria-label on case items: `사건 ${title} 보기` (provided by CaseItem component)
+    await page.waitForSelector('[aria-label^="사건"]', { timeout: 8000 }).catch(() => {});
+
+    // Try role=button with name (accessible name) first, then aria-label prefix, then generic list item
+    let clicked = false;
+    const byRoleName = page.locator('role=button[name^="사건"]').first();
+    if ((await byRoleName.count()) > 0) {
+      await byRoleName.click();
+      clicked = true;
+      console.log('Clicked case item by role+name');
+    }
+
+    if (!clicked) {
+      const byAria = page.locator('[aria-label^="사건"]').first();
+      if ((await byAria.count()) > 0) {
+        await byAria.click();
+        clicked = true;
+        console.log('Clicked case item by aria-label prefix');
+      }
+    }
+
+    if (!clicked) {
+      // fallback to any clickable list item
+      const generic = page.locator('li[role="button"]').first();
+      if ((await generic.count()) === 0) {
+        console.log('No clickable case items found on page');
+        return;
+      }
+      await generic.click();
+      console.log('Clicked case item by generic selector');
+    }
+  }
+
+  // Wait for CaseDetail tabs to render
+  await page.waitForSelector('[role="tablist"]', { timeout: 8000 }).catch(() => {});
+
+  // Click '보안 채팅' tab by index (third tab) as a fallback when text selectors fail
+  const tabs = page.locator('role=tab');
+  if ((await tabs.count()) >= 3) {
+    await tabs.nth(2).click();
+    console.log('Clicked 보안 채팅 tab (by index)');
+  } else {
+    const tabChat = page.locator('role=tab[name="보안 채팅"]');
+    if ((await tabChat.count()) > 0) {
+      await tabChat.click();
+      console.log('Clicked 보안 채팅 tab');
+    }
   }
 
   // Wait a bit for SecureChat to initialize
   await page.waitForTimeout(2000);
 
   // Click 'AI 분석' tab
-  const tabAI = page.locator('role=tab[name="AI 분석"]');
-  if ((await tabAI.count()) > 0) {
-    await tabAI.click();
-    console.log('Clicked AI 분석 tab');
+  // Click 'AI 분석' tab (fourth tab)
+  if ((await tabs.count()) >= 4) {
+    await tabs.nth(3).click();
+    console.log('Clicked AI 분석 tab (by index)');
   } else {
-    await page.click('text=AI 분석').catch(() => {});
+    const tabAI = page.locator('role=tab[name="AI 분석"]');
+    if ((await tabAI.count()) > 0) {
+      await tabAI.click();
+      console.log('Clicked AI 분석 tab');
+    }
   }
 
   // Wait to capture any console errors

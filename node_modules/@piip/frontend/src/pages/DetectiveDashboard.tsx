@@ -21,6 +21,8 @@ import {
   DialogActions,
   TextField,
 } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 import {
   Security,
   Warning,
@@ -56,8 +58,10 @@ const DetectiveDashboard: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [cases, setCases] = useState<Case[]>([]);
+  const [assignedCases, setAssignedCases] = useState<Case[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
+  const authUser = useSelector((state: RootState) => state.auth.user as { id?: string } | null);
 
   const fetchCases = async () => {
     try {
@@ -73,6 +77,36 @@ const DetectiveDashboard: React.FC = () => {
   useEffect(() => {
     fetchCases();
   }, []);
+
+  // Fetch direct assignments for this detective (if logged in as detective)
+  useEffect(() => {
+    let mounted = true;
+    const loadAssigned = async () => {
+      if (!authUser?.id) return;
+      try {
+        const res = await api.get(`/assignments?detectiveId=${authUser.id}&status=assigned`);
+        const list = Array.isArray(res.data) ? res.data : res.data?.data || [];
+        // For each assignment, fetch case detail (best-effort)
+        const casePromises = list.map(async (a: any) => {
+          try {
+            const cre = await api.get(`/cases/${a.caseId}`);
+            return cre.data;
+          } catch (e) {
+            return null;
+          }
+        });
+        const resolved = await Promise.all(casePromises);
+        if (!mounted) return;
+        setAssignedCases(resolved.filter(Boolean));
+      } catch (e) {
+        console.warn('Failed to load assignments for detective', e);
+      }
+    };
+    loadAssigned();
+    return () => {
+      mounted = false;
+    };
+  }, [authUser?.id]);
 
   // sort by priority: '긴급' first
   const sortedMyActiveCases = [...myActiveCases].sort((a, b) => {
@@ -168,7 +202,19 @@ const DetectiveDashboard: React.FC = () => {
   };
 
   // Filter cases
-  const newRequests = cases.filter((c) => c.assignments?.some((a) => a.status === 'assigned'));
+  // New assignment requests found both from `cases` payload and separate assignments endpoint
+  const newRequests = (() => {
+    const combined = [
+      ...cases.filter((c) => c.assignments?.some((a) => a.status === 'assigned')),
+      ...assignedCases,
+    ];
+    const map = new Map<string, Case>();
+    combined.forEach((c) => {
+      if (!c) return;
+      map.set(String(c.id ?? c._id ?? JSON.stringify(c)), c);
+    });
+    return Array.from(map.values());
+  })();
 
   const myActiveCases = cases.filter((c) => c.assignments?.some((a) => a.status === 'accepted'));
 
@@ -239,6 +285,7 @@ const DetectiveDashboard: React.FC = () => {
             {newRequests.map((c) => (
               <Grid item xs={12} md={6} key={c.id}>
                 <Paper
+                  data-testid={`assignment-card-${c.id}`}
                   sx={{ p: 2, border: `1px solid ${theme.palette.error.main}`, bgcolor: '#fff5f5' }}
                 >
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
@@ -255,6 +302,7 @@ const DetectiveDashboard: React.FC = () => {
                   </Typography>
                   <Box sx={{ display: 'flex', gap: 1 }}>
                     <Button
+                      data-testid={`accept-button-${c.id}`}
                       variant="contained"
                       color="primary"
                       startIcon={<Check />}
@@ -264,6 +312,7 @@ const DetectiveDashboard: React.FC = () => {
                       수임 승낙
                     </Button>
                     <Button
+                      data-testid={`reject-button-${c.id}`}
                       variant="outlined"
                       color="error"
                       startIcon={<Close />}

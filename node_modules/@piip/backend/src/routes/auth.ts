@@ -133,18 +133,16 @@ router.post("/login", async (req: Request, res: Response) => {
     if (!user) {
       try {
         const detective = await detectiveRepository().findOne({
-          where: [
-            { id: email },
-            { licenseNumber: email },
-            { email: email },
-          ],
+          where: [{ id: email }, { licenseNumber: email }, { email: email }],
         });
 
         if (detective) {
-          user = await userRepository().findOne({ where: { detectiveId: detective.id } });
+          user = await userRepository().findOne({
+            where: { detectiveId: detective.id },
+          });
         }
       } catch (e) {
-        console.warn('Detective lookup during login failed', e);
+        console.warn("Detective lookup during login failed", e);
       }
     }
 

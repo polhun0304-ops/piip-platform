@@ -6,6 +6,7 @@ import {
   Toolbar,
   Typography,
   IconButton,
+  Badge,
   List,
   ListItem,
   ListItemIcon,
@@ -34,6 +35,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
 import { logoutThunk } from '../store/slices/authSlice';
+import api from '../services/api';
 import HeroSection from './EnhancedHomepage/HeroSection';
 import FeaturesSection from './EnhancedHomepage/FeaturesSection';
 import Footer from './EnhancedHomepage/Footer';
@@ -261,6 +263,61 @@ const UnifiedLayout: React.FC<UnifiedLayoutProps> = ({ children }) => {
     }
   };
 
+  // Track case counts and next actionable case for quick navigation
+  const [pendingCount, setPendingCount] = useState(0);
+  const [pausedCount, setPausedCount] = useState(0);
+  const [inProgressCount, setInProgressCount] = useState(0);
+  const [nextCaseId, setNextCaseId] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadCases = async () => {
+      try {
+        const res = await api.get('/cases');
+        const cases = Array.isArray(res.data) ? res.data : [];
+
+        if (!mounted) return;
+
+        const pending = cases.filter((c: any) => c.status === '대기').length;
+        const paused = cases.filter((c: any) => c.status === '보류').length;
+        const inprog = cases.filter(
+          (c: any) => c.status === '조사중' || c.status === '조사 중'
+        ).length;
+
+        setPendingCount(pending);
+        setPausedCount(paused);
+        setInProgressCount(inprog);
+
+        // Determine next actionable case depending on role
+        let next: string | null = null;
+        if (role === 'client') {
+          const nextCase = cases.find((c: any) => c.status === '대기' || c.status === '보류');
+          next = nextCase?.id || nextCase?._id || null;
+        } else if (role === 'detective') {
+          // detective API returns assignments joined; try to find assigned -> accepted flow
+          const assigned = cases.find((c: any) => {
+            const assignments = c.assignments || [];
+            return assignments.some((a: any) => a.status === 'assigned' || a.status === 'accepted');
+          });
+          next = assigned?.id || assigned?._id || null;
+        } else if (role === 'admin') {
+          const adminNext = cases.find((c: any) => c.status === '보류' || c.status === '대기');
+          next = adminNext?.id || adminNext?._id || null;
+        }
+
+        setNextCaseId(next);
+      } catch (e) {
+        // ignore quietly; counts remain at 0
+        console.warn('Failed to load case counts', e);
+      }
+    };
+
+    if (authUser) loadCases();
+    return () => {
+      mounted = false;
+    };
+  }, [authUser, role]);
+
   const handleNavigation = (path: string) => {
     navigate(path);
     if (isMobile) {
@@ -363,7 +420,18 @@ const UnifiedLayout: React.FC<UnifiedLayoutProps> = ({ children }) => {
                       minWidth: 40,
                     }}
                   >
-                    {item.icon}
+                    {/* Show badge on '사건 관리' to surface pending/paused counts */}
+                    {item.path === '/cases' ? (
+                      <Badge
+                        badgeContent={pendingCount + pausedCount}
+                        color="error"
+                        invisible={pendingCount + pausedCount === 0}
+                      >
+                        {item.icon}
+                      </Badge>
+                    ) : (
+                      item.icon
+                    )}
                   </ListItemIcon>
                   <ListItemText
                     primary={item.title}
@@ -512,6 +580,19 @@ const UnifiedLayout: React.FC<UnifiedLayoutProps> = ({ children }) => {
           </Box>
 
           {/* 로그인/로그아웃 버튼 (상단 우측) */}
+          {/* Next action button */}
+          <Button
+            variant="outlined"
+            color="inherit"
+            onClick={() => {
+              if (nextCaseId) navigate(`/cases/${nextCaseId}`);
+            }}
+            disabled={!nextCaseId}
+            sx={{ mr: 1, borderColor: 'rgba(255,255,255,0.12)', color: '#fff' }}
+          >
+            다음 할 일
+          </Button>
+
           <Button
             variant="contained"
             color="secondary"
