@@ -1,0 +1,55 @@
+{
+  "name": "PIIP Detective Platform",
+  "short_name": "PIIP",
+  "description": "세계 최고의 탐정 플랫폼 - AI 기반 전문가 매칭 및 사건 관리",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0118",
+  "theme_color": "#00f5ff",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity", "security"],
+  "screenshots": [
+    {
+      "src": "/assets/screenshot-1.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/assets/screenshot-2.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "무료 상담",
+      "short_name": "상담",
+      "description": "전문가와 무료 상담 신청",
+      "url": "/#request",
+      "icons": [{ "src": "/assets/shortcut-consult.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "전문가 찾기",
+      "short_name": "전문가",
+      "description": "검증된 탐정 전문가 검색",
+      "url": "/#detectives",
+      "icons": [{ "src": "/assets/shortcut-detective.png", "sizes": "96x96" }]
+    }
+  ]
+}

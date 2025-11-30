@@ -1,0 +1,63 @@
+{
+  "name": "piip-platform",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "backend": "ts-node-dev --respawn packages/backend/src/index.ts",
+    "frontend": "next dev -p 3000",
+    "build": "turbo run build",
+    "openapi:gen": "npm run gen:sdk:node && echo OpenAPI SDK regenerated",
+    "openapi:check-diff": "git diff --name-only HEAD docs/openapi/openapi.yaml || true",
+    "openapi:changed": "git diff --name-only origin/main...HEAD docs/openapi/openapi.yaml || true",
+    "gen:sdk": "openapi-generator-cli generate -i docs/openapi/openapi.yaml -g typescript-fetch -o packages/sdk --additional-properties=supportsES6=true,npmName=@piip/sdk,npmVersion=0.1.0",
+    "gen:sdk:node": "openapi-typescript-codegen --input docs/openapi/openapi.yaml --output packages/sdk --client fetch --name-index true --useOptions true",
+    "gen:server": "openapi-generator-cli generate -i docs/openapi/openapi.yaml -g nodejs-express-server -o packages/backend",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "test": "turbo run test",
+    "clean": "turbo run clean",
+    "start": "turbo run start"
+  },
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.13.5",
+    "@types/bcrypt": "^6.0.0",
+    "@types/mongoose": "^5.11.96",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.0.0",
+    "openapi-typescript-codegen": "^0.29.0",
+    "prettier": "^3.0.0",
+    "turbo": "^1.10.0",
+    "typescript": "5.5.4"
+  },
+  "dependencies": {
+    "@opentelemetry/auto-instrumentations-node": "^0.67.0",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.208.0",
+    "@opentelemetry/sdk-node": "^0.208.0",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.20.0",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.27"
+  },
+  "description": "PIIP는 현대적인 탐정 업무를 지원하는 통합 정보 플랫폼입니다. AI 기술과 자동화를 통해 조사 프로세스를 효율화하고, 데이터 기반의 의사결정을 지원합니다.",
+  "main": "app.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=20 <25"
+  }
+}

@@ -1,0 +1,60 @@
+name: E2E Headless (secure chat)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  e2e:
+    name: Run headless E2E
+    runs-on: ubuntu-latest
+    services:
+      mongo:
+        image: mongo:6.0
+        ports: ["27017:27017"]
+        options: >-
+          --health-cmd "mongosh --eval 'db.adminCommand({ ping: 1 })' || exit 1"
+          --health-interval=10s --health-timeout=5s --health-retries=5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: |
+          # build frontend in CI (Node 20 environment) to reproduce Vite build results
+          npm --prefix packages/frontend ci
+          npm --prefix packages/frontend run build
+
+      - name: Start backend (dev) and wait for health
+        env:
+          MONGO_URI: mongodb://localhost:27017/piip-platform
+        run: |
+          # start backend (ts-node-dev) in background
+          npm run backend &
+          backend_pid=$!
+          echo "backend pid: $backend_pid"
+          # wait for the backend /health to be available
+          for i in `seq 1 30`; do
+            if curl -sSf http://localhost:5001/health >/dev/null 2>&1; then
+              echo 'backend healthy'
+              break
+            fi
+            echo 'waiting for backend...'
+            sleep 2
+          done
+
+      - name: Run headless E2E test (frontend)
+        run: |
+          # run the headless e2e test script that uses the running backend
+          npm --prefix packages/frontend run test:e2e

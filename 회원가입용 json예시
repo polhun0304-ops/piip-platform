@@ -1,0 +1,47 @@
+[
+  {
+    "username": "changhoon",
+    "email": "changhoon@example.com",
+    "password": "hashed_pw_123",
+    "role": "admin",
+    "phoneNumber": "+82-10-1234-5678",
+    "isVerified": true,
+    "profileImage": "https://example.com/images/changhoon.jpg",
+    "address": {
+      "city": "Yongin",
+      "district": "Giheung-gu",
+      "street": "123 Detective Ave",
+      "postalCode": "16900"
+    },
+    "preferences": {
+      "language": "ko",
+      "notifications": true,
+      "darkMode": true
+    },
+    "tags": [
+      "founder",
+      "premium",
+      "beta-user"
+    ],
+    "activityLog": [
+      {
+        "action": "signup",
+        "timestamp": {
+          "$date": "2025-11-17T20:30:00Z"
+        }
+      },
+      {
+        "action": "login",
+        "timestamp": {
+          "$date": "2025-11-17T20:45:00Z"
+        }
+      }
+    ],
+    "lastLogin": {
+      "$date": "2025-11-17T20:45:00Z"
+    },
+    "createdAt": {
+      "$date": "2025-11-17T20:30:00Z"
+    }
+  }
+]

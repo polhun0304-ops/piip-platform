@@ -1,0 +1,21 @@
+{
+  "editor.formatOnSave": true,
+  "cursor.ai.enable": true,
+  "cursor.ai.providers": {
+    "openai": {
+      "apiKey": "sk-OPENAI-KEY",
+      "defaultModel": "gpt-4o"
+    },
+    "anthropic": {
+      "apiKey": "sk-ANTHROPIC-KEY",
+      "defaultModel": "claude-3.5-sonnet"
+    },
+    "copilot": {
+      "enabled": true
+    }
+  },
+  "cursor.experimental.multiAI": true,
+  "cursor.contextSize": 16000,
+  "cursor.ai.codeReview": true,
+  "cursor.commandShortcut": "Ctrl+Shift+P"
+}
