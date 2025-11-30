@@ -13,6 +13,7 @@ import { PricingTemplate } from "../entities/PricingTemplate";
 import { Quote } from "../entities/Quote";
 import { Consultation } from "../entities/Consultation";
 import E2EKey from "../entities/E2EKey";
+import { SystemSettings } from "../entities/SystemSettings";
 
 export const AppDataSource = new DataSource({
   type: "sqlite",
@@ -34,6 +35,8 @@ export const AppDataSource = new DataSource({
     PricingTemplate,
     Quote,
     Consultation,
+    Report,
+    SystemSettings,
   ],
   migrations: [],
   subscribers: [],

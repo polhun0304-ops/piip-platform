@@ -1,5 +1,7 @@
 import { AppDataSource } from "../config/database";
 import { Detective } from "../entities/Detective";
+import { User } from "../entities/User";
+import bcrypt from "bcryptjs";
 
 /**
  * 샘플 탐정 시드 데이터
@@ -159,8 +161,35 @@ export async function seedDetectives() {
   for (const d of detectives) {
     const exists = await repo.findOne({ where: { email: d.email } });
     if (!exists) {
-      await repo.save(repo.create(d));
+      const saved = await repo.save(repo.create(d));
       console.log(`✅ Created detective: ${d.name}`);
+
+      // Create a linked User account for seeded detective if missing
+      try {
+        const userRepo = AppDataSource.getRepository(User);
+        const existingUser = await userRepo.findOne({
+          where: { email: d.email },
+        });
+        if (!existingUser) {
+          const defaultPassword =
+            process.env.DETECTIVE_DEFAULT_PASSWORD || "detective123!";
+          const hashed = await bcrypt.hash(defaultPassword, 10);
+          const newUser = userRepo.create({
+            email: d.email,
+            password: hashed,
+            name: d.name,
+            role: "detective",
+            isActive: true,
+            detectiveId: saved.id,
+          });
+          await userRepo.save(newUser);
+          console.log(
+            `   ➕ Created user account for detective ${d.email} (default password)`
+          );
+        }
+      } catch (e) {
+        console.warn("Failed to create linked user for detective:", e);
+      }
     } else {
       console.log(`⏭️  Detective already exists: ${d.name}`);
     }

@@ -19,11 +19,17 @@ router.get("/", verifyJWT, async (req: AuthRequest, res: Response) => {
 
     // 탐정은 본인 배정된 사건만 조회
     if (req.user!.role === "detective" && req.user!.detectiveId) {
+      // Only include assignments that are currently relevant (assigned or accepted).
+      // This prevents showing cases where the detective was previously assigned and later rejected.
       queryBuilder
         .leftJoinAndSelect("case.assignments", "assignment")
         .where("assignment.detectiveId = :detectiveId", {
           detectiveId: req.user!.detectiveId,
-        });
+        })
+        .andWhere("assignment.status IN (:...statuses)", {
+          statuses: ["assigned", "accepted"],
+        })
+        .distinct(true);
     } else if (req.user!.role === "client") {
       // 의뢰인은 본인 사건만 조회
       queryBuilder.where("case.clientUserId = :userId", {
@@ -341,12 +347,9 @@ router.post(
 
       await assignmentRepo.save(assignment);
 
-      // Update case status if needed
-      targetCase.status = "조사 중"; // Or keep as '대기' until accepted? Let's say '조사 중' implies active process starts or '배정됨'
-      // For now, let's keep case status as is or update to 'Assigned' if we had that status.
-      // The Case entity has '조사 중' | '종료' | '대기'.
-      // Let's keep it '대기' until detective accepts? Or '조사 중'?
-      // Usually '조사 중' means active.
+      // Update case status and persist the change so clients see the new status immediately.
+      targetCase.status = "조사 중";
+      await caseRepo.save(targetCase);
 
       res.status(201).json(assignment);
     } catch (e: unknown) {

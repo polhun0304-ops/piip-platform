@@ -1,4 +1,0 @@
-
-> @piip/frontend@1.0.0 build
-> node scripts/check-node.cjs && tsc && vite build
-

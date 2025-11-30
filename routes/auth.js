@@ -43,7 +43,18 @@ router.post("/login", async (req, res) => {
     user.lastLogin = new Date();
     await user.save();
 
-    res.status(200).json({ token });
+    // 응답에 비밀번호 필드를 제외한 사용자 정보를 함께 반환합니다.
+    const safeUser = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      isVerified: user.isVerified,
+      lastLogin: user.lastLogin,
+      createdAt: user.createdAt,
+    };
+
+    res.status(200).json({ token, user: safeUser });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "서버 오류" });

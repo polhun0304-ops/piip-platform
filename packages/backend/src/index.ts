@@ -30,11 +30,12 @@ import consultationsRouter from "./routes/consultations";
 import chatRouter from "./routes/chat";
 import aiRouter from "./routes/ai";
 import e2eeRouter from "./routes/e2ee";
+import adminRouter from "./routes/admin";
 
 import { cleanupLocalUploads } from "./services/cleanup";
 
 // 환경 변수
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5002;
 const FILE_RETENTION_DAYS = parseInt(
   process.env.FILE_RETENTION_DAYS || "0",
   10
@@ -93,6 +94,7 @@ app.use("/api/consultations", consultationsRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/ai", aiRouter);
 app.use("/api/e2ee", e2eeRouter);
+app.use("/api/admin", adminRouter);
 
 // Socket.IO handshake authentication using JWT from handshake.auth.token or Authorization header
 io.use((socket, next) => {
@@ -176,12 +178,14 @@ io.on("connection", (socket) => {
 app.set("io", io);
 
 // MongoDB 연결 및 서버 시작
-connectDB()
+// connectDB()
+//   .then(() => {
+//     logger.info("✅ MongoDB 연결 완료, 서버 시작 준비 중...");
+//     return initializeDatabase();
+//   })
+initializeDatabase()
   .then(() => {
-    logger.info("✅ MongoDB 연결 완료, 서버 시작 준비 중...");
-    return initializeDatabase();
-  })
-  .then(() => {
+    logger.info("✅ Database initialization completed, starting server...");
     httpServer.listen(PORT, () => {
       logger.info(`🚀 Server running on port ${PORT}`);
       logger.info(`📡 API available at http://localhost:${PORT}/api`);

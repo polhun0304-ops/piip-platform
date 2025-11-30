@@ -6,6 +6,25 @@ param(
     [switch]$Local  # If provided, force local npm dev startup instead of Docker
 )
 
+# If running under Windows PowerShell (5.1), try to re-launch under PowerShell Core (pwsh)
+# to get proper UTF-8 handling and more reliable console behavior.
+try {
+    if ($PSVersionTable.PSEdition -ne 'Core') {
+        $pwshCmd = Get-Command pwsh -ErrorAction SilentlyContinue
+        if ($pwshCmd) {
+            Write-Host "PowerShell Core (pwsh) found. Relaunching under pwsh for UTF-8 output..." -ForegroundColor Yellow
+            $argList = @()
+            if ($Local) { $argList += '-Local' }
+            & $pwshCmd.Source -NoProfile -ExecutionPolicy Bypass -File $MyInvocation.MyCommand.Path @argList
+            exit
+        } else {
+            Write-Warning "PowerShell Core (pwsh) not found. Continuing under Windows PowerShell 5.1. UTF-8 output may be limited."
+        }
+    }
+} catch {
+    Write-Warning "Failed to check/relaunch pwsh: $($_.Exception.Message)"
+}
+
 # Set output encoding so non-ASCII (한글 등) 출력이 깨지지 않도록 합니다.
 $OutputEncoding = [System.Text.Encoding]::UTF8
 

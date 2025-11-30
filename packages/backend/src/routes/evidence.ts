@@ -10,6 +10,40 @@ import { saveObject } from "../services/storage";
 import { enqueueForEvidence, enqueueForCase } from "../services/analysisRunner";
 import { verifyJWT, AuthRequest } from "../middleware/auth";
 
+// Basic magic-bytes checks for common types (non-exhaustive)
+function looksLikeAllowedFile(buffer: Buffer, mimetype: string): boolean {
+  if (!buffer || buffer.length < 4) return false;
+  const hex = buffer.slice(0, 8).toString("hex").toLowerCase();
+  // PNG: 89504e47
+  if (hex.startsWith("89504e47") && mimetype.startsWith("image/")) return true;
+  // JPG/JPEG: ffd8ff
+  if (hex.startsWith("ffd8ff") && mimetype.startsWith("image/")) return true;
+  // PDF: 25504446
+  if (
+    hex.startsWith("25504446") &&
+    (mimetype === "application/pdf" || mimetype.startsWith("application/"))
+  )
+    return true;
+  // MP4: 00000018..66747970 (ftyp)
+  if (hex.includes("66747970") && mimetype.startsWith("video/")) return true;
+  // MP3 ID3: 494433
+  if (hex.startsWith("494433") && mimetype.startsWith("audio/")) return true;
+  // fallback: allow common text types
+  if (mimetype.startsWith("text/")) return true;
+  return false;
+}
+
+function auditLog(action: string, payload: Record<string, unknown>) {
+  try {
+    // simple structured log for audit - can be replaced with proper logger
+    console.info(
+      JSON.stringify({ ts: new Date().toISOString(), action, ...payload })
+    );
+  } catch (e) {
+    console.info(action, payload);
+  }
+}
+
 const router = Router();
 
 // 업로드 스토리지 설정: 메모리 기반으로 받아서 storage 서비스로 저장
@@ -66,7 +100,7 @@ router.get("/", verifyJWT, async (req: AuthRequest, res: Response) => {
 });
 
 // GET /api/evidence/:id - 특정 증거 조회
-router.get("/:id", async (req: Request, res: Response) => {
+router.get("/:id", verifyJWT, async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const evidenceRepository = AppDataSource.getRepository(Evidence);
@@ -79,6 +113,15 @@ router.get("/:id", async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Evidence not found" });
     }
 
+    // Permission checks: clients can view only evidences belonging to their cases
+    if (req.user?.role === "client") {
+      const clientUserId = (evidence.case as any)?.clientUserId;
+      if (clientUserId && clientUserId !== req.user.userId) {
+        return res.status(403).json({ error: "Unauthorized" });
+      }
+    }
+
+    // Detectives may also be restricted to cases they are assigned to (handled in list endpoint)
     res.json(evidence);
   } catch (error) {
     console.error("Error fetching evidence:", error);
@@ -182,9 +225,21 @@ router.post(
       if (!req.file) {
         return res.status(400).json({ error: "File is required" });
       }
-
-      // 타입 추론
+      // 타입 추론 + sanity check via magic bytes
       const mime = req.file.mimetype;
+      if (!looksLikeAllowedFile(req.file.buffer, mime)) {
+        auditLog("evidence.upload.rejected", {
+          reason: "magic-signature-mismatch",
+          filename: req.file.originalname,
+          mimetype: mime,
+          caseId,
+          userId: req.user?.userId,
+        });
+        return res
+          .status(400)
+          .json({ error: "Unsupported or corrupted file type" });
+      }
+
       let type: Evidence["type"] = "문서";
       if (mime.startsWith("image/")) type = "이미지";
       else if (mime.startsWith("audio/")) type = "오디오";
@@ -208,6 +263,13 @@ router.post(
       });
 
       const saved = await evidenceRepository.save(newEvidence);
+      auditLog("evidence.uploaded", {
+        evidenceId: saved.id,
+        caseId: saved.caseId,
+        userId: req.user?.userId,
+        detectiveId: req.user?.detectiveId,
+        filename: req.file.originalname,
+      });
       if ((process.env.ANALYSIS_ENABLED || "true").toLowerCase() === "true") {
         // fire-and-forget per-evidence analysis
         enqueueForEvidence(saved.id).catch((err: unknown) => {
@@ -230,16 +292,37 @@ router.post(
 );
 
 // PUT /api/evidence/:id - 증거 수정
-router.put("/:id", async (req: Request, res: Response) => {
+router.put("/:id", verifyJWT, async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const { label, type, date, filePath, caseId } = req.body;
 
     const evidenceRepository = AppDataSource.getRepository(Evidence);
-    const evidence = await evidenceRepository.findOneBy({ id });
+    const evidence = await evidenceRepository.findOne({
+      where: { id },
+      relations: ["case"],
+    });
 
     if (!evidence) {
       return res.status(404).json({ error: "Evidence not found" });
+    }
+
+    // Permission: clients can only update evidence in their own cases
+    if (req.user?.role === "client") {
+      const clientUserId = (evidence.case as any)?.clientUserId;
+      if (clientUserId && clientUserId !== req.user.userId) {
+        return res.status(403).json({ error: "Unauthorized" });
+      }
+    }
+
+    // Detectives must be assigned to the case to modify
+    if (req.user?.role === "detective") {
+      const isAssigned = (evidence.case as any)?.assignments?.some(
+        (a: any) => a.detectiveId === req.user?.detectiveId
+      );
+      if (!isAssigned) {
+        return res.status(403).json({ error: "Unauthorized" });
+      }
     }
 
     evidenceRepository.merge(evidence, {
@@ -251,6 +334,11 @@ router.put("/:id", async (req: Request, res: Response) => {
     });
 
     const updatedEvidence = await evidenceRepository.save(evidence);
+    auditLog("evidence.updated", {
+      evidenceId: updatedEvidence.id,
+      userId: req.user?.userId,
+      detectiveId: req.user?.detectiveId,
+    });
     res.json(updatedEvidence);
   } catch (error) {
     console.error("Error updating evidence:", error);
@@ -334,15 +422,47 @@ router.post("/fetch-url", async (req: Request, res: Response) => {
 });
 
 // DELETE /api/evidence/:id - 증거 삭제
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", verifyJWT, async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const evidenceRepository = AppDataSource.getRepository(Evidence);
+    const evidence = await evidenceRepository.findOne({
+      where: { id },
+      relations: ["case"],
+    });
+
+    if (!evidence) {
+      return res.status(404).json({ error: "Evidence not found" });
+    }
+
+    // Permission checks
+    if (req.user?.role === "client") {
+      const clientUserId = (evidence.case as any)?.clientUserId;
+      if (clientUserId && clientUserId !== req.user.userId) {
+        return res.status(403).json({ error: "Unauthorized" });
+      }
+    }
+
+    if (req.user?.role === "detective") {
+      const isAssigned = (evidence.case as any)?.assignments?.some(
+        (a: any) => a.detectiveId === req.user?.detectiveId
+      );
+      if (!isAssigned) {
+        return res.status(403).json({ error: "Unauthorized" });
+      }
+    }
+
     const result = await evidenceRepository.delete(id);
 
     if (result.affected === 0) {
       return res.status(404).json({ error: "Evidence not found" });
     }
+
+    auditLog("evidence.deleted", {
+      evidenceId: id,
+      userId: req.user?.userId,
+      detectiveId: req.user?.detectiveId,
+    });
 
     res.status(204).send();
   } catch (error) {

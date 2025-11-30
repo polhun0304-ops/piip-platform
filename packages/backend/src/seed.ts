@@ -8,6 +8,7 @@ import { User } from "./entities/User";
 import { PricingTemplate } from "./entities/PricingTemplate";
 import { Quote } from "./entities/Quote";
 import { Consultation } from "./entities/Consultation";
+import { Detective } from "./entities/Detective";
 import * as bcrypt from "bcryptjs";
 
 config();
@@ -29,28 +30,30 @@ async function seedDatabase() {
     // If Detective exists and links to User, we might need to clear it too.
     // Let's assume for now we just clear what we create.
 
-    console.log("🗑️  Clearing existing data...");
-    // Delete in order of dependency (Child -> Parent)
-    await evidenceRepository.clear();
-    await quoteRepository.clear();
-    await consultationRepository.clear();
-    await caseRepository.clear();
-    await pricingRepository.clear();
-    await userRepository.clear();
-    console.log("✅ Existing data cleared");
+    console.log("🔁 Seeding in idempotent mode (upsert / skip existing)");
+    // NOTE: Do NOT perform global clears here. Instead, create or update
+    // only the test data we need so re-running the seeder is safe in CI.
 
-    // Admin 계정 생성
-    const adminPassword = await bcrypt.hash("admin123!@#", 10);
-    const admin = userRepository.create({
-      email: "admin@piip.com",
-      password: adminPassword,
-      name: "관리자",
-      phone: "010-0000-0000",
-      role: "admin",
-      isActive: true,
+    // Admin 계정 생성(업서트)
+    const adminEmail = "admin@piip.com";
+    const existingAdmin = await userRepository.findOne({
+      where: { email: adminEmail },
     });
-    await userRepository.save(admin);
-    console.log("✅ Created admin account: admin@piip.com");
+    if (!existingAdmin) {
+      const adminPassword = await bcrypt.hash("admin123!@#", 10);
+      const admin = userRepository.create({
+        email: adminEmail,
+        password: adminPassword,
+        name: "관리자",
+        phone: "010-0000-0000",
+        role: "admin",
+        isActive: true,
+      });
+      await userRepository.save(admin);
+      console.log("✅ Created admin account: admin@piip.com");
+    } else {
+      console.log("⏭️  Admin account already exists: admin@piip.com");
+    }
 
     // 회원(User) 10개 생성
     // Ensure test users map 1->client, 2->detective, 3->admin
@@ -71,8 +74,59 @@ async function seedDatabase() {
         isActive: true,
       });
     }
-    const users = await userRepository.save(userArr);
-    console.log(`✅ Created ${users.length} test users`);
+    // Create or skip test users by email (idempotent)
+    const createdUsers = [];
+    for (const u of userArr) {
+      const exists = await userRepository.findOne({
+        where: { email: u.email },
+      });
+      if (!exists) {
+        const created = await userRepository.save(u);
+        createdUsers.push(created);
+        console.log(`✅ Created test user: ${u.email}`);
+      } else {
+        console.log(`⏭️  Test user exists: ${u.email}`);
+      }
+    }
+    console.log(`ℹ️  Test users ensured (created ${createdUsers.length})`);
+
+    // Load users from DB for downstream associations (cases, consultations, etc.)
+    const users = await userRepository.find();
+    // Ensure Detective entities exist for users with role 'detective'
+    const detectiveRepository = AppDataSource.getRepository(Detective);
+    const detectiveUsers = users.filter((u) => u.role === "detective");
+    for (const du of detectiveUsers) {
+      // Try to find existing detective by userId or email
+      let det = await detectiveRepository.findOne({
+        where: [{ userId: du.id }, { email: du.email }],
+      });
+      if (!det) {
+        det = detectiveRepository.create({
+          userId: du.id,
+          name: du.name || `탐정 ${du.email}`,
+          email: du.email,
+          phone: du.phone || undefined,
+          licenseNumber: `DET-${Math.floor(1000 + Math.random() * 9000)}`,
+          experienceYears: 3,
+          status: "활동중",
+          specialties: [],
+        });
+        await detectiveRepository.save(det);
+        console.log(`✅ Created Detective profile for user ${du.email}`);
+      } else if (!det.userId) {
+        // Link existing detective record to user
+        det.userId = du.id;
+        await detectiveRepository.save(det);
+        console.log(`🔗 Linked Detective ${det.id} to user ${du.email}`);
+      }
+
+      // Ensure user's detectiveId is set
+      if (!du.detectiveId) {
+        du.detectiveId = det.id;
+        await userRepository.save(du);
+        console.log(`🔗 Set user.detectiveId for ${du.email} -> ${det.id}`);
+      }
+    }
 
     // 가격표(PricingTemplate) 5개 생성
     const pricingArr: any[] = [];
@@ -103,8 +157,22 @@ async function seedDatabase() {
         includedServices: ["기본서비스A", "기본서비스B"],
       });
     }
-    const pricings = await pricingRepository.save(pricingArr);
-    console.log(`✅ Created ${pricings.length} pricing templates`);
+    // Pricing templates: create if missing by name
+    const ensuredPricings = [];
+    for (const p of pricingArr) {
+      const exists = await pricingRepository.findOne({
+        where: { name: p.name },
+      });
+      if (!exists) {
+        const saved = await pricingRepository.save(p);
+        ensuredPricings.push(saved);
+        console.log(`✅ Created pricing template: ${p.name}`);
+      } else {
+        ensuredPricings.push(exists);
+        console.log(`⏭️  Pricing template exists: ${p.name}`);
+      }
+    }
+    console.log(`ℹ️  Pricing templates ensured (${ensuredPricings.length})`);
 
     // 기존 데이터 삭제 (전체 삭제)
     // await evidenceRepository.clear(); // Already cleared
@@ -120,20 +188,30 @@ async function seedDatabase() {
     ];
     const clientUsers = users.filter((u) => u.role === "client");
 
+    // Create cases only if a case with the same title doesn't exist
+    const cases: any[] = [];
     for (let i = 1; i <= 25; i++) {
-      caseArr.push({
-        title: `테스트 사건 #${i}`,
-        description: `테스트용 사건 설명 ${i}번. 다양한 유형의 사건 자동 생성.`,
-        status: statusArr[i % statusArr.length],
-        date: `2025-11-${((i % 28) + 1).toString().padStart(2, "0")}`,
-        clientUserId:
-          clientUsers.length > 0
-            ? clientUsers[i % clientUsers.length].id
-            : null,
-      });
+      const title = `테스트 사건 #${i}`;
+      const exists = await caseRepository.findOne({ where: { title } });
+      if (!exists) {
+        const newCase: any = {
+          title,
+          description: `테스트용 사건 설명 ${i}번. 다양한 유형의 사건 자동 생성.`,
+          status: statusArr[i % statusArr.length],
+          date: `2025-11-${((i % 28) + 1).toString().padStart(2, "0")}`,
+        };
+        if (clientUsers.length > 0) {
+          newCase.clientUserId = clientUsers[i % clientUsers.length].id;
+        }
+        const saved = await caseRepository.save(newCase as any);
+        cases.push(saved);
+        console.log(`✅ Created case: ${title}`);
+      } else {
+        cases.push(exists);
+        console.log(`⏭️  Case exists: ${title}`);
+      }
     }
-    const cases = await caseRepository.save(caseArr);
-    console.log(`✅ Created ${cases.length} cases`);
+    console.log(`ℹ️  Cases ensured (${cases.length})`);
 
     // 증거 25개 생성 (각 사건에 1개씩)
     const evidenceArr: any[] = [];
@@ -143,40 +221,63 @@ async function seedDatabase() {
       "문서",
       "비디오",
     ];
-    for (let i = 0; i < 25; i++) {
-      evidenceArr.push({
-        label: `테스트 증거 #${i + 1}`,
-        type: typeArr[i % typeArr.length],
-        date: `2025-11-${(((i * 2) % 28) + 1).toString().padStart(2, "0")}`,
-        caseId: cases[i].id,
+    // Evidence: create one evidence per case if not exists for that case+label
+    for (let i = 0; i < cases.length; i++) {
+      const label = `테스트 증거 #${i + 1}`;
+      const exists = await evidenceRepository.findOne({
+        where: { label, caseId: cases[i].id },
       });
+      if (!exists) {
+        const ev = {
+          label,
+          type: typeArr[i % typeArr.length],
+          date: `2025-11-${(((i * 2) % 28) + 1).toString().padStart(2, "0")}`,
+          caseId: cases[i].id,
+        };
+        await evidenceRepository.save(ev);
+        console.log(`✅ Created evidence: ${label} for case ${cases[i].id}`);
+      } else {
+        console.log(`⏭️  Evidence exists: ${label} for case ${cases[i].id}`);
+      }
     }
-    const evidence = await evidenceRepository.save(evidenceArr);
-    console.log(`✅ Created ${evidence.length} evidence items`);
 
     // 견적(Quote) 5개 생성 (사건과 가격표 연동) - 사건(cases) 생성 이후에 실행
     const quoteArr: any[] = [];
-    for (let i = 0; i < 5; i++) {
-      quoteArr.push({
-        caseId: cases[i].id,
-        pricingTemplateId: pricings[i].id,
-        status: "sent",
-        basePrice: pricings[i].basePrice,
-        items: [
-          { name: "항목A", quantity: 1, unitPrice: 50000, totalPrice: 50000 },
-          { name: "항목B", quantity: 2, unitPrice: 30000, totalPrice: 60000 },
-        ],
-        selectedOptions: ["추가옵션A"],
-        totalPrice: pricings[i].basePrice + 110000,
-        discount: 10000,
-        finalPrice: pricings[i].basePrice + 100000,
-        estimatedDays: 5,
-        notes: `테스트 견적 메모 ${i + 1}`,
-        validUntil: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    // Quotes: create if missing by caseId & pricingTemplateId
+    for (
+      let i = 0;
+      i < Math.min(5, cases.length, ensuredPricings.length);
+      i++
+    ) {
+      const caseId = cases[i].id;
+      const pricingId = ensuredPricings[i].id;
+      const exists = await quoteRepository.findOne({
+        where: { caseId, pricingTemplateId: pricingId },
       });
+      if (!exists) {
+        const q = {
+          caseId,
+          pricingTemplateId: pricingId,
+          status: "sent",
+          basePrice: ensuredPricings[i].basePrice,
+          items: [
+            { name: "항목A", quantity: 1, unitPrice: 50000, totalPrice: 50000 },
+            { name: "항목B", quantity: 2, unitPrice: 30000, totalPrice: 60000 },
+          ],
+          selectedOptions: ["추가옵션A"],
+          totalPrice: ensuredPricings[i].basePrice + 110000,
+          discount: 10000,
+          finalPrice: ensuredPricings[i].basePrice + 100000,
+          estimatedDays: 5,
+          notes: `테스트 견적 메모 ${i + 1}`,
+          validUntil: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        };
+        await quoteRepository.save(q as any);
+        console.log(`✅ Created quote for case ${caseId}`);
+      } else {
+        console.log(`⏭️  Quote exists for case ${caseId}`);
+      }
     }
-    const quotes = await quoteRepository.save(quoteArr);
-    console.log(`✅ Created ${quotes.length} quotes`);
 
     // 상담(Consultation) 10개 생성 (회원/사건 연동)
     const consultationArr: any[] = [];
@@ -205,8 +306,21 @@ async function seedDatabase() {
         completedAt: null,
       });
     }
-    const consultations = await consultationRepository.save(consultationArr);
-    console.log(`✅ Created ${consultations.length} consultations`);
+    // Consultations: create if missing by meetingUrl
+    let createdConsultations = 0;
+    for (const c of consultationArr) {
+      const exists = await consultationRepository.findOne({
+        where: { meetingUrl: c.meetingUrl },
+      });
+      if (!exists) {
+        await consultationRepository.save(c);
+        createdConsultations++;
+        console.log(`✅ Created consultation: ${c.meetingUrl}`);
+      } else {
+        console.log(`⏭️  Consultation exists: ${c.meetingUrl}`);
+      }
+    }
+    console.log(`ℹ️  Consultations ensured (created ${createdConsultations})`);
 
     console.log("✅ Database seeded with 50+ test items!");
 

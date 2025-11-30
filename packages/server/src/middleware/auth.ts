@@ -33,12 +33,14 @@ export function authMiddleware(allowAnonymousPaths: RegExp[] = []) {
     }
     const token = header.substring("Bearer ".length);
     try {
-      const decoded = jwt.verify(token, secret) as JWTPayload;
+      const decoded = jwt.verify(token, secret) as any;
+      // Support tokens that use `sub` (RFC) or older tokens with `userId`/`id`.
+      const userId = decoded.sub || decoded.userId || decoded.id || null;
       const scopes = decoded.scopes?.length
         ? decoded.scopes
         : DEFAULT_SCOPES[decoded.role] || [];
       (req as any).user = {
-        id: decoded.sub,
+        id: userId,
         role: decoded.role,
         scopes,
       };
@@ -63,13 +65,11 @@ export function requireScopes(required: string[]) {
       (s) => user.scopes.includes(s) || user.scopes.includes("admin:all")
     );
     if (!hasAll) {
-      return res
-        .status(403)
-        .json({
-          code: "FORBIDDEN",
-          message: "Insufficient scopes",
-          details: { required, have: user.scopes },
-        });
+      return res.status(403).json({
+        code: "FORBIDDEN",
+        message: "Insufficient scopes",
+        details: { required, have: user.scopes },
+      });
     }
     next();
   };

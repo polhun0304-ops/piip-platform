@@ -1,7 +1,9 @@
 export interface User {
   id: string;
   email: string;
-  role: 'admin' | 'detective' | 'client';
+  role: "admin" | "detective" | "client";
+  name?: string;
+  affiliation?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -10,8 +12,8 @@ export interface Case {
   id: string;
   title: string;
   description: string;
-  status: 'open' | 'in_progress' | 'closed';
-  priority: 'low' | 'medium' | 'high';
+  status: "open" | "in_progress" | "closed";
+  priority: "low" | "medium" | "high";
   assignedToId: string;
   clientId: string;
   createdAt: Date;
@@ -33,7 +35,7 @@ export interface Person {
 export interface Evidence {
   id: string;
   caseId: string;
-  type: 'document' | 'photo' | 'video' | 'audio' | 'physical';
+  type: "document" | "photo" | "video" | "audio" | "physical";
   title: string;
   description?: string;
   fileUrls: string[];
@@ -49,7 +51,7 @@ export interface Payment {
   caseId: string;
   clientId: string;
   amount: number;
-  status: 'pending' | 'completed' | 'failed';
+  status: "pending" | "completed" | "failed";
   paymentMethod: string;
   transactionId: string;
   createdAt: Date;

@@ -1,8 +1,0 @@
-{"level":"info","message":"✅ MongoDB 연결 성공","timestamp":"2025-11-20 18:13:10"}
-{"level":"info","message":"✅ MongoDB 연결 완료, 서버 시작 준비 중...","timestamp":"2025-11-20 18:13:10"}
-{"level":"info","message":"🚀 Server running on port 4000","timestamp":"2025-11-20 18:13:11"}
-{"level":"info","message":"📡 API available at http://localhost:4000/api","timestamp":"2025-11-20 18:13:11"}
-{"level":"info","message":"✅ MongoDB 연결 성공","timestamp":"2025-11-20 18:22:17"}
-{"level":"info","message":"✅ MongoDB 연결 완료, 서버 시작 준비 중...","timestamp":"2025-11-20 18:22:17"}
-{"level":"info","message":"🚀 Server running on port 4000","timestamp":"2025-11-20 18:22:17"}
-{"level":"info","message":"📡 API available at http://localhost:4000/api","timestamp":"2025-11-20 18:22:17"}

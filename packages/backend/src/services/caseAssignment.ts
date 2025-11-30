@@ -4,7 +4,7 @@ import { Detective } from "../entities/Detective";
 import { CaseAssignment } from "../entities/CaseAssignment";
 import { RequestTemplate } from "../entities/RequestTemplate";
 
-// AI provider 재사용
+// AI provider 재사용 with enhanced configuration
 const PROVIDER = (process.env.ANALYSIS_PROVIDER || "mock").toLowerCase();
 type LLMClientShape = {
   chat?: {
@@ -15,24 +15,35 @@ type LLMClientShape = {
     };
   };
 };
-let azureClient: unknown;
-let openaiClient: unknown;
+let azureClient: LLMClientShape | null = null;
+let openaiClient: LLMClientShape | null = null;
 
 if (PROVIDER === "azure-openai") {
   const endpoint = process.env.AZURE_OPENAI_ENDPOINT || "";
   const apiKey = process.env.AZURE_OPENAI_API_KEY || "";
-  if (endpoint && apiKey) {
+  const apiVersion = process.env.OPENAI_API_VERSION || "2024-02-15-preview";
+  if (
+    endpoint &&
+    apiKey &&
+    endpoint !== "https://your-resource.openai.azure.com"
+  ) {
     try {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       const { AzureOpenAI } = require("openai");
-      azureClient = new AzureOpenAI({ endpoint, apiKey });
+      azureClient = new AzureOpenAI({ endpoint, apiKey, apiVersion });
+      console.log("CaseAssignment: Azure OpenAI client initialized");
     } catch (err) {
-      console.error("Failed to load Azure OpenAI SDK:", err);
+      console.error("CaseAssignment: Failed to load Azure OpenAI SDK:", err);
+      azureClient = null;
     }
+  } else {
+    console.warn(
+      "CaseAssignment: Azure OpenAI credentials not properly configured"
+    );
   }
 } else if (PROVIDER === "openai") {
   const apiKey = process.env.OPENAI_API_KEY || "";
-  if (apiKey) {
+  if (apiKey && apiKey !== "your-api-key-here") {
     try {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       const { OpenAI } = require("openai");
@@ -41,9 +52,13 @@ if (PROVIDER === "azure-openai") {
         (config as Record<string, unknown>).baseURL =
           process.env.OPENAI_BASE_URL;
       openaiClient = new OpenAI(config);
+      console.log("CaseAssignment: OpenAI client initialized");
     } catch (err) {
-      console.error("Failed to load OpenAI SDK:", err);
+      console.error("CaseAssignment: Failed to load OpenAI SDK:", err);
+      openaiClient = null;
     }
+  } else {
+    console.warn("CaseAssignment: OpenAI API key not properly configured");
   }
 }
 
