@@ -1,0 +1,7 @@
+﻿null 값 식에서 메서드를 호출할 수 없습니다.
+위치 줄:1 문자:1081
++ ... ' } ; try { $loginBody = @{ email = (Get-Content .\tmp_autodetective_ ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 

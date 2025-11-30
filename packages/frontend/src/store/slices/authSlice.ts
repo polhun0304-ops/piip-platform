@@ -6,6 +6,8 @@ type UserSummary = {
   id: string;
   email: string;
   name?: string;
+  role: string;
+  affiliation?: string;
 };
 
 const AuthService = {
@@ -52,7 +54,7 @@ export const initializeAuthFromStorage = createAsyncThunk(
         try {
           const me = (await Promise.race([
             AuthService.getCurrentUser(),
-            new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 2000)),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 500)), // Reduced timeout
           ])) as UserSummary;
           return { token, user: me } as { token: string; user: UserSummary };
         } catch (apiError) {
@@ -151,6 +153,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.token = action.payload.token;
         state.user = action.payload.user;
+        console.log('🔐 Login successful, user role:', action.payload.user?.role);
       })
       .addCase(loginThunk.rejected, (state, action) => {
         state.loading = false;

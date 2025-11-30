@@ -58,6 +58,8 @@ const SecureChat: React.FC<SecureChatProps> = ({ caseId, currentUserId }) => {
 
   // Use centralized messages hook
   const { messages, isLoading: messagesLoading, appendMessage } = useMessages(caseId);
+  // 안전 보장: 외부 훅이나 런타임 중에 messages가 배열이 아닐 수 있으니 방어 처리
+  const safeMessages = Array.isArray(messages) ? messages : [];
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -159,11 +161,11 @@ const SecureChat: React.FC<SecureChatProps> = ({ caseId, currentUserId }) => {
         // ignore
       }
     };
-  }, [caseId, DEBUG_E2EE, appendMessage, on]);
+  }, [caseId, DEBUG_E2EE, appendMessage, socket]);
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [safeMessages]);
 
   // Local safe message renderer to avoid a single malformed message
   // from crashing the whole SecureChat component render.
@@ -340,14 +342,14 @@ const SecureChat: React.FC<SecureChatProps> = ({ caseId, currentUserId }) => {
 
       {/* 메시지 영역 */}
       <Box sx={{ flex: 1, overflowY: 'auto', p: 2, bgcolor: '#f5f5f5' }}>
-        {messages.length === 0 ? (
+        {safeMessages.length === 0 ? (
           <Box sx={{ textAlign: 'center', py: 4 }}>
             <Typography color="text.secondary">
               아직 메시지가 없습니다. 첫 메시지를 보내보세요.
             </Typography>
           </Box>
         ) : (
-          messages.map((msg) => <MessageBubble key={msg.id || JSON.stringify(msg)} msg={msg} />)
+          safeMessages.map((msg) => <MessageBubble key={msg.id || JSON.stringify(msg)} msg={msg} />)
         )}
         <div ref={messagesEndRef} />
       </Box>

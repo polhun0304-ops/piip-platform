@@ -24,6 +24,7 @@ api.interceptors.request.use(
 );
 
 export default api;
+export { api };
 
 // Typed helpers (small convenience wrappers)
 import type { CaseDTO, MessageDTO } from '../types/api';

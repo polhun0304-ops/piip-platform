@@ -52,6 +52,7 @@ interface Case {
   date: string;
   description?: string;
   assignments?: CaseAssignment[];
+  _id?: string;
 }
 
 const DetectiveDashboard: React.FC = () => {
@@ -62,6 +63,16 @@ const DetectiveDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
   const authUser = useSelector((state: RootState) => state.auth.user as { id?: string } | null);
+
+  // 내 활동중인 사건 (탐정이 수임한 사건)
+  const myActiveCases = cases.filter((c) => c.assignments?.some((a) => a.status === 'accepted'));
+
+  // sort by priority: '긴급' first
+  const sortedMyActiveCases = [...myActiveCases].sort((a, b) => {
+    const aUrgent = a.status === '긴급' ? 1 : 0;
+    const bUrgent = b.status === '긴급' ? 1 : 0;
+    return bUrgent - aUrgent;
+  });
 
   const fetchCases = async () => {
     try {
@@ -108,27 +119,33 @@ const DetectiveDashboard: React.FC = () => {
     };
   }, [authUser?.id]);
 
-  // sort by priority: '긴급' first
-  const sortedMyActiveCases = [...myActiveCases].sort((a, b) => {
-    const aUrgent = a.status === '긴급' ? 1 : 0;
-    const bUrgent = b.status === '긴급' ? 1 : 0;
-    return bUrgent - aUrgent;
-  });
-
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   const [selectedCaseToAccept, setSelectedCaseToAccept] = React.useState<string | null>(null);
   const [acceptNote, setAcceptNote] = React.useState('');
+  const [acceptingMap, setAcceptingMap] = React.useState<Record<string, boolean>>({});
 
   const openAcceptModal = (id: string) => {
     setSelectedCaseToAccept(id);
     setAcceptNote('');
     setConfirmOpen(true);
+    setAcceptingMap((s) => ({ ...s, [id]: true }));
   };
 
   const closeAcceptModal = () => {
     setConfirmOpen(false);
     setSelectedCaseToAccept(null);
     setAcceptNote('');
+    // if user cancelled, re-enable the button for that case
+    // (selectedCaseToAccept may be null here if closed after confirm)
+    // clear all accepting flags related to modal
+    setAcceptingMap((s) => {
+      if (!s) return {};
+      const next = { ...s };
+      if (selectedCaseToAccept && next[selectedCaseToAccept]) {
+        delete next[selectedCaseToAccept];
+      }
+      return next;
+    });
   };
 
   const confirmAccept = async () => {
@@ -139,6 +156,8 @@ const DetectiveDashboard: React.FC = () => {
     } catch (err) {
       console.error(err);
       setMessage('수임 처리 중 오류가 발생했습니다.');
+      // re-enable button on error
+      setAcceptingMap((s) => ({ ...s, [selectedCaseToAccept]: false }));
     }
   };
 
@@ -147,9 +166,13 @@ const DetectiveDashboard: React.FC = () => {
       await api.post(`/cases/${id}/accept`, { note });
       setMessage('사건을 수임했습니다.');
       fetchCases();
+      // keep the button disabled after successful accept (case will move out of list)
+      setAcceptingMap((s) => ({ ...s, [id]: true }));
     } catch (error) {
       console.error('Failed to accept case:', error);
       setMessage('사건 수임 중 오류가 발생했습니다.');
+      // re-enable button on failure
+      setAcceptingMap((s) => ({ ...s, [id]: false }));
     }
   };
 
@@ -215,8 +238,6 @@ const DetectiveDashboard: React.FC = () => {
     });
     return Array.from(map.values());
   })();
-
-  const myActiveCases = cases.filter((c) => c.assignments?.some((a) => a.status === 'accepted'));
 
   // Stats
   const activeCount = myActiveCases.length;
@@ -305,8 +326,15 @@ const DetectiveDashboard: React.FC = () => {
                       data-testid={`accept-button-${c.id}`}
                       variant="contained"
                       color="primary"
-                      startIcon={<Check />}
+                      startIcon={
+                        acceptingMap[c.id] ? (
+                          <CircularProgress size={16} color="inherit" />
+                        ) : (
+                          <Check />
+                        )
+                      }
                       onClick={() => openAcceptModal(c.id)}
+                      disabled={!!acceptingMap[c.id]}
                       fullWidth
                     >
                       수임 승낙

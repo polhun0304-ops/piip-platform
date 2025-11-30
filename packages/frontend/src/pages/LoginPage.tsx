@@ -38,7 +38,8 @@ const LoginPage: React.FC = () => {
         })
       );
 
-      const role = response.user.role;
+      const role =
+        response.user && typeof response.user.role === 'string' ? response.user.role : 'client';
 
       if (role === 'admin') {
         navigate('/admin/db');

@@ -5,7 +5,7 @@ module.exports = {
   timeout: 30000,
   use: {
     headless: true,
-    baseURL: 'http://localhost:5174',
+    baseURL: process.env.APP_BASE || 'http://localhost:5173',
     actionTimeout: 10000,
   },
 };

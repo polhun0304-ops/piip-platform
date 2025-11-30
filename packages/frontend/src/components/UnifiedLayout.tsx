@@ -56,6 +56,59 @@ interface NavigationItem {
   description?: string;
 }
 
+// QuickActions: 역할별 빠른 액션 버튼을 단일 위치에서 렌더합니다.
+interface QuickActionsProps {
+  role: string;
+  onNavigate: (path: string) => void;
+}
+
+const QuickActions: React.FC<QuickActionsProps> = ({ role, onNavigate }) => {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: { xs: 'row', md: 'column' },
+        gap: 1,
+        alignItems: 'center',
+      }}
+    >
+      {role === 'client' && (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => onNavigate('/cases/request')}
+          data-testid="cta-client-request"
+          sx={{ mb: { md: 1 }, minWidth: 120 }}
+        >
+          의뢰하기
+        </Button>
+      )}
+      {role === 'detective' && (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => onNavigate('/evidence/new')}
+          data-testid="cta-detective-evidence"
+          sx={{ mb: { md: 1 }, minWidth: 120 }}
+        >
+          증거 업로드
+        </Button>
+      )}
+      {role === 'admin' && (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => onNavigate('/admin/assignments')}
+          data-testid="cta-admin-assignments"
+          sx={{ mb: { md: 1 }, minWidth: 120 }}
+        >
+          배정 관리
+        </Button>
+      )}
+    </Box>
+  );
+};
+
 /**
  * 통합 메인 레이아웃 컴포넌트
  * - 모든 페이지를 연결하는 마스터 내비게이션
@@ -253,7 +306,8 @@ const UnifiedLayout: React.FC<UnifiedLayoutProps> = ({ children }) => {
       break;
   }
 
-  navigationItems = [...navigationItems, ...extraMenu];
+  // Do not append generic extraMenu to all roles — show only role-appropriate items.
+  // If you want to expose global links (about/settings), add them explicitly per-role.
 
   const handleDrawerToggle = () => {
     if (isMobile) {
@@ -382,6 +436,9 @@ const UnifiedLayout: React.FC<UnifiedLayoutProps> = ({ children }) => {
             <ChevronLeftIcon />
           </IconButton>
         )}
+
+        {/* Role-specific quick actions removed from drawerContent to avoid duplicate DOM nodes.
+            QuickActions component is rendered once inside the AppBar to ensure a single data-testid instance. */}
       </Box>
 
       {/* Navigation List */}
@@ -394,6 +451,7 @@ const UnifiedLayout: React.FC<UnifiedLayoutProps> = ({ children }) => {
                 <ListItemButton
                   onClick={() => handleNavigation(item.path)}
                   selected={isActivePath(item.path)}
+                  data-testid={`nav-${item.path.replace(/\//g, '_')}`}
                   sx={{
                     borderRadius: 2,
                     px: 2,
@@ -578,6 +636,9 @@ const UnifiedLayout: React.FC<UnifiedLayoutProps> = ({ children }) => {
                     : '알수없음'}
             </Typography>
           </Box>
+
+          {/* Quick actions: render single instance to avoid duplicate data-testid elements in DOM */}
+          <QuickActions role={role} onNavigate={handleNavigation} />
 
           {/* 로그인/로그아웃 버튼 (상단 우측) */}
           {/* Next action button */}

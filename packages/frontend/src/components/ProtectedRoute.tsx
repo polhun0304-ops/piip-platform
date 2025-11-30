@@ -33,6 +33,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   if (allowedRoles && allowedRoles.length > 0) {
     if (!user || !allowedRoles.includes((user.role ?? 'client') as Role)) {
+      console.log('🚫 Access denied for role:', user?.role, 'allowed:', allowedRoles);
       // Authenticated but not authorized for this route
       return <Navigate to="/home" replace />;
     }

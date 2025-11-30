@@ -15,7 +15,10 @@ import PersonList from './pages/PersonList';
 import EvidenceList from './pages/EvidenceList';
 import ReportsList from './pages/ReportsList';
 import ReportCreate from './pages/ReportCreate';
-import AdminDashboard from './pages/AdminDashboard';
+import ReportDetail from './pages/ReportDetail';
+import EvidenceCreate from './pages/EvidenceCreate';
+import EvidenceDetail from './pages/EvidenceDetail';
+import AdminDashboard from './components/AdminDashboard';
 import ApiDocsPage from './pages/ApiDocsPage';
 import AboutPage from './pages/AboutPage';
 import HomeModern from './pages/HomeModern';
@@ -26,6 +29,17 @@ import FranchiseManagement from './pages/FranchiseManagement';
 import LoginPage from './pages/LoginPage';
 import EnhancedHomePage from './pages/EnhancedHomePage';
 import ClientDashboard from './pages/ClientDashboard';
+import PaymentPage from './pages/PaymentPage';
+import CaseRequest from './pages/CaseRequest';
+import PerformancePage from './pages/PerformancePage';
+import AdminStatsPage from './pages/AdminStatsPage';
+import DetectivesSearch from './pages/DetectivesSearch';
+import AITools from './pages/AITools';
+import PushPage from './pages/PushPage';
+import SettingsPage from './pages/SettingsPage';
+import AllInOne from './pages/AllInOne';
+import BlockchainPage from './pages/BlockchainPage';
+import PerformanceAll from './pages/PerformanceAll';
 
 console.log('📱 App component loading...');
 
@@ -91,11 +105,25 @@ const App = () => {
                   }
                 />
                 <Route path="/cases" element={<CaseList />} />
+                <Route path="/cases/request" element={<CaseRequest />} />
                 <Route path="/cases/:id" element={<CaseDetail />} />
+                <Route path="/payment" element={<PaymentPage />} />
+                <Route path="/performance" element={<PerformancePage />} />
+                <Route path="/admin/stats" element={<AdminStatsPage />} />
+                <Route path="/detectives/search" element={<DetectivesSearch />} />
+                <Route path="/ai-tools" element={<AITools />} />
+                <Route path="/push" element={<PushPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/all-in-one" element={<AllInOne />} />
+                <Route path="/blockchain" element={<BlockchainPage />} />
+                <Route path="/performance/all" element={<PerformanceAll />} />
                 <Route path="/reports" element={<ReportsList />} />
                 <Route path="/reports/new" element={<ReportCreate />} />
+                <Route path="/reports/:id" element={<ReportDetail />} />
                 <Route path="/persons" element={<PersonList />} />
                 <Route path="/evidence" element={<EvidenceList />} />
+                <Route path="/evidence/new" element={<EvidenceCreate />} />
+                <Route path="/evidence/:id" element={<EvidenceDetail />} />
 
                 {/* 홈페이지 버전 비교 & 레거시 */}
                 <Route path="/homes" element={<HomeSelector />} />

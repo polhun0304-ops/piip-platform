@@ -27,9 +27,16 @@ export const authService = {
   login: async (email: string, password: string): Promise<LoginResponse> => {
     const response = await api.post<LoginResponse>('/auth/login', { email, password });
     if (response.data.token) {
-      localStorage.setItem('piip_token', response.data.token);
-      localStorage.setItem('piip_user', JSON.stringify(response.data.user));
-      localStorage.setItem('piip_role', response.data.user.role);
+      try {
+        localStorage.setItem('piip_token', response.data.token);
+        const userObj = response.data.user || null;
+        localStorage.setItem('piip_user', JSON.stringify(userObj));
+        const roleVal = userObj && typeof userObj.role === 'string' ? userObj.role : 'client';
+        localStorage.setItem('piip_role', roleVal);
+      } catch (e) {
+        // If localStorage is not available or write fails, don't crash the login flow
+        console.warn('Failed to persist login info to localStorage', e);
+      }
     }
     return response.data;
   },
@@ -37,9 +44,15 @@ export const authService = {
   register: async (data: RegisterData): Promise<LoginResponse> => {
     const response = await api.post<LoginResponse>('/auth/register', data);
     if (response.data.token) {
-      localStorage.setItem('piip_token', response.data.token);
-      localStorage.setItem('piip_user', JSON.stringify(response.data.user));
-      localStorage.setItem('piip_role', response.data.user.role);
+      try {
+        localStorage.setItem('piip_token', response.data.token);
+        const userObj = response.data.user || null;
+        localStorage.setItem('piip_user', JSON.stringify(userObj));
+        const roleVal = userObj && typeof userObj.role === 'string' ? userObj.role : 'client';
+        localStorage.setItem('piip_role', roleVal);
+      } catch (e) {
+        console.warn('Failed to persist register info to localStorage', e);
+      }
     }
     return response.data;
   },

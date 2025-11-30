@@ -5,6 +5,11 @@ export interface CaseSummary {
   title: string;
   status: 'open' | 'in_progress' | 'closed';
   priority: 'low' | 'medium' | 'high';
+  clientId?: string;
+  assignedDetectiveId?: string;
+  description?: string;
+  createdAt?: string;
+  date?: string;
 }
 
 interface CasesState {

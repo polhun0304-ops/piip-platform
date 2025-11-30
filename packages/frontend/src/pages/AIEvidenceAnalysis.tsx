@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -20,6 +20,7 @@ import {
   Stack,
   alpha,
   useTheme,
+  CircularProgress,
 } from '@mui/material';
 import {
   CloudUpload,
@@ -45,11 +46,39 @@ interface AnalysisResult {
   findings?: string[];
 }
 
+import api from '../services/api';
+import { authService } from '../services/auth';
+
 const AIEvidenceAnalysis: React.FC = () => {
   const theme = useTheme();
   const [activeTab, setActiveTab] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+
+  const user = authService.getCurrentUser();
+  const [myEvidences, setMyEvidences] = useState<any[]>([]);
+  const [loadingEvidences, setLoadingEvidences] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    const fetch = async () => {
+      try {
+        // backend will filter by role/case; clients will only see their case's evidences
+        const res = await api.get('/evidence');
+        if (!mounted) return;
+        setMyEvidences(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
+        console.warn('Failed to load evidences for AI page', err);
+      } finally {
+        if (mounted) setLoadingEvidences(false);
+      }
+    };
+    // Only fetch list for clients or to populate the right pane
+    fetch();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   // 샘플 분석 결과
   const analysisResults: AnalysisResult[] = [
@@ -250,122 +279,163 @@ const AIEvidenceAnalysis: React.FC = () => {
               </CardContent>
             </Card>
           </Grid>
-
           {/* Analysis Results */}
           <Grid item xs={12} md={8}>
             <Card>
               <CardContent>
-                <Typography variant="h6" fontWeight={700} gutterBottom>
-                  분석 결과 ({analysisResults.length})
-                </Typography>
-
-                <List>
-                  {analysisResults.map((result) => (
-                    <Card
-                      key={result.id}
-                      sx={{
-                        mb: 2,
-                        transition: 'all 0.3s',
-                        '&:hover': {
-                          boxShadow: theme.shadows[4],
-                        },
-                      }}
-                    >
-                      <CardContent>
-                        <Stack direction="row" spacing={2} alignItems="flex-start">
-                          {/* Icon */}
-                          <Box sx={{ mt: 0.5 }}>{getTypeIcon(result.type)}</Box>
-
-                          {/* Content */}
-                          <Box sx={{ flexGrow: 1 }}>
-                            <Stack
-                              direction="row"
-                              justifyContent="space-between"
-                              alignItems="center"
-                              mb={1}
+                {/* If user is client, show a simplified view: upload + list of own evidences only */}
+                {user?.role === 'client' ? (
+                  <>
+                    <Typography variant="h6" fontWeight={700} gutterBottom>
+                      업로드한 자료 ({myEvidences.length})
+                    </Typography>
+                    {loadingEvidences ? (
+                      <CircularProgress />
+                    ) : (
+                      <List>
+                        {myEvidences.map((ev) => (
+                          <ListItem key={ev.id || ev._id}>
+                            <ListItemIcon>{getTypeIcon(ev.type)}</ListItemIcon>
+                            <ListItemText
+                              primary={ev.label || ev.title || `증거 ${ev.id || ev._id}`}
+                              secondary={ev.createdAt || ev.uploadDate || ev.date}
+                            />
+                            <Button
+                              size="small"
+                              onClick={() =>
+                                window.open(ev.filePath || ev.url || ev.fileUrl, '_blank')
+                              }
                             >
-                              <Typography variant="subtitle1" fontWeight={600}>
-                                {result.fileName}
-                              </Typography>
-                              <Chip
-                                label={`신뢰도 ${result.confidence}%`}
-                                size="small"
-                                color={result.confidence >= 90 ? 'success' : 'warning'}
-                              />
-                            </Stack>
+                              열기
+                            </Button>
+                          </ListItem>
+                        ))}
+                      </List>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <Typography variant="h6" fontWeight={700} gutterBottom>
+                      분석 결과 ({analysisResults.length})
+                    </Typography>
 
-                            <Stack direction="row" spacing={1} mb={2}>
-                              <Chip label={getTypeLabel(result.type)} size="small" />
-                              <Chip
-                                label={result.status === 'completed' ? '완료' : '분석중'}
-                                size="small"
-                                color={result.status === 'completed' ? 'success' : 'default'}
-                              />
-                              <Chip label={result.uploadDate} size="small" variant="outlined" />
-                            </Stack>
+                    <List>
+                      {analysisResults.map((result) => (
+                        <Card
+                          key={result.id}
+                          sx={{
+                            mb: 2,
+                            transition: 'all 0.3s',
+                            '&:hover': {
+                              boxShadow: theme.shadows[4],
+                            },
+                          }}
+                        >
+                          <CardContent>
+                            <Stack direction="row" spacing={2} alignItems="flex-start">
+                              {/* Icon */}
+                              <Box sx={{ mt: 0.5 }}>{getTypeIcon(result.type)}</Box>
 
-                            {/* Highlights */}
-                            {result.highlights && (
-                              <Box sx={{ mb: 2 }}>
-                                <Typography variant="caption" fontWeight={600} color="primary">
-                                  주요 구간:
-                                </Typography>
-                                <List dense>
-                                  {result.highlights.map((highlight, idx) => (
-                                    <ListItem key={idx} sx={{ py: 0.5, px: 0 }}>
-                                      <ListItemIcon sx={{ minWidth: 32 }}>
-                                        <PlayCircle fontSize="small" color="primary" />
-                                      </ListItemIcon>
-                                      <ListItemText
-                                        primary={highlight}
-                                        primaryTypographyProps={{ variant: 'body2' }}
-                                      />
-                                    </ListItem>
-                                  ))}
-                                </List>
+                              {/* Content */}
+                              <Box sx={{ flexGrow: 1 }}>
+                                <Stack
+                                  direction="row"
+                                  justifyContent="space-between"
+                                  alignItems="center"
+                                  mb={1}
+                                >
+                                  <Typography variant="subtitle1" fontWeight={600}>
+                                    {result.fileName}
+                                  </Typography>
+                                  <Chip
+                                    label={`신뢰도 ${result.confidence}%`}
+                                    size="small"
+                                    color={result.confidence >= 90 ? 'success' : 'warning'}
+                                  />
+                                </Stack>
+
+                                <Stack direction="row" spacing={1} mb={2}>
+                                  <Chip label={getTypeLabel(result.type)} size="small" />
+                                  <Chip
+                                    label={result.status === 'completed' ? '완료' : '분석중'}
+                                    size="small"
+                                    color={result.status === 'completed' ? 'success' : 'default'}
+                                  />
+                                  <Chip label={result.uploadDate} size="small" variant="outlined" />
+                                </Stack>
+
+                                {/* Highlights */}
+                                {result.highlights && (
+                                  <Box sx={{ mb: 2 }}>
+                                    <Typography variant="caption" fontWeight={600} color="primary">
+                                      주요 구간:
+                                    </Typography>
+                                    <List dense>
+                                      {result.highlights.map((highlight, idx) => (
+                                        <ListItem key={idx} sx={{ py: 0.5, px: 0 }}>
+                                          <ListItemIcon sx={{ minWidth: 32 }}>
+                                            <PlayCircle fontSize="small" color="primary" />
+                                          </ListItemIcon>
+                                          <ListItemText
+                                            primary={highlight}
+                                            primaryTypographyProps={{ variant: 'body2' }}
+                                          />
+                                        </ListItem>
+                                      ))}
+                                    </List>
+                                  </Box>
+                                )}
+
+                                {/* Findings */}
+                                {result.findings && (
+                                  <Box>
+                                    <Typography
+                                      variant="caption"
+                                      fontWeight={600}
+                                      color="secondary"
+                                    >
+                                      분석 결과:
+                                    </Typography>
+                                    <List dense>
+                                      {result.findings.map((finding, idx) => (
+                                        <ListItem key={idx} sx={{ py: 0.5, px: 0 }}>
+                                          <ListItemIcon sx={{ minWidth: 32 }}>
+                                            <Fingerprint fontSize="small" color="secondary" />
+                                          </ListItemIcon>
+                                          <ListItemText
+                                            primary={finding}
+                                            primaryTypographyProps={{ variant: 'body2' }}
+                                          />
+                                        </ListItem>
+                                      ))}
+                                    </List>
+                                  </Box>
+                                )}
+
+                                {/* Actions */}
+                                <Stack direction="row" spacing={1} mt={2}>
+                                  <Button
+                                    variant="contained"
+                                    size="small"
+                                    startIcon={<CloudUpload />}
+                                  >
+                                    증거보관센터에 저장
+                                  </Button>
+                                  <Button variant="outlined" size="small" startIcon={<Gavel />}>
+                                    법률검토 요청
+                                  </Button>
+                                  <Button variant="outlined" size="small" startIcon={<Download />}>
+                                    PDF 리포트
+                                  </Button>
+                                </Stack>
                               </Box>
-                            )}
-
-                            {/* Findings */}
-                            {result.findings && (
-                              <Box>
-                                <Typography variant="caption" fontWeight={600} color="secondary">
-                                  분석 결과:
-                                </Typography>
-                                <List dense>
-                                  {result.findings.map((finding, idx) => (
-                                    <ListItem key={idx} sx={{ py: 0.5, px: 0 }}>
-                                      <ListItemIcon sx={{ minWidth: 32 }}>
-                                        <Fingerprint fontSize="small" color="secondary" />
-                                      </ListItemIcon>
-                                      <ListItemText
-                                        primary={finding}
-                                        primaryTypographyProps={{ variant: 'body2' }}
-                                      />
-                                    </ListItem>
-                                  ))}
-                                </List>
-                              </Box>
-                            )}
-
-                            {/* Actions */}
-                            <Stack direction="row" spacing={1} mt={2}>
-                              <Button variant="contained" size="small" startIcon={<CloudUpload />}>
-                                증거보관센터에 저장
-                              </Button>
-                              <Button variant="outlined" size="small" startIcon={<Gavel />}>
-                                법률검토 요청
-                              </Button>
-                              <Button variant="outlined" size="small" startIcon={<Download />}>
-                                PDF 리포트
-                              </Button>
                             </Stack>
-                          </Box>
-                        </Stack>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </List>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </List>
+                  </>
+                )}
               </CardContent>
             </Card>
           </Grid>
