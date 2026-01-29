@@ -1,106 +1,97 @@
-# PIIP — AI Agent Instructions (간결판)
+# PIIP 플랫폼 - AI 코딩 에이전트 가이드
 
-**목표:** 에이전트가 로컬 개발, 디버깅, E2E 재현, Docker 재현을 빠르게 수행하도록 핵심 지식과 실행 절차를 제공합니다.
-**핵심 개요**
+## 프로젝트 개요
+PIIP는 탐정 업무 관리를 위한 모노레포 플랫폼으로, Node.js 백엔드, React 프론트엔드, 모바일 앱으로 구성되어 있습니다.
+- **루트:** Turbo 레포로 워크스페이스(`packages/*`) 관리
+- **백엔드:** Express, Socket.IO, 하이브리드 DB (MongoDB + TypeORM), AI 에이전트
+- **프론트엔드:** Vite + React (SPA)
+- **모바일:** Vite + React Native Web
 
-- 레포 구조: 모노레포(`packages/*`) — 핵심은 `packages/backend`(Express + TypeORM + Mongo), `packages/frontend`(Vite + React)
-- 백엔드: REST `/api/*` + Socket.IO (JWT 핸드셰이크). 엔트리: `packages/backend/src/index.ts` (DB 초기화: `initializeDatabase()`)
-- 프런트: Vite dev 서버(`packages/frontend/vite.config.ts`)가 `/api` 프록시를 사용함. 소켓 클라이언트: `packages/frontend/src/hooks/useSocket.ts` (`VITE_API_BASE`).
-  **빠른 실행(핵심 명령)**
+## 아키텍처 및 패턴
 
-```powershell
-npm install
-npm run dev         # turbo로 전체 서비스 실행
-npm run backend     # 백엔드만 (root script)
-cd packages/frontend; npm run dev
-docker compose up -d --build
-docker ps -a
-docker logs --tail 200 piip-backend
-**환경 변수 핵심**
-- `PORT`, `JWT_SECRET`, `CORS_ORIGIN`
-- AI 관련: `ANALYSIS_PROVIDER` (`mock|openai|azure-openai`), `OPENAI_API_KEY`, `OPENAI_MODEL`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_DEPLOYMENT`
-- 파일/스토리지: `STORAGE_PROVIDER` (`local|s3`) — S3일 경우 추가 설정 필요
-**자주 발생하는 문제와 해결 포인트**
-- Docker 내부에서 프록시 실패(ECONNREFUSED): `packages/frontend/vite.config.ts`의 proxy가 `http://localhost:5001`인 경우 컨테이너 내부에서는 백엔드로 연결 불가.
-  - 해결: `docker-compose.yml` 또는 컨테이너 env로 `VITE_API_BASE=http://piip-backend:5001` 설정 (서비스 이름 사용).
-- Socket 연결 실패: 서버의 Socket.IO 핸드셰이크는 JWT를 검사합니다. 테스트/재현 시 `localStorage`에 `piip_token`을 넣거나 Playwright에서 Authorization 헤더 사용.
-- 로컬에서 AI 호출 불가: `ANALYSIS_PROVIDER=mock`로 설정해 외부 호출을 우회하세요.
-**테스트(Playwright) 관련**
-- 설치: `cd packages/frontend && npm run playwright:install`
-- 실행(추적 포함): `npx playwright test --trace on`
-- 실패 재현 팁: Playwright에서 `ERR_CONNECTION_REFUSED` 또는 `Timeout`이 보이면 백엔드(5001)와 프런트(5173)가 동작하는지 먼저 확인하세요.
-**중요 파일(참고용)**
-- 백엔드 엔트리: `packages/backend/src/index.ts`
-- 케이스/할당 관련: `packages/backend/src/routes/cases.ts`
-- AI 통합: `packages/backend/src/services/intakeAgent.ts`
-- Vite 설정: `packages/frontend/vite.config.ts`
-- Socket helper: `packages/frontend/src/hooks/useSocket.ts`
-- Playwright 테스트: `packages/frontend/playwright`
+### 백엔드 (`packages/backend`)
+- **진입점:** `src/index.ts` - Express 및 Socket.IO 시작
+- **데이터베이스:** 하이브리드 아키텍처
+  - **MongoDB:** Mongoose (`config/mongodb.ts`) - 사건/접수/상담 데이터의 주 저장소
+  - **SQL (SQLite/PG):** TypeORM (`config/database.ts`) - 구조화된 엔티티(증거, 보고서, 사용자 등) 저장
+- **AI 통합:** `services/intakeAgent.ts`, `services/ai.ts`, `services/caseAssignment.ts`
+  - `ANALYSIS_PROVIDER` 환경변수로 `mock`, `openai`, `azure-openai` 프로바이더 지원
+  - **패턴:** 외부 AI 호출 전 항상 `ANALYSIS_PROVIDER` 확인. API 키 없이 로컬 개발 시 `mock` 사용
+  - 예시: `const PROVIDER = (process.env.ANALYSIS_PROVIDER || "mock").toLowerCase();`
+- **실시간 통신:** Socket.IO와 JWT 인증 (`index.ts`의 `io.use(...)`)
+  - `handshake.auth.token` 또는 `Authorization` 헤더를 통한 인증
+  - 소켓 데이터에 사용자 정보 저장: `socket.data.user = { userId, email, role, detectiveId }`
+- **스토리지:** 플러그형 저장소 시스템 (`services/storage.ts`)
+  - `STORAGE_PROVIDER`: `local` (기본값) 또는 `s3`
+  - 로컬: `uploads/` 디렉토리에 파일 저장
+  - S3: `S3_BUCKET`, `AWS_REGION` 필수, `S3_PUBLIC_URL_BASE` 선택사항
+  - 파일 정리: `LOCAL_AUTOCLEAN=true` 설정 시 `FILE_RETENTION_DAYS` 후 자동 삭제
+- **알림:** Twilio SMS (`services/notificationService.ts`)
+  - `TWILIO_SID`, `TWILIO_TOKEN`, `TWILIO_FROM` 환경변수 필요
 
-필요하면 이 파일을 더 짧은 체크리스트형(핵심 명령만) 또는 CI(예: GitHub Actions)용 검사 목록으로 확장하겠습니다.
-# Copilot / AI Agent Instructions for PIIP Platform
+### 프론트엔드 (`packages/frontend`)
+- **빌드:** Vite (`vite.config.ts`)
+- **API 프록시:** `vite.config.ts`에서 `/api` 및 `/socket.io`를 백엔드로 전달
+  - **로컬:** `http://localhost:5001`
+  - **Docker:** `VITE_API_BASE`로 백엔드 컨테이너 지정 (예: `http://piip-backend:5001`)
+- **소켓 클라이언트:** `src/hooks/useSocket.ts` - 연결 및 인증 토큰 처리
+  - `VITE_API_BASE` 읽거나 기본값 `http://localhost:5001` 사용
+  - `localStorage.getItem('piip_token')`에서 JWT를 `auth: { token }`으로 전달
+- **상태 관리:** Redux Toolkit (`@reduxjs/toolkit`) 및 React Query (`@tanstack/react-query`)
 
-Short summary
+### 모바일 (`packages/mobile`)
+- **빌드:** React Native Web용 Vite
+- **플랫폼:** 크로스 플랫폼 호환성을 위한 React Native Web
 
-- Monorepo: `packages/backend` (Node/Express, TypeORM + Mongo bootstrap), `packages/frontend` (Vite + React), `packages/sdk`, `packages/mobile`.
-- Backend exposes REST + Socket.IO on `/api` and websockets; frontend uses Vite dev server with a proxy to `/api`.
+## 핵심 워크플로우
+# PIIP 플랫폼 — AI 코딩 에이전트 가이드 (간결)
 
-Quick start (developer-relevant)
+이 파일은 PIIP 모노레포를 빠르게 이해하고 안전하게 변경할 수 있도록 핵심 규칙과 진입점을 정리합니다.
 
-- Install deps at repo root (workspaces):
-  - `npm install` (root) — uses workspaces/turbo.
-- Local dev (recommended for active development):
-  - From root: `npm run dev` (runs turbo pipelines). For Windows PowerShell there is `start-dev.ps1` which helps launch services and ensures UTF-8 output.
-  - To run only backend: `npm run backend` (root) or `cd packages/backend && npm run dev`.
-  - To run frontend: `cd packages/frontend && npm run dev`.
-- Dockerized full stack:
-  - `docker compose up -d --build` from repo root. Watch logs — common failure is frontend proxying to `http://localhost:5001` inside container.
+1) 한 줄 요약
+- 모노레포: `packages/backend`(Express + Socket.IO + AI), `packages/frontend`(Vite/React), `packages/mobile`.
 
-Key architectural notes (what to know first)
+2) 빠른 실행(로컬)
+- 전체 개발: `npm run dev` (루트, Turborepo로 패키지 병렬 실행)
+- 백엔드만: `npm run backend` 또는 `cd packages/backend && npm run dev`
+- 프론트엔드만: `cd packages/frontend && npm run dev`
+- Docker: `docker compose up -d --build`
 
-- Backend (`packages/backend/src/index.ts`):
-  - Initializes MongoDB connection then calls `initializeDatabase()` (TypeORM/SQLite for some data). Listens on `process.env.PORT || 5001`.
-  - Socket.IO handshake performs JWT verification. See `io.use(...)` and `JWT_SECRET` usage.
-  - Many features are behind routes under `/api/*` (auth, cases, intake, analysis, chat, e2ee).
-- AI integration:
-  - `packages/backend/src/services/intakeAgent.ts` toggles between `mock`, `openai`, and `azure-openai` via `ANALYSIS_PROVIDER` (or `OPENAI_API_KEY` / `AZURE_OPENAI_*` envs). The code falls back to a mock response if envs are missing.
-- Frontend:
-  - Vite dev server config at `packages/frontend/vite.config.ts` — note the proxy target for `/api` is `http://localhost:5001` (change to `http://piip-backend:5001` when running inside Docker).
-  - Socket client uses `import.meta.env.VITE_API_BASE` fallbacking to `http://localhost:5001` in `src/hooks/useSocket.ts`.
+3) 가장 먼저 읽어야 할 파일
+- 백엔드 진입점: `packages/backend/src/index.ts`
+- AI 관련: `packages/backend/src/services/intakeAgent.ts`, `packages/backend/src/services/ai.ts`
+- 스토리지: `packages/backend/src/services/storage.ts` (local/S3 플러그인)
+- Socket 클라이언트: `packages/frontend/src/hooks/useSocket.ts`
+- API 스펙: `docs/openapi/openapi.yaml`
 
-Developer workflows and gotchas
+4) 중요한 환경변수 / 런타임 규칙
+- `ANALYSIS_PROVIDER` = `mock|openai|azure-openai` (로컬 개발은 `mock` 권장)
+- `STORAGE_PROVIDER` = `local|s3` (로컬 업로드는 `uploads/`)
+- `MONGO_URI`, `JWT_SECRET`, `AZURE_OPENAI_API_KEY` / `OPENAI_API_KEY`
+- `VITE_API_BASE` (프론트엔드가 백엔드를 호출할 때 사용)
+- 기본 백엔드 포트: `PORT` default `5001` (Docker 내부에서는 서비스명 사용)
 
-- Running tests (E2E):
-  - Playwright tests live under `packages/frontend/playwright` (or `packages/frontend`) — install browsers: `cd packages/frontend && npm run playwright:install` then `npx playwright test --trace on`.
-  - Troubleshooting tips: when Playwright sees `ERR_CONNECTION_REFUSED` to `localhost:5173` or `localhost:5001`, check whether services run locally or whether the frontend in Docker is proxying to `127.0.0.1` (wrong inside-container target).
-- Seeding and DB: backend runs `initializeDatabase()` and seed scripts; seed idempotency messages (`Template already exists`) are expected.
-- Environment variables that commonly affect agent work:
-  - `PORT`, `JWT_SECRET`, `ANALYSIS_PROVIDER`, `OPENAI_API_KEY`, `OPENAI_MODEL`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_DEPLOYMENT`, `CORS_ORIGIN`, `STORAGE_PROVIDER`.
-  - For local dev without OpenAI: set `ANALYSIS_PROVIDER=mock` to avoid external calls.
+5) Socket.IO 인증 패턴
+- 서버는 `handshake.auth.token` 또는 `Authorization` 헤더를 기대합니다 (`packages/backend/src/index.ts`).
+- 인증 후 `socket.data.user`에 `{ userId, email, role, detectiveId }`를 채웁니다.
 
-Project-specific conventions
+6) AI 호출/보안 규칙
+- 코드에서 AI 클라이언트를 만들기 전 항상 `ANALYSIS_PROVIDER` 확인.
+- 키는 절대 하드코딩하지 말고 환경변수로 주입.
 
-- Monorepo uses `turbo` workspaces — prefer top-level `npm run dev` for concurrently running services during development.
-- Frontend environment keys are `VITE_*` (Vite injects these). Examples: `VITE_API_BASE`, `VITE_API_URL`, `VITE_DEBUG_E2EE`.
-- Socket.IO auth: tokens may come from `handshake.auth.token` or `Authorization` header; many tests set `piip_token` in localStorage directly.
+7) API 변경 시 작업 플로우
+- API 변경: `docs/openapi/openapi.yaml` 업데이트 → 루트에서 `npm run openapi:gen` 실행 → `packages/sdk` 갱신.
 
-Integration points to inspect when changing behavior
+8) 테스트/검증
+- E2E: `cd packages/frontend && npx playwright test` (Playwright traces 폴더 존재)
+- 백엔드 유닛: `cd packages/backend && npm test`
 
-- API surface: `packages/backend/src/routes/*` (auth, cases, assignments, chat, intake). Example: `routes/cases.ts` controls detective assignment and affects what `나의사건` shows.
-- Real-time: server Socket.IO logic in `packages/backend/src/index.ts` and client socket helper `packages/frontend/src/hooks/useSocket.ts`.
-- AI flows: `packages/backend/src/services/intakeAgent.ts` and downstream `consultationGating` / `caseAssignment` modules; changing prompts or provider selection requires env updates and optional model/deployment naming.
+9) Docker / 네트워킹 주의
+- 컨테이너 간 통신: `localhost` 대신 서비스 이름 사용 (예: `http://piip-backend:5001`).
 
-How to contribute safe changes (practical rules)
+10) 작업 가이드(간단 체크리스트)
+- 변경 전: 관련 유닛/통합 테스트 실행
+- API 변경 시: OpenAPI 스펙과 SDK 동기화
+- AI 관련 변경: `ANALYSIS_PROVIDER` 호환성과 키 안전성 검토
 
-- Keep changes minimal and focused; follow existing TypeScript style. Match the project's Node engine (`node >=20 <25`).
-- When modifying cross-cutting behavior (auth, socket, API paths), run both local dev and Playwright E2E to confirm behavior.
-- For Docker fixes: change Vite proxy or `VITE_API_BASE` in `packages/frontend/.env.docker` (or set env in `docker-compose.yml`) — prefer changing env over hardcoding hostnames in code.
-
-Where to look first when debugging common issues
-
-- Backend crashes on container start: collect `docker logs --tail 1000 piip-backend` and look for missing envs or thrown exceptions during DB init.
-- Frontend proxy ECONNREFUSED: open `packages/frontend/vite.config.ts` and `packages/frontend/src/hooks/useSocket.ts` to ensure `VITE_API_BASE` is set for container environment.
-- Playwright flakiness: traces are saved under `packages/frontend/test-results` / `archives/playwright-traces` during runs performed by the CI/dev agent; use `npx playwright show-trace <trace.zip>` to replay.
-
-If anything is unclear or you want this to tilt more toward a specific agent style (e.g., more strict testing steps, or an interactive repair checklist), tell me which sections to expand and I will iterate.
-```
+피드백: 더 자세히 원하는 영역(예: DB 마이그레이션 흐름, AI 에러 처리 패턴 등)을 알려주시면 본 파일을 확장해 반영하겠습니다.
